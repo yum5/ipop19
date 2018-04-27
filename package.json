@@ -1,0 +1,10 @@
+{
+  "name": "iPOPDemo",
+  "version": "1.0.0",
+  "description": "demo",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "electron": "^1.8.6"
+  }
+}
