@@ -8,14 +8,8 @@
     "electron": "^1.8.6"
   },
   "scripts": {
-    "dev": "concurrently \"cross-env NODE_ENV=development webpack-dev-server --config webpack/dev.config.js\" \"cross-env NODE_ENV=development electron ./app/src/main/app.js\"",
-    "prod": "cross-env NODE_ENV=production webpack --progress --color --config webpack/prod.config.js",
-    "build": "cross-env NODE_ENV=production webpack --progress --color --config webpack.config.js",
-    "start": "npm run prod && electron app/build/app.js",
-    "lint": "eslint --ext .jsx,.js app/src/main --fix",
-    "pack": "electron-builder --dir",
-    "dist": "npm run prod && electron-builder",
-    "postinstall": "electron-builder install-app-deps"
+    "build": "cross-env NODE_ENV=production webpack --progress --color --config webpack.config.js && electron dist/app.js",
+    "start": "npm run build && electron app/build/app.js"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
