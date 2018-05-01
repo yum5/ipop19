@@ -3,7 +3,7 @@ const  shellParser = require('node-shell-parser');
 
 cmd.get(
   // 'netstat -Ieth0',
-  './fakenetstat',
+  // './fakenetstat',
   function(err, data, stderr) {
       console.log(data)
 

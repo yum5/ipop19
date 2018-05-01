@@ -6,25 +6,24 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
   <script src="js/chartjs-plugin-streaming.min.js"></script> -->
 
-  <title>Quotes!</title>
+  <title>iPOPDemo - Packet Counter</title>
   <style>
     body {
       font-family: Verdana, sans-serif;
-      padding: 10px;
-      background: skyblue;
-    }
-    p {
-      color: #fff;
-      font-size: 36px;
-      margin: 0;
-      padding: 0;
+      padding: 12px;
+      background: #eee;
     }
   </style>
 
 </head>
 <body>
-  <p id="quote">Just do it!</p>
   <canvas id="canvas" style="width: 800px; height: 600px"></canvas>
+  <div id="vue-root">
+    <label>Sampling Interval / ms</label>
+    <input type="number" v-model="interval" placeholder="interval">
+    <label>Duration / ms</label>
+    <input type="number" v-model="duration" placeholder="duration">
+  </div>
   <script src="./app.bundle.js" charset="utf-8"></script>
 </body>
 </html>
