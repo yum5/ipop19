@@ -40,3 +40,5 @@ jspm_packages
 
 
 dist/
+output.csv
+fakenetstat_tmp.txt

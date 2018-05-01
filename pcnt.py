@@ -6,6 +6,7 @@ import datetime
 import re
 import csv
 
+COMMAND = "./fakenetstat"
 
 def res_cmd_read(cmd):
     return subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
@@ -15,7 +16,7 @@ def packetCount(arg1, arg2):
     global perf_counter_old
     global rx_old
     global tx_old
-    result = res_cmd_read(["netstat", "-I%s" % argvs[1]])
+    result = res_cmd_read([COMMAND, "-I%s" % argvs[1]])
     stdout_decoded = result[0].decode(encoding='utf-8')
     cnt_data = re.split(" +", stdout_decoded.split('\n')[2])
 
@@ -71,7 +72,7 @@ if argc > 2:
     filename = argvs[2]
 
 # インターフェース存在確認
-result = res_cmd_read(["netstat", "-I%s" % argvs[1]])
+result = res_cmd_read([COMMAND, "-I%s" % argvs[1]])
 if result[1].decode(encoding='utf-8') != '':
     print("The interface name is invalid.")
     exit(1)

@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# echo "Kernel Interface table"
+# echo "Iface       MTU Met    RX-OK RX-ERR RX-DRP RX-OVR    TX-OK TX-ERR TX-DRP TX-OVR Flg"
+# echo "eth0       1500   0     1228      0      0      0      893      0      0      0 BMRU"
+
+FILENAME="fakenetstat_tmp.txt"
+
+if [[ ! -f "${FILENAME}" ]]; then
+  echo "100" > "${FILENAME}"
+  echo "200" >> "${FILENAME}"
+fi
+
+i=0
+while read -r line; do
+  lines[((i++))]=$line
+done < "${FILENAME}"
+
+last_rx="${lines[0]}"
+last_tx="${lines[1]}"
+
+next_rx=$((last_rx + RANDOM % 200))
+next_tx=$((last_tx + RANDOM % 200))
+
+echo "Kernel Interface table"
+echo -e "Iface MTU Met RX-OK RX-ERR RX-DRP RX-OVR TX-OK TX-ERR TX-DRP TX-OVR Flg"
+echo -e "eth0 1500 0 ${next_rx} 0 0 0 ${next_tx} 0 0 0 BMRU"
+
+echo "${next_rx}" > "${FILENAME}"
+echo "${next_tx}" >> "${FILENAME}"
