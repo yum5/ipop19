@@ -100,15 +100,38 @@ const settings = {
 }
 
 const main = () => {
+  // centos 6
+  // cmd.get(
+  //   'netstat -Ieth0',
+  //   // '/Users/Kyosuke/GitHub/iPOPDemo/fakenetstat',
+  //   function(err, data, stderr) {
+  //     const result = data.split('\n')[2].split(' ');
+  //
+  //     if (mainWindow) {
+  //       mainWindow.webContents.send('packet_received', {
+  //         timestamp: new Date(),
+  //         rx: parseInt(result[3]),
+  //         tx: parseInt(result[7])
+  //       });
+  //     }
+  //   }
+  // );
+
+  // centos 7
   cmd.get(
-    '/Users/Kyosuke/GitHub/iPOPDemo/fakenetstat',
+    // ip -s link show dev eth0,
+    'netstat -Ieth0',
+    // '/Users/Kyosuke/GitHub/iPOPDemo/fakenetstat',
     function(err, data, stderr) {
       const result = data.split('\n')[2].split(' ');
-      mainWindow.webContents.send('packet_received', {
-        timestamp: new Date(),
-        rx: parseInt(result[3]),
-        tx: parseInt(result[7])
-      });
+
+      if (mainWindow) {
+        mainWindow.webContents.send('packet_received', {
+          timestamp: new Date(),
+          rx: parseInt(result[2]),
+          tx: parseInt(result[6])
+        });
+      }
     }
   );
   setTimeout(main, settings.interval);
