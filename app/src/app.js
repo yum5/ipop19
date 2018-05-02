@@ -52,84 +52,67 @@ app.on('activate', () => {
 })
 
 
-const net = require('net');
+const getCommand = nic => {
+  if (process.platform === 'linux') {
+    return `netstat -I${nic}`
+  } else if (process.platform === 'darwin') {
+    return `netstat -I ${nic}`
+  } else {
+    throw 'Unsupported Platform'
+  }
+}
 
-// const client = new net.Socket();
-// client.connect(3030, 'localhost', function() {
-// 	console.log('Connected');
-// 	client.write('Hello, server! Love, Client.');
-// });
-//
-// client.on('data', function(data) {
-// 	console.log('Received: ' + data);
-//   mainWindow.webContents.send('packet_received', {
-//     timestamp: moment()
-//   });
-// 	client.destroy(); // kill client after server's response
-// });
-//
-// client.on('close', function() {
-// 	console.log('Connection closed');
-// });
+const parseCommandResult = stdout => {
+  if (process.platform === 'linux') {
+    const lines = stdout.split('\n');
 
-// const server = net.createServer(function(conn){
-//   console.log('server-> tcp server created');
-//
-//   conn.on('data', function(data) {
-//     console.log('server-> ' + data + ' from ' + conn.remoteAddress + ':' + conn.remotePort);
-//     conn.write('server -> Repeating: ' + data);
-//     mainWindow.webContents.send('packet_received', {
-//       timestamp: new Date()
-//     });
-//   });
-//   conn.on('close', function(){
-//     console.log('server-> client closed connection');
-//   });
-// }).listen(3000);
+    if (lines.length === 7) {
+      // Possibly CentOS 7
+      const lineRx = lines[3].split(/\s+/)
+      const lineTx = lines[5].split(/\s+/)
 
+      return {
+        rx: parseInt(lineRx[2]),
+        tx: parseInt(lineTx[2])
+      }
+    } else if (lines.length === 4) {
+      // Possibly CentOS 6
+      const result = stdout.split('\n')[2].split(/\s+/);
+      return {
+        rx: parseInt(result[3]),
+        tx: parseInt(result[7])
+      }
+    } else {
+      throw 'Unexpected Command Result'
+    }
+  } else if (process.platform === 'darwin') {
+    const result = stdout.split('\n')[1].split(/\s+/);
 
-// var observable = interval(1000);
-// var subscription = observable.take(3).subscribe(x => console.log(x));
-// range(1, 200)
-//   .pipe(filter(x => x % 2 === 1), map(x => x + x))
-//   .subscribe(x => console.log(x));
-
+    return {
+      rx: parseInt(result[4]),
+      tx: parseInt(result[6])
+    }
+  } else {
+    throw 'Unsupported Platform'
+  }
+}
 
 const settings = {
-  interval: 1000
+  interval: 1000,
+  nic: 'en0'
 }
 
 const main = () => {
-  // centos 6
-  // cmd.get(
-  //   'netstat -Ieth0',
-  //   // '/Users/Kyosuke/GitHub/iPOPDemo/fakenetstat',
-  //   function(err, data, stderr) {
-  //     const result = data.split('\n')[2].split(' ');
-  //
-  //     if (mainWindow) {
-  //       mainWindow.webContents.send('packet_received', {
-  //         timestamp: new Date(),
-  //         rx: parseInt(result[3]),
-  //         tx: parseInt(result[7])
-  //       });
-  //     }
-  //   }
-  // );
-
-  // centos 7
   cmd.get(
-    // ip -s link show dev eth0,
-    'netstat -Ieth0',
-    // '/Users/Kyosuke/GitHub/iPOPDemo/fakenetstat',
+    getCommand(settings.nic),
     function(err, data, stderr) {
-      const result = data.split('\n')[2].split(' ');
+      const result = parseCommandResult(data);
 
       if (mainWindow) {
         mainWindow.webContents.send('packet_received', {
           timestamp: new Date(),
-          rx: parseInt(result[2]),
-          tx: parseInt(result[6])
+          rx: result.rx,
+          tx: result.tx
         });
       }
     }
@@ -138,6 +121,7 @@ const main = () => {
 }
 
 main()
-ipcMain.on('settings_changed', function(event, interval) {
-  settings.interval = interval
+ipcMain.on('settings_changed', function(event, newSetting) {
+  settings.interval = newSetting.interval;
+  settings.nic = newSetting.nic;
 });

@@ -138,15 +138,25 @@ const app = new Vue({
   el: '#vue-root',
   data: {
     duration: 20000, // graph duration
-    interval: 1000 // sampling interval
+    interval: 1000, // sampling interval
+    nic: 'en0'
   },
   watch: {
-    duration: _.throttle(function(){
+    duration: _.throttle(function() {
       config.options.plugins.streaming.duration = this.duration;
       myBar.update();
     }, 1000),
-    interval: _.throttle(function(){
-      ipcRenderer.send('settings_changed', this.interval);
+    interval: _.throttle(function() {
+      ipcRenderer.send('settings_changed', {
+        interval: this.interval,
+        nic: this.nic
+      });
+    }, 1000),
+    nic: _.throttle(function() {
+      ipcRenderer.send('settings_changed', {
+        interval: this.interval,
+        nic: this.nic
+      });
     }, 1000)
   }
 });
