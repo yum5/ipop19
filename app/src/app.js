@@ -7,6 +7,7 @@
 // const moment = require('moment');
 const electron = require('electron');
 const cmd = require('node-cmd');
+const os = require('os');
 const { app, BrowserWindow, ipcMain } = electron;
 
 // const { Observable, Subject, ReplaySubject, from, of, range, interval } = require('rxjs');
@@ -54,7 +55,15 @@ app.on('activate', () => {
 
 const getCommand = nic => {
   if (process.platform === 'linux') {
-    return `netstat -I${nic}`
+    if (os.release().includes('el6')) {
+      // Possibly CentOS 6
+      return `netstat -I${nic}`;
+    } else if (os.release().includes('el7')) {
+      // Possibly CentOS 7
+      return `ip -s link show dev ${nic}`;
+    } else {
+      throw 'Unsupported Platform'
+    }
   } else if (process.platform === 'darwin') {
     return `netstat -I ${nic}`
   } else {
