@@ -1,24 +1,20 @@
 'use strict';
 
-// index.js (main process)
-// - GUI (renderer process)
-// - GUI (renderer process)
-// - GUI (renderer process)
 // const moment = require('moment');
 const electron = require('electron');
 const cmd = require('node-cmd');
 const os = require('os');
 const { app, BrowserWindow, ipcMain } = electron;
 
-// const { Observable, Subject, ReplaySubject, from, of, range, interval } = require('rxjs');
-// const { map, filter, switchMap } = require('rxjs/operators');
-// const { interval } = require('rxjs/observable/interval');
-// const Rx = require('rxjs');
+const PLATFORM = {
+  centos6: 'centos6',
+  centos7: 'centos7',
+  darwin: 'darwin'
+}
 
 let mainWindow;
 
 function createWindow () {
-  // create window
   mainWindow = new BrowserWindow({
     width: 1000,
     height: 800,
@@ -52,31 +48,50 @@ app.on('activate', () => {
   }
 })
 
-
-const getCommand = nic => {
+const getPlatform = () => {
   if (process.platform === 'linux') {
     if (os.release().includes('el6')) {
-      // Possibly CentOS 6
-      return `netstat -I${nic}`;
+      return PLATFORM.centos6
     } else if (os.release().includes('el7')) {
-      // Possibly CentOS 7
-      return `ip -s link show dev ${nic}`;
+      return PLATFORM.centos7
     } else {
       throw 'Unsupported Platform'
     }
   } else if (process.platform === 'darwin') {
-    return `netstat -I ${nic}`
+    return PLATFORM.darwin
   } else {
     throw 'Unsupported Platform'
   }
 }
 
-const parseCommandResult = stdout => {
-  if (process.platform === 'linux') {
-    const lines = stdout.split('\n');
+const getCommand = nic => {
+  const platform = getPlatform()
 
-    if (lines.length === 7) {
-      // Possibly CentOS 7
+  switch (platform) {
+    case PLATFORM.centos6:
+      return `netstat -I${nic}`;
+    case PLATFORM.centos7:
+      return `ip -s link show dev ${nic}`;
+    case PLATFORM.darwin:
+      return `netstat -I ${nic}`;
+  }
+}
+
+const parseCommandResult = stdout => {
+  const platform = getPlatform()
+
+  switch (platform) {
+    case PLATFORM.centos6:
+    {
+      const result = stdout.split('\n')[2].split(/\s+/);
+      return {
+        rx: parseInt(result[3]),
+        tx: parseInt(result[7])
+      }
+    }
+    case PLATFORM.centos7:
+    {
+      const lines = stdout.split('\n');
       const lineRx = lines[3].split(/\s+/)
       const lineTx = lines[5].split(/\s+/)
 
@@ -84,25 +99,16 @@ const parseCommandResult = stdout => {
         rx: parseInt(lineRx[2]),
         tx: parseInt(lineTx[2])
       }
-    } else if (lines.length === 4) {
-      // Possibly CentOS 6
-      const result = stdout.split('\n')[2].split(/\s+/);
-      return {
-        rx: parseInt(result[3]),
-        tx: parseInt(result[7])
-      }
-    } else {
-      throw 'Unexpected Command Result'
     }
-  } else if (process.platform === 'darwin') {
-    const result = stdout.split('\n')[1].split(/\s+/);
+    case PLATFORM.darwin:
+    {
+      const result = stdout.split('\n')[1].split(/\s+/);
 
-    return {
-      rx: parseInt(result[4]),
-      tx: parseInt(result[6])
+      return {
+        rx: parseInt(result[4]),
+        tx: parseInt(result[6])
+      }
     }
-  } else {
-    throw 'Unsupported Platform'
   }
 }
 
@@ -110,6 +116,11 @@ const settings = {
   interval: 1000,
   nic: 'en0'
 }
+
+ipcMain.on('settings_changed', function(event, newSetting) {
+  settings.interval = newSetting.interval;
+  settings.nic = newSetting.nic;
+});
 
 const main = () => {
   cmd.get(
@@ -130,7 +141,3 @@ const main = () => {
 }
 
 main()
-ipcMain.on('settings_changed', function(event, newSetting) {
-  settings.interval = newSetting.interval;
-  settings.nic = newSetting.nic;
-});

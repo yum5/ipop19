@@ -2,20 +2,9 @@ import { Chart } from 'chart.js';
 import 'chartjs-plugin-streaming';
 import moment from 'moment';
 import Vue from 'vue';
-
 const electron = require('electron');
 const { remote, ipcRenderer } = electron
 const _ = require('lodash');
-
-function onRefresh() {
-  config.data.datasets.forEach(function(dataset) {
-    // dataset.data.push({
-    //   x: moment(),
-    //   y: Math.random() * 100
-    // });
-  });
-  // config.options.plugins.streaming.duration -= 1000;
-}
 
 const orange = 'rgb(255, 159, 64)';
 const blue = 'rgb(64, 159, 255)';
@@ -72,8 +61,7 @@ const config = {
       streaming: {
         duration: 20000,
         refresh: 1000,
-        delay: 1000,
-        onRefresh: onRefresh
+        delay: 1000
       }
     }
   }
@@ -131,8 +119,6 @@ ipcRenderer.on('packet_received', function(event, data) {
     }
   });
 });
-
-
 
 const app = new Vue({
   el: '#vue-root',
