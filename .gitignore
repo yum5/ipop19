@@ -39,6 +39,8 @@ jspm_packages
 .node_repl_history
 
 
-dist/
+dist/*
+!dist/package.json
+!dist/yarn.lock
 output.csv
 fakenetstat_tmp.txt

@@ -12,6 +12,9 @@ const PLATFORM = {
   darwin: 'darwin'
 }
 
+// TODO: mainプロセスはWebpackに扱われず単にコピーされるだけなので、export NODE_ENV=production とないと反映されない！！！！！
+const isDevelopment = process.env.NODE_ENV !== 'production'
+
 let mainWindow;
 
 function createWindow () {
@@ -23,7 +26,10 @@ function createWindow () {
     // }
   });
   mainWindow.loadURL('file://' + __dirname + '/index.html');
-  mainWindow.webContents.openDevTools();
+
+  if (isDevelopment) {
+    mainWindow.webContents.openDevTools();
+  }
 
   mainWindow.on('closed', function() {
     mainWindow = null;
@@ -43,7 +49,7 @@ app.on('window-all-closed', () => {
 app.on('activate', () => {
   // macOSでは、ユーザがドックアイコンをクリックしたとき、
   // そのアプリのウインドウが無かったら再作成するのが一般的。
-  if (win === null) {
+  if (mainWindow === null) {
     createWindow()
   }
 })
