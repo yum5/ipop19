@@ -1,0 +1,7 @@
+{
+  "name": "iPOPDemo",
+  "version": "1.0.0",
+  "description": "demo",
+  "main": "./main.js",
+  "license": "MIT"
+}
