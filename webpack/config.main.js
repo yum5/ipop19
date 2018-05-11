@@ -6,15 +6,15 @@ module.exports = {
   // context: path.join(__dirname, './app'),
   entry: {
     app: [
-      './src/renderer/index.js'
+      './src/main/index.js'
     ]
   },
   output: {
     path: path.resolve(__dirname, './build'),
     // publicPath: '/dist/',
-    filename: 'renderer.js'
+    filename: 'main.js'
   },
-  target: 'electron-renderer',
+  target: 'electron-main',
   module: {
     rules: [
       {
@@ -43,6 +43,9 @@ module.exports = {
       }
     ]
   },
+  node: {
+    __dirname: false
+  },
   devServer: {
     historyApiFallback: true,
     noInfo: true,
@@ -59,11 +62,7 @@ module.exports = {
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(),
     // new CopyWebpackPlugin([{
-    //     from: './src/app.js',
-    //     to: 'app.js'
-    //   },
-    //   {
-    //     from: './src/index.html',
+    //     from: './src/renderer/index.html',
     //     to: 'index.html'
     //   },
     // ]),

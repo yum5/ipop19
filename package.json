@@ -8,16 +8,10 @@
     "electron": "^1.8.6",
     "node-cmd": "^3.0.0"
   },
-  "build": {
-    "directories": {
-      "app": "dist",
-      "output": "packs"
-    }
-  },
   "scripts": {
-    "build": "concurrently \"cross-env NODE_ENV=development webpack --progress --color --config webpack.config.js\" \"cross-env NODE_ENV=development webpack --progress --color --config webpack.config.main.js\"",
-    "build:production": "concurrently \"cross-env NODE_ENV=production webpack --progress --color --config webpack.config.js\" \"cross-env NODE_ENV=production webpack --progress --color --config webpack.config.main.js\"",
-    "pack": "npm run build:production && electron-packager build/ Demo --platform=darwin --arch=x64 --version=1.8.6 --asar --package-manager yarn --overwrite --out dist/",
+    "build": "concurrently \"cross-env NODE_ENV=development webpack --progress --color --config webpack/config.renderer.js\" \"cross-env NODE_ENV=development webpack --progress --color --config webpack/config.main.js\"",
+    "build:production": "concurrently \"cross-env NODE_ENV=production webpack --progress --color --config webpack/config.renderer.js\" \"cross-env NODE_ENV=production webpack --progress --color --config webpack/config.main.js\"",
+    "pack:mac": "npm run build:production && electron-packager build/ Demo --platform=darwin --arch=x64 --version=1.8.6 --asar --package-manager yarn --overwrite --out dist/",
     "start": "npm run build && electron build/app.js"
   },
   "devDependencies": {

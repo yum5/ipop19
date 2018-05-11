@@ -6,15 +6,15 @@ module.exports = {
   // context: path.join(__dirname, './app'),
   entry: {
     app: [
-      './src/main/index.js'
+      './src/renderer/index.js'
     ]
   },
   output: {
     path: path.resolve(__dirname, './build'),
     // publicPath: '/dist/',
-    filename: 'main.js'
+    filename: 'renderer.js'
   },
-  target: 'electron-main',
+  target: 'electron-renderer',
   module: {
     rules: [
       {
@@ -42,9 +42,6 @@ module.exports = {
         options: {}
       }
     ]
-  },
-  node: {
-    __dirname: false
   },
   devServer: {
     historyApiFallback: true,
