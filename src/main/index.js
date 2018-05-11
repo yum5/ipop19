@@ -118,31 +118,75 @@ const parseCommandResult = stdout => {
   }
 }
 
+const getInterfaces = () => {
+  const platform = getPlatform()
+
+  switch (platform) {
+    case PLATFORM.centos6:
+    {
+    }
+    case PLATFORM.centos7:
+    {
+    }
+    case PLATFORM.darwin:
+    {
+      return {
+        command: `networksetup -listallhardwareports | grep Device`,
+        parser: stdout => stdout.split('\n').map(v => v.split(/\s+/)[1]).filter(v => v)
+      }
+    }
+  }
+}
+
+
 const settings = {
   interval: 1000,
-  nic: 'en0'
+  interfaces: [],
+  selectedInterface: '',
 }
 
 ipcMain.on('settings_changed', function(event, newSetting) {
   settings.interval = newSetting.interval;
-  settings.nic = newSetting.nic;
+  settings.selectedInterface = newSetting.selectedInterface;
 });
 
-const main = () => {
-  cmd.get(
-    getCommand(settings.nic),
+ipcMain.on('request_settings', function(event) {
+  const { command, parser } = getInterfaces()
+  cmd.get(command,
     function(err, data, stderr) {
-      const result = parseCommandResult(data);
+      const list = parser(data);
+      settings.interfaces = list;
+      settings.selectedInterface = list[0];
 
       if (mainWindow) {
-        mainWindow.webContents.send('packet_received', {
-          timestamp: new Date(),
-          rx: result.rx,
-          tx: result.tx
+        mainWindow.webContents.send('receive_settings', {
+          interval: settings.interval,
+          interfaces: settings.interfaces,
+          selectedInterface: settings.selectedInterface
         });
       }
     }
   );
+});
+
+const main = () => {
+  if (settings.selectedInterface !== '') {
+    cmd.get(
+      getCommand(settings.selectedInterface),
+      function(err, data, stderr) {
+        const result = parseCommandResult(data);
+
+        if (mainWindow) {
+          mainWindow.webContents.send('packet_received', {
+            timestamp: new Date(),
+            rx: result.rx,
+            tx: result.tx
+          });
+        }
+      }
+    );
+  }
+
   setTimeout(main, settings.interval);
 }
 

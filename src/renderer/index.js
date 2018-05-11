@@ -125,7 +125,8 @@ const app = new Vue({
   data: {
     duration: 20000, // graph duration
     interval: 1000, // sampling interval
-    nic: 'en0'
+    interfaces: [],
+    selectedInterface: ''
   },
   watch: {
     duration: _.throttle(function() {
@@ -135,14 +136,21 @@ const app = new Vue({
     interval: _.throttle(function() {
       ipcRenderer.send('settings_changed', {
         interval: this.interval,
-        nic: this.nic
+        selectedInterface: this.selectedInterface
       });
     }, 1000),
-    nic: _.throttle(function() {
+    selectedInterface: _.throttle(function() {
       ipcRenderer.send('settings_changed', {
         interval: this.interval,
-        nic: this.nic
+        selectedInterface: this.selectedInterface
       });
     }, 1000)
   }
+});
+
+ipcRenderer.send('request_settings');
+ipcRenderer.on('receive_settings', function(event, data) {
+  app.interval = data.interval;
+  app.interfaces = data.interfaces;
+  app.selectedInterface = data.selectedInterface;
 });
