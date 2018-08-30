@@ -54,6 +54,9 @@ module.exports = {
   performance: {
     hints: false
   },
+  optimization: {
+    minimize: false
+  },
   devtool: 'inline-source-map',
   plugins: [
     new webpack.DefinePlugin({

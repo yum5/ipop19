@@ -6,6 +6,12 @@ const electron = require('electron');
 const { remote, ipcRenderer } = electron
 const _ = require('lodash');
 
+import configureStore from '../shared/store/configureStore';
+import App from './components/App';
+import { Provider } from 'react-redux';
+import React from 'react';
+import { render } from 'react-dom';
+
 const orange = 'rgb(255, 159, 64)';
 const blue = 'rgb(64, 159, 255)';
 
@@ -154,3 +160,11 @@ ipcRenderer.on('receive_settings', function(event, data) {
   app.interfaces = data.interfaces;
   app.selectedInterface = data.selectedInterface;
 });
+
+const _store = configureStore({}, 'renderer');
+render(
+  <Provider store={_store}>
+    <App />
+  </Provider>,
+  document.getElementById('root')
+);

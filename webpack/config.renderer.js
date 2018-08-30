@@ -15,6 +15,9 @@ module.exports = {
     filename: 'renderer.js'
   },
   target: 'electron-renderer',
+  resolve: {
+    extensions: ['.js', '.jsx']
+  },
   module: {
     rules: [
       {
@@ -37,6 +40,11 @@ module.exports = {
         exclude: /node_modules/
       },
       {
+        test: /\.jsx?$/,
+        loader: 'babel-loader',
+        exclude: /node_modules/,
+      },
+      {
         test: /\.(png|jpg|gif|svg)$/,
         loader: 'file-loader',
         options: {}
@@ -50,6 +58,9 @@ module.exports = {
   },
   performance: {
     hints: false
+  },
+  optimization: {
+    minimize: false
   },
   devtool: 'inline-source-map',
   plugins: [
