@@ -129,22 +129,22 @@ const app = new Vue({
     selectedInterface: ''
   },
   watch: {
-    duration: _.throttle(function() {
+    duration: _.debounce(function() {
       config.options.plugins.streaming.duration = this.duration;
       myBar.update();
-    }, 1000),
-    interval: _.throttle(function() {
+    }, 100),
+    interval: _.debounce(function() {
       ipcRenderer.send('settings_changed', {
         interval: this.interval,
         selectedInterface: this.selectedInterface
       });
-    }, 1000),
-    selectedInterface: _.throttle(function() {
+    }, 100),
+    selectedInterface: _.debounce(function() {
       ipcRenderer.send('settings_changed', {
         interval: this.interval,
         selectedInterface: this.selectedInterface
       });
-    }, 1000)
+    }, 100)
   }
 });
 

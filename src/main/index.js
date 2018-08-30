@@ -4,6 +4,7 @@
 const electron = require('electron');
 const cmd = require('node-cmd');
 const os = require('os');
+const NanoTimer = require('nanotimer');
 const { app, BrowserWindow, ipcMain } = electron;
 
 const PLATFORM = {
@@ -233,7 +234,11 @@ ipcMain.on('request_settings', function(event) {
   );
 });
 
+const timer = new NanoTimer();
+
 const main = () => {
+  timer.setTimeout(main, '', `${settings.interval}m`);
+
   if (settings.selectedInterface !== '') {
     const { command, parser } = getPacketCount(settings.selectedInterface)
     cmd.get(command,
@@ -250,8 +255,6 @@ const main = () => {
       }
     );
   }
-
-  setTimeout(main, settings.interval);
 }
 
 main()
