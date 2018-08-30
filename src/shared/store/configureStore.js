@@ -1,5 +1,7 @@
 // https://github.com/hardchor/timesheets/blob/4991fd472dbb12b0c6e6806c6a01ea3385ab5979/app/shared/store/configureStore.js
 import { createStore, applyMiddleware, compose } from 'redux';
+import thunk from 'redux-thunk';
+import logger from 'redux-logger';
 import getRootReducer from '../reducers';
 import {
   forwardToMain,
@@ -15,6 +17,8 @@ import {
  */
 export default function configureStore(initialState, scope = 'main') {
   let middleware = [
+    thunk,
+    logger
   ];
 
   if (scope === 'renderer') {

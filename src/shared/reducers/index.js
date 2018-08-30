@@ -1,9 +1,16 @@
 import { combineReducers } from 'redux';
 
+import settings from './settings';
+
+
 export default function getRootReducer(scope = 'main') {
   if (scope === 'main') {
-    return combineReducers({});
+    return combineReducers({
+      settings
+    });
   } else if (scope === 'renderer') {
-    return combineReducers({});
+    return combineReducers({
+      settings
+    });
   }
 }

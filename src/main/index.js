@@ -6,6 +6,8 @@ const cmd = require('node-cmd');
 const os = require('os');
 const NanoTimer = require('nanotimer');
 const { app, BrowserWindow, ipcMain } = electron;
+import configureStore from '../shared/store/configureStore';
+import { appendTime, packetCount } from '../shared/actions/settings';
 
 const PLATFORM = {
   centos6: 'centos6',
@@ -258,3 +260,9 @@ const main = () => {
 }
 
 main()
+
+const store = configureStore({}, 'main');
+
+setInterval(() => {
+  store.dispatch(packetCount('en0'));
+}, 1000)
