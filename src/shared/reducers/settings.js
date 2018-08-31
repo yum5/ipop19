@@ -1,11 +1,9 @@
 import {
   APPEND_TIME,
-  RECEIVE_PACKET_COUNT
 } from '../actions/settings';
 
 const initialState = {
   times: [],
-  counts: []
 }
 export default function settings(state = initialState, action) {
   switch (action.type) {
@@ -15,15 +13,6 @@ export default function settings(state = initialState, action) {
       return {
         ...state,
         times: state.times.concat(payload)
-      };
-    }
-
-    case RECEIVE_PACKET_COUNT: {
-      const { payload } = action;
-
-      return {
-        ...state,
-        counts: state.counts.concat(payload)
       };
     }
 

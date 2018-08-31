@@ -8,6 +8,7 @@ const _ = require('lodash');
 
 import configureStore from '../shared/store/configureStore';
 import App from './components/App';
+import Graph from './components/Graph';
 import { Provider } from 'react-redux';
 import React from 'react';
 import { render } from 'react-dom';
@@ -164,7 +165,10 @@ ipcRenderer.on('receive_settings', function(event, data) {
 const _store = configureStore({}, 'renderer');
 render(
   <Provider store={_store}>
-    <App />
+    <div>
+      <App />
+      <Graph />
+    </div>
   </Provider>,
   document.getElementById('root')
 );

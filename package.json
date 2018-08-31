@@ -24,6 +24,7 @@
     "nanotimer": "^0.3.15",
     "node-cmd": "^3.0.0",
     "react": "^16.4.2",
+    "react-chartjs-2": "^2.7.4",
     "react-dom": "^16.4.2",
     "react-redux": "^5.0.7",
     "redux-logger": "^3.0.6",

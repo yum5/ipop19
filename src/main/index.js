@@ -7,7 +7,8 @@ const os = require('os');
 const NanoTimer = require('nanotimer');
 const { app, BrowserWindow, ipcMain } = electron;
 import configureStore from '../shared/store/configureStore';
-import { appendTime, packetCount } from '../shared/actions/settings';
+import { appendTime } from '../shared/actions/settings';
+import { packetCount } from '../shared/actions/packets';
 
 const PLATFORM = {
   centos6: 'centos6',
@@ -254,6 +255,7 @@ const main = () => {
             tx: result.tx
           });
         }
+        store.dispatch(packetCount('en0'));
       }
     );
   }
@@ -263,6 +265,6 @@ main()
 
 const store = configureStore({}, 'main');
 
-setInterval(() => {
-  store.dispatch(packetCount('en0'));
-}, 1000)
+// setInterval(() => {
+//   store.dispatch(packetCount('en0'));
+// }, 1000)
