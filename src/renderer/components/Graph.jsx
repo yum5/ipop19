@@ -113,7 +113,6 @@ export class Graph extends Component {
     const { data, options } = this;
     return (
       <div>
-        <p>Hello</p>
         <Line data={data} options={options} width={800} height={300}/>
       </div>
     )

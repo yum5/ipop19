@@ -9,6 +9,7 @@ const { app, BrowserWindow, ipcMain } = electron;
 import configureStore from '../shared/store/configureStore';
 import { appendTime } from '../shared/actions/settings';
 import { packetCount } from '../shared/actions/packets';
+import { getDevices } from '../shared/actions/devices';
 
 const PLATFORM = {
   centos6: 'centos6',
@@ -178,33 +179,33 @@ const getPacketCount = (nic) => {
   }
 }
 
-const getInterfaces = () => {
-  const platform = getPlatform()
-
-  switch (platform) {
-    case PLATFORM.centos6:
-    {
-      return {
-        command: `netstat -i | tail -n +3`,
-        parser: stdout => stdout.split('\n').map(v => v.split(/\s+/)[0]).filter(v => v)
-      }
-    }
-    case PLATFORM.centos7:
-    {
-      return {
-        command: `ip link show | grep -oE '^\[0-9]\+:\[ ]\+(.\+):'`,
-        parser: stdout => stdout.split('\n').map(v => v.split(/\s+/)[1]).filter(v => v).map(v => v.replace(/:/, ''))
-      }
-    }
-    case PLATFORM.darwin:
-    {
-      return {
-        command: `networksetup -listallhardwareports | grep Device`,
-        parser: stdout => stdout.split('\n').map(v => v.split(/\s+/)[1]).filter(v => v)
-      }
-    }
-  }
-}
+// const getInterfaces = () => {
+//   const platform = getPlatform()
+//
+//   switch (platform) {
+//     case PLATFORM.centos6:
+//     {
+//       return {
+//         command: `netstat -i | tail -n +3`,
+//         parser: stdout => stdout.split('\n').map(v => v.split(/\s+/)[0]).filter(v => v)
+//       }
+//     }
+//     case PLATFORM.centos7:
+//     {
+//       return {
+//         command: `ip link show | grep -oE '^\[0-9]\+:\[ ]\+(.\+):'`,
+//         parser: stdout => stdout.split('\n').map(v => v.split(/\s+/)[1]).filter(v => v).map(v => v.replace(/:/, ''))
+//       }
+//     }
+//     case PLATFORM.darwin:
+//     {
+//       return {
+//         command: `networksetup -listallhardwareports | grep Device`,
+//         parser: stdout => stdout.split('\n').map(v => v.split(/\s+/)[1]).filter(v => v)
+//       }
+//     }
+//   }
+// }
 
 
 const settings = {
@@ -219,23 +220,30 @@ ipcMain.on('settings_changed', function(event, newSetting) {
 });
 
 ipcMain.on('request_settings', function(event) {
-  const { command, parser } = getInterfaces()
-  cmd.get(command,
-    function(err, data, stderr) {
-      const list = parser(data);
-      settings.interfaces = list;
-      settings.selectedInterface = list[0];
-
-      if (mainWindow) {
-        mainWindow.webContents.send('receive_settings', {
-          interval: settings.interval,
-          interfaces: settings.interfaces,
-          selectedInterface: settings.selectedInterface
-        });
-      }
-    }
-  );
+  // const { command, parser } = getInterfaces()
+  // cmd.get(command,
+  //   function(err, data, stderr) {
+  //     const list = parser(data);
+  //     settings.interfaces = list;
+  //     settings.selectedInterface = list[0];
+  //
+  //     if (mainWindow) {
+  //       mainWindow.webContents.send('receive_settings', {
+  //         interval: settings.interval,
+  //         interfaces: settings.interfaces,
+  //         selectedInterface: settings.selectedInterface
+  //       });
+  //     }
+  //   }
+  // );
 });
+
+const store = configureStore({}, 'main');
+setTimeout(() => {
+  // wait a moment until React gets ready
+  store.dispatch(getDevices());
+}, 3000)
+
 
 const timer = new NanoTimer();
 
@@ -255,15 +263,14 @@ const main = () => {
             tx: result.tx
           });
         }
-        store.dispatch(packetCount('en0'));
+
       }
     );
   }
+  // store.dispatch(packetCount('en0'));
 }
 
 main()
-
-const store = configureStore({}, 'main');
 
 // setInterval(() => {
 //   store.dispatch(packetCount('en0'));

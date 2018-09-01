@@ -8,7 +8,6 @@ const _ = require('lodash');
 
 import configureStore from '../shared/store/configureStore';
 import App from './components/App';
-import Graph from './components/Graph';
 import { Provider } from 'react-redux';
 import React from 'react';
 import { render } from 'react-dom';
@@ -167,7 +166,6 @@ render(
   <Provider store={_store}>
     <div>
       <App />
-      <Graph />
     </div>
   </Provider>,
   document.getElementById('root')
