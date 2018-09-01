@@ -7,11 +7,13 @@ import moment from 'moment';
 import { takeRight } from 'lodash';
 
 const initialState = {
-  rawData: [],
-  graphData: {
-    rx: [],
-    tx: []
-  }
+  // **nic_name**: [
+  //   rawData: [],
+  //   graphData: {
+  //     rx: [],
+  //     tx: []
+  //   }
+  // ]
 }
 export default function packets(state = initialState, action) {
   switch (action.type) {
@@ -21,15 +23,16 @@ export default function packets(state = initialState, action) {
 
     case RECEIVE_PACKET_COUNT: {
       const { payload } = action;
-      const lastEntry = state.rawData.slice(-1)[0];
-      let nextEntry;
+      const { device } = payload;
 
-      if (lastEntry) {
+      if (state[device] && state[device].rawData.slice(-1)[0]) {
+        const lastEntry = state[device].rawData.slice(-1)[0];
+
         const timeInterval = moment(payload.timestamp) - moment(lastEntry.timestamp);
         const rxDelta = payload.rx - lastEntry.rx;
         const txDelta = payload.tx - lastEntry.tx;
 
-        nextEntry = {
+        const nextEntry = {
           timestamp: payload.timestamp,
           rx: payload.rx,
           tx: payload.tx,
@@ -39,8 +42,26 @@ export default function packets(state = initialState, action) {
           rxDeltaPerSec: rxDelta / timeInterval,
           txDeltaPerSec: txDelta / timeInterval
         };
+
+        return {
+          ...state,
+          [device]: {
+            rawData: state[device].rawData.concat(nextEntry),
+            graphData: {
+              ...state[device].graphData,
+              rx: takeRight(state[device].graphData.rx.concat({
+                x: nextEntry.timestamp,
+                y: nextEntry.rxDeltaPerSec
+              }), 30),
+              tx: takeRight(state[device].graphData.tx.concat({
+                x: nextEntry.timestamp,
+                y: nextEntry.txDeltaPerSec
+              }), 30),
+            }
+          }
+        };
       } else {
-        nextEntry = {
+        const nextEntry = {
           timestamp: payload.timestamp,
           rx: payload.rx,
           tx: payload.tx,
@@ -50,23 +71,24 @@ export default function packets(state = initialState, action) {
           rxDeltaPerSec: 0,
           txDeltaPerSec: 0
         };
-      }
 
-      return {
-        ...state,
-        rawData: state.rawData.concat(nextEntry),
-        graphData: {
-          ...state.graphData,
-          rx: takeRight(state.graphData.rx.concat({
-            x: nextEntry.timestamp,
-            y: nextEntry.rxDeltaPerSec
-          }), 30),
-          tx: takeRight(state.graphData.tx.concat({
-            x: nextEntry.timestamp,
-            y: nextEntry.txDeltaPerSec
-          }), 30),
+        return {
+          ...state,
+          [device]: {
+            rawData: [nextEntry],
+            graphData: {
+              rx: [{
+                x: nextEntry.timestamp,
+                y: nextEntry.rxDeltaPerSec
+              }],
+              tx: [{
+                x: nextEntry.timestamp,
+                y: nextEntry.txDeltaPerSec
+              }],
+            }
+          }
         }
-      };
+      }
     }
 
     default:

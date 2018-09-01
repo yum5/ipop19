@@ -27,6 +27,7 @@ export const packetCount = nic =>
         const result = parser(data);
 
         dispatch(receivePacketCount({
+          device: nic,
           timestamp: new Date(),
           rx: result.rx,
           tx: result.tx

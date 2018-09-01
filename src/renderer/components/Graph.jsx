@@ -121,7 +121,7 @@ export class Graph extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    graphData: state.packets.graphData
+    graphData: state.packets.en0 && state.packets.en0.graphData
   };
 }
 
