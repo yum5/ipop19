@@ -10,6 +10,9 @@ import {
   replayActionMain,
   replayActionRenderer,
 } from 'electron-redux';
+
+const isDevelopment = process.env.NODE_ENV !== 'production'
+
 /**
  * @param  {Object} initialState
  * @param  {String} [scope='main|renderer']
@@ -17,9 +20,15 @@ import {
  */
 export default function configureStore(initialState, scope = 'main') {
   let middleware = [
-    thunk,
-    logger
+    thunk
   ];
+
+  if (isDevelopment) {
+    middleware = [
+      logger,
+      ...middleware
+    ]
+  }
 
   if (scope === 'renderer') {
     middleware = [

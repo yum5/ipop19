@@ -1,18 +1,23 @@
 import {
-  APPEND_TIME,
+  ADD_GRAPH_ENTRY,
+  REMOVE_GRAPH_ENTRY
 } from '../actions/settings';
 
 const initialState = {
-  times: [],
+  // times: [],
+  graphEntries: []
 }
 export default function settings(state = initialState, action) {
   switch (action.type) {
-    case APPEND_TIME: {
+    case ADD_GRAPH_ENTRY: {
       const { payload } = action;
 
       return {
         ...state,
-        times: state.times.concat(payload)
+        graphEntries: [
+          ...state.graphEntries,
+          payload
+        ]
       };
     }
 

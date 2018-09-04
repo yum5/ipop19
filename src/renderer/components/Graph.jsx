@@ -119,9 +119,10 @@ export class Graph extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, props) => {
+  const device = props.device;
   return {
-    graphData: state.packets.en0 && state.packets.en0.graphData
+    graphData: state.packets[device] && state.packets[device].graphData
   };
 }
 

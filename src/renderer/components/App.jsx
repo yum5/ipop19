@@ -10,6 +10,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 
 import Graph from './Graph';
 import NewGraphDialog from './NewGraphDialog';
+import { addGraphEntry } from '../../shared/actions/settings';
 
 const styles = {
   root: {
@@ -47,15 +48,12 @@ export class App extends Component {
   };
 
   handleItemClick(value) {
-    console.log(value);
+    this.props.dispatch(addGraphEntry(value));
     this.setState({ open: false });
   };
 
   render() {
-    const list = this.props.nic.map(ifs =>
-      <li key={ifs}>{ifs}</li>
-    )
-    const { classes, nic } = this.props;
+    const { classes, nic, graphEntries } = this.props;
     return (
       <div>
         <AppBar position="static">
@@ -64,7 +62,7 @@ export class App extends Component {
             <MenuIcon />
             </IconButton>
             <Typography variant="title" color="inherit" className={classes.flex}>
-              News
+              Packet Count
             </Typography>
             <Button color="inherit">Settings</Button>
           </Toolbar>
@@ -76,11 +74,13 @@ export class App extends Component {
           onItemClick={this.handleItemClick}
           items={nic}
         />
-        <p>Hello</p>
-          <ul>
-            {list}
-          </ul>
-        <Graph />
+        <h1>Graph</h1>
+        {graphEntries.map(entry =>
+          <div key={entry}>
+            <h3>Device: {entry}</h3>
+            <Graph device={entry}/>
+          </div>
+        )}
       </div>
     )
   }
@@ -89,7 +89,8 @@ export class App extends Component {
 const mapStateToProps = (state) => {
   return {
     nic: state.devices.nic,
-    graphData: state.packets.graphData
+    graphData: state.packets.graphData,
+    graphEntries: state.settings.graphEntries
   };
 }
 

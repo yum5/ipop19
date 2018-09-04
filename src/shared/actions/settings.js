@@ -1,8 +1,8 @@
 import cmd from 'node-cmd';
-import { getPacketCount, getInterfaces } from '../utils';
 
 export const UPDATE_SETTINGS = 'UPDATE_SETTINGS';
-export const APPEND_TIME = 'APPEND_TIME';
+export const ADD_GRAPH_ENTRY = 'ADD_GRAPH_ENTRY';
+export const REMOVE_GRAPH_ENTRY = 'REMOVE_GRAPH_ENTRY';
 
 export const updateSettings = (newSetting) => {
   return {
@@ -11,9 +11,9 @@ export const updateSettings = (newSetting) => {
   }
 }
 
-export const appendTime = (time) => {
+export const addGraphEntry = (entry) => {
   return {
-    type: APPEND_TIME,
-    payload: time
+    type: ADD_GRAPH_ENTRY,
+    payload: entry
   }
 }

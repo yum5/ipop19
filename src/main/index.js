@@ -79,7 +79,10 @@ const timer = new NanoTimer();
 
 const main = () => {
   timer.setTimeout(main, '', `${settings.interval}m`);
-  store.dispatch(packetCount('en0'));
+
+  store.getState().settings.graphEntries.forEach(entry => {
+    store.dispatch(packetCount(entry));
+  })
 }
 
 main()
