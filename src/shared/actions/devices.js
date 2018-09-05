@@ -1,5 +1,5 @@
 import cmd from 'node-cmd';
-import { getInterfaces } from '../utils';
+import { getInterfacesCmd } from '../utils';
 
 export const REQUEST_DEVICES = 'REQUEST_DEVICES';
 export const RECEIVE_DEVICES = 'RECEIVE_DEVICES';
@@ -20,7 +20,7 @@ export const receiveDevices = (payload) => {
 export const getDevices = () =>
   dispatch => {
     dispatch(requestDevices());
-    const { command, parser } = getInterfaces();
+    const { command, parser } = getInterfacesCmd();
 
     cmd.get(command,
       function(err, data, stderr) {

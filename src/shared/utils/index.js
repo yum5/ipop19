@@ -14,16 +14,16 @@ const getPlatform = () => {
     } else if (os.release().includes('el7')) {
       return PLATFORM.centos7
     } else {
-      throw 'Unsupported Platform'
+      throw new Error('Unsupported Platform')
     }
   } else if (process.platform === 'darwin') {
     return PLATFORM.darwin
   } else {
-    throw 'Unsupported Platform'
+    throw new Error('Unsupported Platform')
   }
 }
 
-const getPacketCount = (nic) => {
+const getPacketCountCmd = (nic) => {
   const platform = getPlatform()
 
   switch (platform) {
@@ -79,7 +79,7 @@ const getPacketCount = (nic) => {
   }
 }
 
-const getInterfaces = () => {
+const getInterfacesCmd = () => {
   const platform = getPlatform()
 
   switch (platform) {
@@ -133,10 +133,42 @@ const executeCommand = (command) => {
   ])
 }
 
+const _getHostName = async (_executeCommand, ip) => {
+   const result = await _executeCommand(`snmpwalk -v 2c -c public ${ip} 1.3.6.1.2.1.1.5.0`);
+
+   try {
+     return result.match(/^SNMPv2-MIB::sysName\.0 = STRING: (.+)\n$/)[1];
+   } catch (e) {
+     throw new Error('snmpwalk returns unexpected result');
+   }
+}
+
+const getHostName = (ip) => {
+  return _getHostName(executeCommand, ip);
+}
+
+const _getInterfaces = async (_executeCommand, ip) => {
+   const result = await _executeCommand(`snmpwalk -v 2c -c public ${ip} 1.3.6.1.2.1.2.2.1.1`);
+
+   try {
+     return result.split('\n').filter(v => v).map(v => v.match(/^IF-MIB::ifIndex\.(\d+) = INTEGER: (\d+)$/)[2]).map(v => parseInt(v));
+   } catch (e) {
+     throw new Error('snmpwalk returns unexpected result');
+   }
+}
+
+const getInterfaces = (ip) => {
+  return _getInterfaces(executeCommand, ip);
+}
+
 
 export {
   getPlatform,
-  getPacketCount,
-  getInterfaces,
-  executeCommand
+  getPacketCountCmd,
+  getInterfacesCmd,
+  executeCommand,
+  _getHostName,
+  getHostName,
+  _getInterfaces,
+  getInterfaces
 }

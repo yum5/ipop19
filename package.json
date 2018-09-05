@@ -68,6 +68,7 @@
     "node-shell-parser": "^0.2.1",
     "rxjs": "^6.0.0",
     "sass-loader": "^7.0.1",
+    "sinon": "^6.2.0",
     "style-loader": "^0.21.0",
     "vue": "^1.0.28-csp",
     "webpack": "^4.6.0",
