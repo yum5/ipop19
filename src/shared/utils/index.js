@@ -107,8 +107,36 @@ const getInterfaces = () => {
   }
 }
 
+
+const executeCommand = (command) => {
+  const promise = new Promise((resolve, reject) => {
+    cmd.get(command,
+      function(err, data, stderr) {
+        if (err) {
+          reject(new Error(err));
+        } else {
+          resolve(data);
+        }
+      }
+    );
+  })
+  const timeout = new Promise((resolve, reject) => {
+    const id = setTimeout(() => {
+      clearTimeout(id);
+      reject(new Error('promise timeout'))
+    }, 3000)
+  })
+
+  return Promise.race([
+    promise,
+    timeout
+  ])
+}
+
+
 export {
   getPlatform,
   getPacketCount,
-  getInterfaces
+  getInterfaces,
+  executeCommand
 }
