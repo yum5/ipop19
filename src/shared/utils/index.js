@@ -175,6 +175,20 @@ const getInOctets = (ip, ifIndex) => {
   return _getInOctets(executeCommand, ip, ifIndex);
 }
 
+const _getOutOctets = async (_executeCommand, ip, ifIndex) => {
+   const result = await _executeCommand(`snmpwalk -v 2c -c public ${ip} 1.3.6.1.2.1.31.1.1.1.10.${ifIndex}`);
+
+   try {
+     return parseInt(result.match(/^IF-MIB::ifHCOutOctets\.(\d+) = Counter64: (\d+)\n$/)[2]);
+   } catch (e) {
+     throw new Error('snmpwalk returns unexpected result');
+   }
+}
+
+const getOutOctets = (ip, ifIndex) => {
+  return _getOutOctets(executeCommand, ip, ifIndex);
+}
+
 const _getIfDesc = async (_executeCommand, ip, ifIndex) => {
    const result = await _executeCommand(`snmpwalk -v 2c -c public ${ip} 1.3.6.1.2.1.2.2.1.2.${ifIndex}`);
 
@@ -215,6 +229,8 @@ export {
   getInterfaceIndex,
   _getInOctets,
   getInOctets,
+  _getOutOctets,
+  getOutOctets,
   _getIfDesc,
   getIfDesc,
   _getAdminStatus,

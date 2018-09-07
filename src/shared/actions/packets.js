@@ -1,6 +1,6 @@
 import "babel-polyfill";
 import cmd from 'node-cmd';
-import { getPacketCountCmd, getInOctets } from '../utils';
+import { getPacketCountCmd, getInOctets, getOutOctets } from '../utils';
 
 export const REQUEST_PACKET_COUNT = 'REQUEST_PACKET_COUNT';
 export const RECEIVE_PACKET_COUNT = 'RECEIVE_PACKET_COUNT';
@@ -39,12 +39,13 @@ export const packetCount = device =>
     (async () => {
       const { ip, index, id } = device;
       const rx = await getInOctets(ip, index);
+      const tx = await getOutOctets(ip, index);
 
       dispatch(receivePacketCount({
         device: id,
         timestamp: new Date(),
         rx,
-        tx: 0
+        tx
       }));
     })()
 
