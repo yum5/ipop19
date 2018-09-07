@@ -53,7 +53,7 @@ export class App extends Component {
   };
 
   render() {
-    const { classes, nic, graphEntries } = this.props;
+    const { classes, interfaces, graphEntries } = this.props;
     return (
       <div>
         <AppBar position="static">
@@ -72,13 +72,13 @@ export class App extends Component {
           open={this.state.open}
           onClose={this.handleClose}
           onItemClick={this.handleItemClick}
-          items={nic}
+          items={interfaces}
         />
         <h1>Graph</h1>
         {graphEntries.map(entry =>
-          <div key={entry}>
-            <h3>Device: {entry}</h3>
-            <Graph device={entry}/>
+          <div key={entry.id}>
+            <h3>Device: {entry.id}</h3>
+            <Graph device={entry.id}/>
           </div>
         )}
       </div>
@@ -89,6 +89,7 @@ export class App extends Component {
 const mapStateToProps = (state) => {
   return {
     nic: state.devices.nic,
+    interfaces: state.devices.interfaces,
     graphData: state.packets.graphData,
     graphEntries: state.settings.graphEntries
   };

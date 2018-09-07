@@ -41,8 +41,8 @@ class NewGraphDialog extends React.Component {
         <div>
           <List>
             {items.map(item => (
-              <ListItem button onClick={() => this.handleItemClick(item)} key={item}>
-                {item}
+              <ListItem button onClick={() => this.handleItemClick(item)} key={item.id}>
+                {`${item.id}[${item.status}]: ${item.desc}`}
               </ListItem>
             ))}
           </List>

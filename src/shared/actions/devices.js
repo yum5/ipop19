@@ -1,5 +1,12 @@
+import "babel-polyfill";
 import cmd from 'node-cmd';
-import { getInterfacesCmd } from '../utils';
+const { map } = require('p-iteration');
+import {
+  getInterfacesCmd,
+  getInterfaceIndex,
+  getIfDesc,
+  getAdminStatus
+} from '../utils';
 
 export const REQUEST_DEVICES = 'REQUEST_DEVICES';
 export const RECEIVE_DEVICES = 'RECEIVE_DEVICES';
@@ -17,16 +24,32 @@ export const receiveDevices = (payload) => {
   }
 }
 
-export const getDevices = () =>
+export const getDevices = (ip) =>
   dispatch => {
     dispatch(requestDevices());
-    const { command, parser } = getInterfacesCmd();
+    // const { command, parser } = getInterfacesCmd();
+    //
+    // cmd.get(command,
+    //   function(err, data, stderr) {
+    //     const list = parser(data);
+    //
+    //     dispatch(receiveDevices(list));
+    //   }
+    // );
+    (async () => {
+      const interfaceIndex = await getInterfaceIndex(ip);
+      const devices = await map(interfaceIndex, async index => {
+        const desc = await getIfDesc(ip, index);
+        const status = await getAdminStatus(ip, index);
 
-    cmd.get(command,
-      function(err, data, stderr) {
-        const list = parser(data);
-
-        dispatch(receiveDevices(list));
-      }
-    );
+        return {
+          id: `${ip}::${index}`,
+          index,
+          ip,
+          desc,
+          status
+        }
+      })
+      dispatch(receiveDevices(devices));
+    })()
   }

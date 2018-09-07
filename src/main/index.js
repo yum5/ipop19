@@ -71,7 +71,7 @@ const settings = {
 const store = configureStore({}, 'main');
 setTimeout(() => {
   // wait a moment until React gets ready
-  store.dispatch(getDevices());
+  store.dispatch(getDevices('192.168.1.1'));
 }, 3000)
 
 

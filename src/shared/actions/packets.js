@@ -1,5 +1,6 @@
+import "babel-polyfill";
 import cmd from 'node-cmd';
-import { getPacketCountCmd } from '../utils';
+import { getPacketCountCmd, getInOctets } from '../utils';
 
 export const REQUEST_PACKET_COUNT = 'REQUEST_PACKET_COUNT';
 export const RECEIVE_PACKET_COUNT = 'RECEIVE_PACKET_COUNT';
@@ -17,21 +18,34 @@ export const receivePacketCount = (payload) => {
   }
 }
 
-export const packetCount = nic =>
+export const packetCount = device =>
   dispatch => {
     dispatch(requestPacketCount());
-    const { command, parser } = getPacketCountCmd(nic);
+    // const { command, parser } = getPacketCountCmd(nic);
+    //
+    // cmd.get(command,
+    //   function(err, data, stderr) {
+    //     const result = parser(data);
+    //
+    //     dispatch(receivePacketCount({
+    //       device: nic,
+    //       timestamp: new Date(),
+    //       rx: result.rx,
+    //       tx: result.tx
+    //     }));
+    //   }
+    // );
 
-    cmd.get(command,
-      function(err, data, stderr) {
-        const result = parser(data);
+    (async () => {
+      const { ip, index, id } = device;
+      const rx = await getInOctets(ip, index);
 
-        dispatch(receivePacketCount({
-          device: nic,
-          timestamp: new Date(),
-          rx: result.rx,
-          tx: result.tx
-        }));
-      }
-    );
+      dispatch(receivePacketCount({
+        device: id,
+        timestamp: new Date(),
+        rx,
+        tx: 0
+      }));
+    })()
+
   }

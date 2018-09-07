@@ -77,14 +77,14 @@ const expected = `IF-MIB::ifHCInOctets.1 = Counter64: 2881550
 `;
       const _executeCommand = sinon.stub().returns(Promise.resolve(expected));
 
-      const result = await _getInOctets(_executeCommand, '192.168.100.14');
+      const result = await _getInOctets(_executeCommand, '192.168.100.14', 10);
       expect(result).toEqual(2881550);
       done();
     })
 
     it('should throw an error when command returns unexpected result', async () => {
       const _executeCommand = sinon.stub().returns(Promise.resolve('*******\n****\n****'));
-      await expect(_getInOctets(_executeCommand, '192.168.100.14'))
+      await expect(_getInOctets(_executeCommand, '192.168.100.14', 10))
         .rejects.toThrowError('snmpwalk returns unexpected result');
     })
   })
@@ -95,14 +95,14 @@ const expected = `IF-MIB::ifDescr.10 = STRING: Unit: 1 Slot: 0 Port: 10 10G - Le
 `;
       const _executeCommand = sinon.stub().returns(Promise.resolve(expected));
 
-      const result = await _getIfDesc(_executeCommand, '192.168.100.14');
+      const result = await _getIfDesc(_executeCommand, '192.168.100.14', 10);
       expect(result).toEqual('Unit: 1 Slot: 0 Port: 10 10G - Level');
       done();
     })
 
     it('should throw an error when command returns unexpected result', async () => {
       const _executeCommand = sinon.stub().returns(Promise.resolve('*******\n****\n****'));
-      await expect(_getIfDesc(_executeCommand, '192.168.100.14'))
+      await expect(_getIfDesc(_executeCommand, '192.168.100.14', 10))
         .rejects.toThrowError('snmpwalk returns unexpected result');
     })
   })
@@ -113,7 +113,7 @@ const expected = `IF-MIB::ifAdminStatus.10 = INTEGER: up(1)
 `;
       const _executeCommand = sinon.stub().returns(Promise.resolve(expected));
 
-      const result = await _getAdminStatus(_executeCommand, '192.168.100.14');
+      const result = await _getAdminStatus(_executeCommand, '192.168.100.14', 10);
       expect(result).toEqual('up');
       done();
     })
@@ -123,14 +123,14 @@ const expected = `IF-MIB::ifAdminStatus.3 = INTEGER: down(2)
 `;
       const _executeCommand = sinon.stub().returns(Promise.resolve(expected));
 
-      const result = await _getAdminStatus(_executeCommand, '192.168.100.14');
+      const result = await _getAdminStatus(_executeCommand, '192.168.100.14', 10);
       expect(result).toEqual('down');
       done();
     })
 
     it('should throw an error when command returns unexpected result', async () => {
       const _executeCommand = sinon.stub().returns(Promise.resolve('*******\n****\n****'));
-      await expect(_getAdminStatus(_executeCommand, '192.168.100.14'))
+      await expect(_getAdminStatus(_executeCommand, '192.168.100.14', 10))
         .rejects.toThrowError('snmpwalk returns unexpected result');
     })
   })

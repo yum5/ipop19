@@ -5,6 +5,7 @@ import {
 
 const initialState = {
   nic: [],
+  interfaces: []
 }
 
 export default function interfaces(state = initialState, action) {
@@ -17,7 +18,8 @@ export default function interfaces(state = initialState, action) {
 
       return {
         ...state,
-        nic: [...payload]
+        nic: [...payload],
+        interfaces: payload
       };
     }
 
