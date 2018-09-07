@@ -147,7 +147,7 @@ const getHostName = (ip) => {
   return _getHostName(executeCommand, ip);
 }
 
-const _getInterfaces = async (_executeCommand, ip) => {
+const _getInterfaceIndex = async (_executeCommand, ip) => {
    const result = await _executeCommand(`snmpwalk -v 2c -c public ${ip} 1.3.6.1.2.1.2.2.1.1`);
 
    try {
@@ -157,8 +157,50 @@ const _getInterfaces = async (_executeCommand, ip) => {
    }
 }
 
-const getInterfaces = (ip) => {
-  return _getInterfaces(executeCommand, ip);
+const getInterfaceIndex = (ip) => {
+  return _getInterfaceIndex(executeCommand, ip);
+}
+
+const _getInOctets = async (_executeCommand, ip, ifIndex) => {
+   const result = await _executeCommand(`snmpwalk -v 2c -c public ${ip} 1.3.6.1.2.1.31.1.1.1.6.${ifIndex}`);
+
+   try {
+     return parseInt(result.match(/^IF-MIB::ifHCInOctets\.(\d+) = Counter64: (\d+)\n$/)[2]);
+   } catch (e) {
+     throw new Error('snmpwalk returns unexpected result');
+   }
+}
+
+const getInOctets = (ip, ifIndex) => {
+  return _getInOctets(executeCommand, ip, ifIndex);
+}
+
+const _getIfDesc = async (_executeCommand, ip, ifIndex) => {
+   const result = await _executeCommand(`snmpwalk -v 2c -c public ${ip} 1.3.6.1.2.1.2.2.1.2.${ifIndex}`);
+
+   try {
+     return result.match(/^IF-MIB::ifDescr\.(\d+) = STRING: (.+)\n$/)[2];
+   } catch (e) {
+     throw new Error('snmpwalk returns unexpected result');
+   }
+}
+
+const getIfDesc = (ip, ifIndex) => {
+  return _getIfDesc(executeCommand, ip, ifIndex);
+}
+
+const _getAdminStatus = async (_executeCommand, ip, ifIndex) => {
+   const result = await _executeCommand(`snmpwalk -v 2c -c public ${ip} 1.3.6.1.2.1.2.2.1.7.${ifIndex}`);
+
+   try {
+     return result.match(/^IF-MIB::ifAdminStatus\.(\d+) = INTEGER: (\w+)\((\d+)\)\n$/)[2];
+   } catch (e) {
+     throw new Error('snmpwalk returns unexpected result');
+   }
+}
+
+const getAdminStatus = (ip, ifIndex) => {
+  return _getAdminStatus(executeCommand, ip, ifIndex);
 }
 
 
@@ -169,6 +211,12 @@ export {
   executeCommand,
   _getHostName,
   getHostName,
-  _getInterfaces,
-  getInterfaces
+  _getInterfaceIndex,
+  getInterfaceIndex,
+  _getInOctets,
+  getInOctets,
+  _getIfDesc,
+  getIfDesc,
+  _getAdminStatus,
+  getAdminStatus
 }

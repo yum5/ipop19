@@ -169,3 +169,36 @@ IF-MIB::ifIndex.544 = INTEGER: 544
 IF-MIB::ifIndex.545 = INTEGER: 545
 IF-MIB::ifIndex.546 = INTEGER: 546
 ```
+
+### インターフェイスで受信したパケットの総バイト数
+
+
+```
+$ snmpwalk -v 2c -c public 192.168.100.14 1.3.6.1.2.1.31.1.1.1.6.6
+IF-MIB::ifHCInOctets.6 = Counter64: 0
+```
+
+```
+$ snmpwalk -v 2c -c public 192.168.1.1 1.3.6.1.2.1.31.1.1.1.6.1
+IF-MIB::ifHCInOctets.1 = Counter64: 2881550
+```
+
+
+### インターフェイス名
+
+```
+$ snmpwalk -v 2c -c public 192.168.100.14 1.3.6.1.2.1.2.2.1.2.10
+IF-MIB::ifDescr.10 = STRING: Unit: 1 Slot: 0 Port: 10 10G - Level
+```
+
+### インターフェイスの論理的な状態
+
+```
+$ snmpwalk -v 2c -c public 192.168.100.14 1.3.6.1.2.1.2.2.1.7.10
+IF-MIB::ifAdminStatus.10 = INTEGER: up(1)
+```
+
+```
+$ snmpwalk -v 2c -c public 192.168.1.1 1.3.6.1.2.1.2.2.1.7.3
+IF-MIB::ifAdminStatus.3 = INTEGER: down(2)
+```
