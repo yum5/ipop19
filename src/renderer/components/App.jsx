@@ -10,6 +10,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 
 import Graph from './Graph';
 import NewGraphDialog from './NewGraphDialog';
+// import SettingsDialog from './SettingsDialog';
 import { addGraphEntry } from '../../shared/actions/settings';
 
 const styles = {

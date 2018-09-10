@@ -123,8 +123,8 @@ const executeCommand = (command) => {
   const timeout = new Promise((resolve, reject) => {
     const id = setTimeout(() => {
       clearTimeout(id);
-      reject(new Error('promise timeout'))
-    }, 3000)
+      reject(new Error(`promise timeout for: ${command}`))
+    }, 30000)
   })
 
   return Promise.race([
