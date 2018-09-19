@@ -63,7 +63,7 @@ app.on('activate', () => {
 })
 
 const settings = {
-  interval: 1000,
+  interval: 20000,
   interfaces: [],
   selectedInterface: '',
 }
@@ -71,7 +71,8 @@ const settings = {
 const store = configureStore({}, 'main');
 setTimeout(() => {
   // wait a moment until React gets ready
-  store.dispatch(getDevices('192.168.100.2'));
+  // store.dispatch(getDevices(['192.168.100.2', '192.168.100.3', '192.168.100.7']));
+  store.dispatch(getDevices(['192.168.100.2']));
 }, 3000)
 
 

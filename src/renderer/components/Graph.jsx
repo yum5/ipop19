@@ -62,9 +62,9 @@ export class Graph extends Component {
       },
       plugins: {
         streaming: {
-          duration: 20000,
+          duration: 90000,
           refresh: 1000,
-          frameRate: 1,
+          frameRate: 20,
           delay: 1000,
           onRefresh: this.onRefresh.bind(this)
         }
