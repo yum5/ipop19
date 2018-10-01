@@ -10,27 +10,15 @@
   <style>
     body {
       font-family: Verdana, sans-serif;
-      padding: 12px;
+      padding: 0px;
+      margin: 0px;
       background: #eee;
     }
   </style>
 
 </head>
 <body>
-  <canvas id="canvas" style="width: 800px; height: 600px"></canvas>
-  <div id="vue-root">
-    <label>Sampling Interval / ms</label>
-    <input type="number" v-model="interval" placeholder="interval">
-    <label>Duration / ms</label>
-    <input type="number" v-model="duration" placeholder="duration">
-    <!-- <label>NIC Name</label>
-    <input type="text" v-model="nic" placeholder="nic"> -->
-    <label>Interface</label>
-    <select v-model="selectedInterface">
-      <option disabled value="">Please select one</option>
-      <option v-for="if in interfaces" v-bind:value="if">{{ if }}</option>
-    </select>
-  </div>
+  <div id="root"></div>
   <script src="./renderer.js" charset="utf-8"></script>
 </body>
 </html>
