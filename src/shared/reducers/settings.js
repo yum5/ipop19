@@ -1,11 +1,13 @@
 import {
   ADD_GRAPH_ENTRY,
-  REMOVE_GRAPH_ENTRY
+  REMOVE_GRAPH_ENTRY,
+  UPDATE_SNMP_HOST
 } from '../actions/settings';
 
 const initialState = {
   // times: [],
-  graphEntries: []
+  graphEntries: [],
+  snmpHosts: []
 }
 export default function settings(state = initialState, action) {
   switch (action.type) {
@@ -18,6 +20,15 @@ export default function settings(state = initialState, action) {
           ...state.graphEntries,
           payload
         ]
+      };
+    }
+
+    case UPDATE_SNMP_HOST: {
+      const { payload } = action;
+
+      return {
+        ...state,
+        snmpHosts: payload
       };
     }
 

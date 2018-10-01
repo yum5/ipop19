@@ -10,7 +10,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 
 import Graph from './Graph';
 import NewGraphDialog from './NewGraphDialog';
-// import SettingsDialog from './SettingsDialog';
+import SettingsDialog from './SettingsDialog';
 import { addGraphEntry } from '../../shared/actions/settings';
 
 const styles = {
@@ -34,23 +34,56 @@ export class App extends Component {
     this.handleClose = this.handleClose.bind(this)
     this.handleItemClick = this.handleItemClick.bind(this)
     this.state = {
-      open: false,
+      dialog: {
+        newGraph: {
+          open: false,
+        },
+        settings: {
+          open: false
+        }
+      }
     };
   }
 
-  handleClickOpen() {
-    this.setState({
-      open: true,
-    });
+  handleClickOpen(dialog) {
+    return () => {
+      this.setState({
+        dialog: {
+          ...this.state.dialog,
+          [dialog]: {
+            ...this.state.dialog[dialog],
+            open: true,
+          }
+        }
+      });
+    }
   };
 
-  handleClose() {
-    this.setState({ open: false });
+  handleClose(dialog) {
+    return () => {
+      this.setState({
+        dialog: {
+          ...this.state.dialog,
+          [dialog]: {
+            ...this.state.dialog[dialog],
+            open: false,
+          }
+        }
+      });
+    }
   };
 
   handleItemClick(value) {
     this.props.dispatch(addGraphEntry(value));
-    this.setState({ open: false });
+    this.setState({
+      dialog: {
+        ...this.state.dialog,
+        newGraph: {
+          ...this.state.dialog.newGraph,
+          open: false,
+        }
+      }
+    });
   };
 
   render() {
@@ -65,15 +98,22 @@ export class App extends Component {
             <Typography variant="title" color="inherit" className={classes.flex}>
               Packet Count
             </Typography>
-            <Button color="inherit">Settings</Button>
+            <Button
+              color="inherit"
+              onClick={this.handleClickOpen('settings')}
+            >Settings</Button>
           </Toolbar>
         </AppBar>
-        <Button onClick={this.handleClickOpen}>Open simple dialog</Button>
+        <Button onClick={this.handleClickOpen('newGraph')}>Open simple dialog</Button>
         <NewGraphDialog
-          open={this.state.open}
-          onClose={this.handleClose}
+          open={this.state.dialog.newGraph.open}
+          onClose={this.handleClose('newGraph')}
           onItemClick={this.handleItemClick}
           items={interfaces}
+        />
+        <SettingsDialog
+          open={this.state.dialog.settings.open}
+          onClose={this.handleClose('settings')}
         />
         <h1>Graph</h1>
         {graphEntries.map(entry =>
