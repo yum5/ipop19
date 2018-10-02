@@ -11,6 +11,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Snap from 'snapsvg-cjs';
 
 import Graph from './Graph';
+import NetworkFigure from './NetworkFigure';
 import NewGraphDialog from './NewGraphDialog';
 import SettingsDialog from './SettingsDialog';
 import { addGraphEntry } from '../../shared/actions/settings';
@@ -43,27 +44,15 @@ export class App extends Component {
         settings: {
           open: false
         }
-      }
+      },
+      vlanId: 11
     };
-  }
 
-  componentDidMount() {
-    const root = Snap(this.snapRoot)
-    Snap.load("network.svg", (data) => {
-      if (root) {
-        root.append(data);
-
-        let color = 'red';
-        setInterval(() => {
-        console.log(Snap.select("#edge--server3-tor2"));
-          Snap.select("#edge--server3-tor2").select('path')
-            .animate({
-              'stroke': color,
-          }, 1000);
-          color = color === 'red' ? 'black': 'red';
-        }, 3000)
-      }
-    });
+    setInterval(() => {
+      this.setState({
+        vlanId: Math.floor(Math.random() * 6) + 11
+      })
+    }, 1000)
   }
 
   handleClickOpen(dialog) {
@@ -125,7 +114,10 @@ export class App extends Component {
             >Settings</Button>
           </Toolbar>
         </AppBar>
-        <div ref={d => this.snapRoot = d} />
+        <NetworkFigure vlanId={this.state.vlanId}/>
+        <div>
+          VLAN Tag: {this.state.vlanId}
+        </div>
         <Button onClick={this.handleClickOpen('newGraph')}>Open simple dialog</Button>
         <NewGraphDialog
           open={this.state.dialog.newGraph.open}
