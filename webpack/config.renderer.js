@@ -74,6 +74,11 @@ module.exports = {
         to: 'index.html'
       },
     ]),
+    new CopyWebpackPlugin([{
+        from: './src/renderer/network.svg',
+        to: 'network.svg'
+      },
+    ]),
   ]
 }
 

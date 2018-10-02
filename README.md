@@ -202,3 +202,14 @@ IF-MIB::ifAdminStatus.10 = INTEGER: up(1)
 $ snmpwalk -v 2c -c public 192.168.1.1 1.3.6.1.2.1.2.2.1.7.3
 IF-MIB::ifAdminStatus.3 = INTEGER: down(2)
 ```
+
+
+## TODO
+Makefile
+
+```
+dot -Tsvg network.dot -o network.svg
+# Modify network.svg in Inkspace
+# Click [Extension] -> Embed Image @inkspace
+# copy to src/renderer/resources
+```

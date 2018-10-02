@@ -1,0 +1,156 @@
+graph graph8
+{
+  graph [
+    charset = "UTF-8",
+    rankdir = LR,
+    fontname="Menlo"
+  ];
+  node [
+    fontname="Menlo"
+  ];
+
+  server1[
+    label=<<table border="0"><tr><td><img src="computer_server1.png" /></td></tr><tr><td>server 1</td></tr></table>>,
+    shape = box,
+    // image = "computer_server1.png"
+  ];
+  server2[
+    label=<<table border="0"><tr><td><img src="computer_server1.png" /></td></tr><tr><td>server 2</td></tr></table>>,
+    shape = box,
+  ];
+  server3[
+    label=<<table border="0"><tr><td><img src="computer_server1.png" /></td></tr><tr><td>server 3</td></tr></table>>,
+    shape = box,
+  ];
+  server4[
+    label=<<table border="0"><tr><td><img src="computer_server1.png" /></td></tr><tr><td>server 4</td></tr></table>>,
+    shape = box,
+  ];
+  server5[
+    label=<<table border="0"><tr><td><img src="computer_server1.png" /></td></tr><tr><td>server 5</td></tr></table>>,
+    shape = box,
+  ];
+
+  flow_classify[
+    label=<<table border="0"><tr><td><img src="souko_shiwake.png" /></td></tr><tr><td>Flow Classifier</td></tr></table>>,
+    shape = box,
+  ];
+
+  tor1[
+    label=<<table border="0"><tr><td><img src="sushi_hamachi.png" /></td></tr><tr><td>ToR SW1</td></tr></table>>,
+    shape = box,
+  ];
+  tor2[
+    label=<<table border="0"><tr><td><img src="sushi_hamachi.png" /></td></tr><tr><td>ToR SW2</td></tr></table>>,
+    shape = box,
+  ];
+  tor3[
+    label=<<table border="0"><tr><td><img src="sushi_hamachi.png" /></td></tr><tr><td>ToR SW3</td></tr></table>>,
+    shape = box,
+  ];
+  tor4[
+    label=<<table border="0"><tr><td><img src="sushi_hamachi.png" /></td></tr><tr><td>ToR SW4</td></tr></table>>,
+    shape = box,
+  ];
+
+  ovs1[
+    label=<<table border="0"><tr><td><img src="sushi_hamachi.png" /></td></tr><tr><td>OVS 1</td></tr></table>>,
+    shape = box,
+  ];
+  ovs2[
+    label=<<table border="0"><tr><td><img src="sushi_hamachi.png" /></td></tr><tr><td>OVS 2</td></tr></table>>,
+    shape = box,
+  ];
+  ovs3[
+    label=<<table border="0"><tr><td><img src="sushi_hamachi.png" /></td></tr><tr><td>OVS 3</td></tr></table>>,
+    shape = box,
+  ];
+
+  spine[
+    label=<<table border="0"><tr><td><img src="sushi_hamachi.png" /></td></tr><tr><td>Spine SW</td></tr></table>>,
+    shape = box,
+  ];
+  mems[
+    label=<<table border="0"><tr><td><img src="sushi_hamachi.png" /></td></tr><tr><td>MEMS SW</td></tr></table>>,
+    shape = box,
+  ];
+  plzt[
+    label=<<table border="0"><tr><td><img src="sushi_hamachi.png" /></td></tr><tr><td>PLZT SW</td></tr></table>>,
+    shape = box,
+  ];
+
+  ryu[
+    label=<<table border="0"><tr><td><img src="computer_hub_loop_setsuzoku.png" /></td></tr><tr><td>Ryu SDN Controller</td></tr></table>>,
+    shape = box,
+  ]
+
+
+  server1 -- flow_classify[
+    headlabel=<
+      em2<br/>
+      192.168.101.137
+    >;
+    taillabel=<
+      p2p1<br/>
+      192.168.101.35
+    >;
+  ]
+  server2 -- flow_classify
+  flow_classify -- tor1
+
+  tor1 -- spine
+  tor1 -- mems
+  tor1 -- plzt
+  tor1 -- ovs1[
+    style = "dashed"
+  ]
+  tor1 -- ryu[
+    style = "dashed"
+  ]
+  ovs1 -- ryu[
+    style = "dashed"
+  ]
+
+  server3 -- tor2[
+    id = "edge--server3-tor2"
+  ]
+  server4 -- tor3
+  server5 -- tor4
+
+  tor2 -- spine
+  tor2 -- mems
+  tor2 -- plzt
+  tor2 -- ryu[
+    style = "dashed"
+  ]
+
+  tor3 -- spine
+  tor3 -- mems
+  tor3 -- plzt
+  tor3 -- ryu[
+    style = "dashed"
+  ]
+
+  tor4 -- spine
+  tor4 -- mems
+  tor4 -- plzt
+  tor4 -- ryu[
+    style = "dashed"
+  ]
+
+  spine -- ryu[
+    style = "dashed"
+  ]
+  mems -- ovs2[
+    style = "dashed"
+  ]
+  ovs2 -- ryu[
+    style = "dashed"
+  ]
+  plzt -- ovs3[
+    style = "dashed"
+  ]
+  ovs3 -- ryu[
+    style = "dashed"
+  ]
+}

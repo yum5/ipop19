@@ -8,6 +8,8 @@ import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 
+import Snap from 'snapsvg-cjs';
+
 import Graph from './Graph';
 import NewGraphDialog from './NewGraphDialog';
 import SettingsDialog from './SettingsDialog';
@@ -43,6 +45,15 @@ export class App extends Component {
         }
       }
     };
+  }
+
+  componentDidMount() {
+    const root = Snap(this.snapRoot)
+    Snap.load("network.svg", (data) => {
+      if (root) {
+        root.append(data);
+      }
+    });
   }
 
   handleClickOpen(dialog) {
@@ -104,6 +115,7 @@ export class App extends Component {
             >Settings</Button>
           </Toolbar>
         </AppBar>
+        <div ref={d => this.snapRoot = d} />
         <Button onClick={this.handleClickOpen('newGraph')}>Open simple dialog</Button>
         <NewGraphDialog
           open={this.state.dialog.newGraph.open}
