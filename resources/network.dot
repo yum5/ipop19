@@ -31,7 +31,7 @@ graph graph8
     shape = box,
   ];
 
-  flow_classify[
+  flow_classifier[
     label=<<table border="0"><tr><td><img src="souko_shiwake.png" /></td></tr><tr><td>Flow Classifier</td></tr></table>>,
     shape = box,
   ];
@@ -53,7 +53,7 @@ graph graph8
     shape = box,
   ];
 
-  ovs1[
+  /* ovs1[
     label=<<table border="0"><tr><td><img src="sushi_hamachi.png" /></td></tr><tr><td>OVS 1</td></tr></table>>,
     shape = box,
   ];
@@ -64,7 +64,7 @@ graph graph8
   ovs3[
     label=<<table border="0"><tr><td><img src="sushi_hamachi.png" /></td></tr><tr><td>OVS 3</td></tr></table>>,
     shape = box,
-  ];
+  ]; */
 
   spine[
     label=<<table border="0"><tr><td><img src="sushi_hamachi.png" /></td></tr><tr><td>Spine SW</td></tr></table>>,
@@ -79,13 +79,13 @@ graph graph8
     shape = box,
   ];
 
-  ryu[
+  /* ryu[
     label=<<table border="0"><tr><td><img src="computer_hub_loop_setsuzoku.png" /></td></tr><tr><td>Ryu SDN Controller</td></tr></table>>,
     shape = box,
-  ]
+  ] */
 
 
-  server1 -- flow_classify[
+  /* server1 -- flow_classifier[
     headlabel=<
       em2<br/>
       192.168.101.137
@@ -94,14 +94,27 @@ graph graph8
       p2p1<br/>
       192.168.101.35
     >;
+  ] */
+  server1 -- flow_classifier[
+    id = "edge--server1-flow_classifier"
   ]
-  server2 -- flow_classify
-  flow_classify -- tor1
+  server2 -- flow_classifier[
+    id = "edge--server2-flow_classifier"
+  ]
+  flow_classifier -- tor1[
+    id = "edge--flow_classifier-tor1"
+  ]
 
-  tor1 -- spine
-  tor1 -- mems
-  tor1 -- plzt
-  tor1 -- ovs1[
+  tor1 -- spine[
+    id = "edge--tor1-spine"
+  ]
+  tor1 -- mems[
+    id = "edge--tor1-mems"
+  ]
+  tor1 -- plzt[
+    id = "edge--tor1-plzt"
+  ]
+  /* tor1 -- ovs1[
     style = "dashed"
   ]
   tor1 -- ryu[
@@ -109,36 +122,58 @@ graph graph8
   ]
   ovs1 -- ryu[
     style = "dashed"
-  ]
+  ] */
 
   server3 -- tor2[
     id = "edge--server3-tor2"
   ]
-  server4 -- tor3
-  server5 -- tor4
-
-  tor2 -- spine
-  tor2 -- mems
-  tor2 -- plzt
-  tor2 -- ryu[
-    style = "dashed"
+  server4 -- tor3[
+    id = "edge--server4-tor3"
+  ]
+  server5 -- tor4[
+    id = "edge--server5-tor4"
   ]
 
-  tor3 -- spine
-  tor3 -- mems
-  tor3 -- plzt
-  tor3 -- ryu[
-    style = "dashed"
+  tor2 -- spine[
+    id = "edge--tor2-spine"
   ]
-
-  tor4 -- spine
-  tor4 -- mems
-  tor4 -- plzt
-  tor4 -- ryu[
-    style = "dashed"
+  tor2 -- mems[
+    id = "edge--tor2-mems"
   ]
+  tor2 -- plzt[
+    id = "edge--tor2-plzt"
+  ]
+  /* tor2 -- ryu[
+    style = "dashed"
+  ] */
 
-  spine -- ryu[
+  tor3 -- spine[
+    id = "edge--tor3-spine"
+  ]
+  tor3 -- mems[
+    id = "edge--tor3-mems"
+  ]
+  tor3 -- plzt[
+    id = "edge--tor3-plzt"
+  ]
+  /* tor3 -- ryu[
+    style = "dashed"
+  ] */
+
+  tor4 -- spine[
+    id = "edge--tor4-spine"
+  ]
+  tor4 -- mems[
+    id = "edge--tor4-mems"
+  ]
+  tor4 -- plzt[
+    id = "edge--tor4-plzt"
+  ]
+  /* tor4 -- ryu[
+    style = "dashed"
+  ] */
+
+  /* spine -- ryu[
     style = "dashed"
   ]
   mems -- ovs2[
@@ -152,5 +187,5 @@ graph graph8
   ]
   ovs3 -- ryu[
     style = "dashed"
-  ]
+  ] */
 }
