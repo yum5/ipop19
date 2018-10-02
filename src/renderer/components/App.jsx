@@ -52,6 +52,16 @@ export class App extends Component {
     Snap.load("network.svg", (data) => {
       if (root) {
         root.append(data);
+
+        let color = 'red';
+        setInterval(() => {
+        console.log(Snap.select("#edge--server3-tor2"));
+          Snap.select("#edge--server3-tor2").select('path')
+            .animate({
+              'stroke': color,
+          }, 1000);
+          color = color === 'red' ? 'black': 'red';
+        }, 3000)
       }
     });
   }
