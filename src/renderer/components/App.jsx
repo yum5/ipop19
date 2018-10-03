@@ -9,6 +9,7 @@ import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+import Divider from '@material-ui/core/Divider';
 
 import Snap from 'snapsvg-cjs';
 import _ from 'lodash';
@@ -43,6 +44,10 @@ const styles = theme => ({
     right: theme.spacing.unit * 2,
     zIndex: 10,
   },
+  graphContainer: {
+    paddingTop: 16,
+    paddingBottom: 16
+  }
 })
 
 export class App extends Component {
@@ -159,11 +164,18 @@ export class App extends Component {
               Graph
             </Typography>
             {graphEntries.map(entry =>
-              <div key={entry.id}>
-                <h3>Device: {entry.id}</h3>
+              <div key={entry.id} className={classes.graphContainer}>
+                <Typography
+                  variant="subheading"
+                  color="inherit"
+                  component="h1"
+                >
+                  Device: {entry.id}
+                </Typography>
                 <Graph device={entry.id}/>
-              </div>
-            )}
+              </div>).reduce((accum, elem) => {
+                return accum === null ? [elem] : [...accum, <Divider/>, elem]
+              }, null)}
           </Paper>
           <Button
             variant="fab"

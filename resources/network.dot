@@ -1,4 +1,4 @@
-graph graph8
+graph holst_network
 {
   graph [
     charset = "UTF-8",
@@ -10,46 +10,46 @@ graph graph8
   ];
 
   server1[
-    label=<<table border="0"><tr><td><img src="computer_server1.png" /></td></tr><tr><td>server 1</td></tr></table>>,
+    label=<<table border="0"><tr><td><img src="figure_server.png" /></td></tr><tr><td>server 1</td></tr></table>>,
     shape = box,
-    // image = "computer_server1.png"
+    // image = "figure_server.png"
   ];
   server2[
-    label=<<table border="0"><tr><td><img src="computer_server1.png" /></td></tr><tr><td>server 2</td></tr></table>>,
+    label=<<table border="0"><tr><td><img src="figure_server.png" /></td></tr><tr><td>server 2</td></tr></table>>,
     shape = box,
   ];
   server3[
-    label=<<table border="0"><tr><td><img src="computer_server1.png" /></td></tr><tr><td>server 3</td></tr></table>>,
+    label=<<table border="0"><tr><td><img src="figure_server.png" /></td></tr><tr><td>server 3</td></tr></table>>,
     shape = box,
   ];
   server4[
-    label=<<table border="0"><tr><td><img src="computer_server1.png" /></td></tr><tr><td>server 4</td></tr></table>>,
+    label=<<table border="0"><tr><td><img src="figure_server.png" /></td></tr><tr><td>server 4</td></tr></table>>,
     shape = box,
   ];
   server5[
-    label=<<table border="0"><tr><td><img src="computer_server1.png" /></td></tr><tr><td>server 5</td></tr></table>>,
+    label=<<table border="0"><tr><td><img src="figure_server.png" /></td></tr><tr><td>server 5</td></tr></table>>,
     shape = box,
   ];
 
   flow_classifier[
-    label=<<table border="0"><tr><td><img src="souko_shiwake.png" /></td></tr><tr><td>Flow Classifier</td></tr></table>>,
+    label=<<table border="0"><tr><td><img src="figure_flow_classifier.png" /></td></tr><tr><td>Flow Classifier</td></tr></table>>,
     shape = box,
   ];
 
   tor1[
-    label=<<table border="0"><tr><td><img src="sushi_hamachi.png" /></td></tr><tr><td>ToR SW1</td></tr></table>>,
+    label=<<table border="0"><tr><td><img src="figure_tor_sw.png" /></td></tr><tr><td>ToR SW1</td></tr></table>>,
     shape = box,
   ];
   tor2[
-    label=<<table border="0"><tr><td><img src="sushi_hamachi.png" /></td></tr><tr><td>ToR SW2</td></tr></table>>,
+    label=<<table border="0"><tr><td><img src="figure_tor_sw.png" /></td></tr><tr><td>ToR SW2</td></tr></table>>,
     shape = box,
   ];
   tor3[
-    label=<<table border="0"><tr><td><img src="sushi_hamachi.png" /></td></tr><tr><td>ToR SW3</td></tr></table>>,
+    label=<<table border="0"><tr><td><img src="figure_tor_sw.png" /></td></tr><tr><td>ToR SW3</td></tr></table>>,
     shape = box,
   ];
   tor4[
-    label=<<table border="0"><tr><td><img src="sushi_hamachi.png" /></td></tr><tr><td>ToR SW4</td></tr></table>>,
+    label=<<table border="0"><tr><td><img src="figure_tor_sw.png" /></td></tr><tr><td>ToR SW4</td></tr></table>>,
     shape = box,
   ];
 
@@ -67,15 +67,15 @@ graph graph8
   ]; */
 
   spine[
-    label=<<table border="0"><tr><td><img src="sushi_hamachi.png" /></td></tr><tr><td>Spine SW</td></tr></table>>,
+    label=<<table border="0"><tr><td><img src="figure_spine_sw.png" /></td></tr><tr><td>Spine SW</td></tr></table>>,
     shape = box,
   ];
   mems[
-    label=<<table border="0"><tr><td><img src="sushi_hamachi.png" /></td></tr><tr><td>MEMS SW</td></tr></table>>,
+    label=<<table border="0"><tr><td><img src="figure_mems_sw.png" /></td></tr><tr><td>MEMS SW</td></tr></table>>,
     shape = box,
   ];
   plzt[
-    label=<<table border="0"><tr><td><img src="sushi_hamachi.png" /></td></tr><tr><td>PLZT SW</td></tr></table>>,
+    label=<<table border="0"><tr><td><img src="figure_plzt_sw.png" /></td></tr><tr><td>PLZT SW</td></tr></table>>,
     shape = box,
   ];
 

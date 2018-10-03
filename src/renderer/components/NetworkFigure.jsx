@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
+import { withStyles } from '@material-ui/core/styles';
 
 export const LINK = {
   SERVER1__FLOW_CLASSIFIER: '#edge--server1-flow_classifier',
@@ -109,6 +110,16 @@ export const getLinkColor = (vlanId) => {
 
 const inactiveLinks = () =>  _.values(LINK)
 
+const styles = theme => ({
+  root: {
+  },
+  '@global': {
+    'div svg': {
+      width: '100%'
+    },
+  },
+})
+
 export class NetworkFigure extends Component {
   constructor(props) {
     super(props);
@@ -192,12 +203,14 @@ export class NetworkFigure extends Component {
   }
 
   render() {
+    const { classes } = this.props;
+
     return (
-      <div>
+      <div className={classes.root}>
         <div ref={d => this.snapRoot = d} />
       </div>
     )
   }
 }
 
-export default NetworkFigure
+export default withStyles(styles)(NetworkFigure)
