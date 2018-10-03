@@ -3,8 +3,10 @@ import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
+import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import AddIcon from '@material-ui/icons/Add';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 
@@ -19,18 +21,29 @@ import NewGraphDialog from './NewGraphDialog';
 import SettingsDialog from './SettingsDialog';
 import { addGraphEntry } from '../../shared/actions/settings';
 
-const styles = {
+const styles = theme => ({
   root: {
     flexGrow: 1,
   },
   flex: {
     flexGrow: 1,
   },
-  menuButton: {
-    marginLeft: -12,
-    marginRight: 20,
+  appContent: {
+    padding: theme.spacing.unit * 2
   },
-};
+  paper: {
+    ...theme.mixins.gutters(),
+    paddingTop: theme.spacing.unit * 2,
+    paddingBottom: theme.spacing.unit * 2,
+    marginBottom: theme.spacing.unit * 2,
+  },
+  fab: {
+    position: 'fixed',
+    bottom: theme.spacing.unit * 2,
+    right: theme.spacing.unit * 2,
+    zIndex: 10,
+  },
+})
 
 export class App extends Component {
   constructor(props) {
@@ -110,11 +123,8 @@ export class App extends Component {
       <div>
         <AppBar position="static">
           <Toolbar>
-          <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
-            <MenuIcon />
-            </IconButton>
             <Typography variant="title" color="inherit" className={classes.flex}>
-              Packet Count
+              HOLST Demo
             </Typography>
             <Button
               color="inherit"
@@ -122,22 +132,51 @@ export class App extends Component {
             >Settings</Button>
           </Toolbar>
         </AppBar>
-        <NetworkFigure
-          vlanId={this.state.vlanId}
-          viaSW={this.state.viaSW}
-        />
-        <div>
-          VLAN Tag: {this.state.vlanId}
+        <div className={classes.appContent}>
+          <Paper className={classes.paper} elevation={1}>
+            <Typography variant="headline" component="h1">
+              Network Status
+            </Typography>
+            <NetworkFigure
+              vlanId={this.state.vlanId}
+              viaSW={this.state.viaSW}
+            />
+            <div>
+              VLAN Tag: {this.state.vlanId}
 
-          <ul>
-            {[11, 12, 13, 14, 15, 16].map(vlanId =>
-              <li key={vlanId}>
-                VLAN Tag {vlanId}: <span style={{background: getLinkColor(vlanId)}}>{getLinkColor(vlanId)}</span>
-              </li>
+              {/*<ul>
+                {[11, 12, 13, 14, 15, 16].map(vlanId =>
+                  <li key={vlanId}>
+                    VLAN Tag {vlanId}: <span style={{background: getLinkColor(vlanId)}}>{getLinkColor(vlanId)}</span>
+                  </li>
+                )}
+              </ul>*/}
+            </div>
+          </Paper>
+
+          <Paper className={classes.paper} elevation={1}>
+            <Typography variant="headline" component="h1">
+              Graph
+            </Typography>
+            {graphEntries.map(entry =>
+              <div key={entry.id}>
+                <h3>Device: {entry.id}</h3>
+                <Graph device={entry.id}/>
+              </div>
             )}
-          </ul>
+          </Paper>
+          <Button
+            variant="fab"
+            color="primary"
+            aria-label="Add"
+            onClick={this.handleClickOpen('newGraph')}
+            className={classes.fab}
+          >
+            <AddIcon />
+          </Button>
         </div>
-        <Button onClick={this.handleClickOpen('newGraph')}>Open simple dialog</Button>
+        <ErrorListNavigation
+          onClick={this.handleClickOpen('errors')} />
         <NewGraphDialog
           open={this.state.dialog.newGraph.open}
           onClose={this.handleClose('newGraph')}
@@ -148,19 +187,10 @@ export class App extends Component {
           open={this.state.dialog.settings.open}
           onClose={this.handleClose('settings')}
         />
-        <h1>Graph</h1>
-        {graphEntries.map(entry =>
-          <div key={entry.id}>
-            <h3>Device: {entry.id}</h3>
-            <Graph device={entry.id}/>
-          </div>
-        )}
         <ErrorListDrawer
           open={this.state.dialog.errors.open}
           onClose={this.handleClose('errors')}
         />
-        <ErrorListNavigation
-          onClick={this.handleClickOpen('errors')} />
       </div>
     )
   }

@@ -11,14 +11,29 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemText from '@material-ui/core/ListItemText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
 import PersonIcon from '@material-ui/icons/Person';
 import AddIcon from '@material-ui/icons/Add';
 import Typography from '@material-ui/core/Typography';
+import Divider from '@material-ui/core/Divider';
 import blue from '@material-ui/core/colors/blue';
 
 import { updateSnmpHost } from '../../shared/actions/settings';
 
 const styles = {
+  settingsItemContainer: {
+    display: 'flex',
+    paddingTop: 8,
+    paddingBottom: 8
+  },
+  settingsItemDescription: {
+    width: 150,
+    paddingRight: 24
+  },
+  settingsItemBody: {
+    flex: 1
+  },
 };
 
 const REGEX_IP_V4 = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
@@ -105,24 +120,56 @@ class SettingsDialog extends React.Component {
         onEnter={this.initState}
         open={open}
       >
-        <DialogTitle id="new-graph-dialog-title">SettingsDialog</DialogTitle>
-        <div>
-          <TextField
-            id="snmp-hosts"
-            label="snmp-hosts"
-            multiline
-            rowsMax="4"
-            value={snmpHosts.value}
-            error={snmpHosts.error}
-            helperText={snmpHosts.helperText}
-            onChange={this.handleChange('snmpHosts')}
-            margin="normal"
-          />
-        </div>
-        <Button
-          onClick={this.handleSaveClick}
-          disabled={snmpHosts.error}
-        >Save</Button>
+        <DialogTitle id="new-graph-dialog-title">Settings</DialogTitle>
+        <DialogContent>
+          <div className={classes.settingsItemContainer}>
+            <div className={classes.settingsItemDescription}>
+              <Typography variant="subheading">
+                Switch hosts
+              </Typography>
+              <Typography variant="caption">
+                Type Switch IPv4 Address which you want to count packet via SNMP protocol. <br/>
+                Insert <code>LF(\n)</code> between each entry and input multiple IP Addresses.
+              </Typography>
+            </div>
+            <div className={classes.settingsItemBody}>
+              <TextField
+                id="snmp-hosts"
+                label="List of IPv4 Address"
+                multiline
+                rowsMax="4"
+                value={snmpHosts.value}
+                error={snmpHosts.error}
+                helperText={snmpHosts.helperText}
+                onChange={this.handleChange('snmpHosts')}
+                margin="normal"
+              />
+            </div>
+          </div>
+          <Divider />
+          <div className={classes.settingsItemContainer}>
+            <div className={classes.settingsItemDescription}>
+              <Typography variant="subheading">
+                Ryu SDN Controller
+              </Typography>
+              <Typography variant="caption">
+                Type Ryu SDN Controller IPv4 Address which expose network configuration information.
+              </Typography>
+            </div>
+            <div className={classes.settingsItemBody}>
+              <TextField
+                id="ryu"
+                label="IPv4 Address"
+              />
+            </div>
+          </div>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={this.handleSaveClick}
+            disabled={snmpHosts.error}
+          >Save</Button>
+        </DialogActions>
       </Dialog>
     );
   }

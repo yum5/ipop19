@@ -17,6 +17,7 @@ const styles = theme => ({
     paddingLeft: 24,
     paddingRight: 24,
     boxSizing: 'border-box',
+    cursor: 'pointer',
   },
   icon: {
     margin: theme.spacing.unit,
