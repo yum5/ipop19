@@ -9,9 +9,10 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 
 import Snap from 'snapsvg-cjs';
+import _ from 'lodash';
 
 import Graph from './Graph';
-import NetworkFigure from './NetworkFigure';
+import NetworkFigure, { SW } from './NetworkFigure';
 import NewGraphDialog from './NewGraphDialog';
 import SettingsDialog from './SettingsDialog';
 import { addGraphEntry } from '../../shared/actions/settings';
@@ -45,12 +46,14 @@ export class App extends Component {
           open: false
         }
       },
-      vlanId: 11
+      vlanId: 11,
+      viaSW: SW.SPINE
     };
 
     setInterval(() => {
       this.setState({
-        vlanId: Math.floor(Math.random() * 6) + 11
+        vlanId: Math.floor(Math.random() * 6) + 11,
+        viaSW: _.sample([SW.SPINE, SW.MEMS, SW.PLZT])
       })
     }, 1000)
   }
@@ -114,7 +117,10 @@ export class App extends Component {
             >Settings</Button>
           </Toolbar>
         </AppBar>
-        <NetworkFigure vlanId={this.state.vlanId}/>
+        <NetworkFigure
+          vlanId={this.state.vlanId}
+          viaSW={this.state.viaSW}
+        />
         <div>
           VLAN Tag: {this.state.vlanId}
         </div>

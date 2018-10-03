@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 
-const LINK = {
+export const LINK = {
   SERVER1__FLOW_CLASSIFIER: '#edge--server1-flow_classifier',
   SERVER2__FLOW_CLASSIFIER: '#edge--server2-flow_classifier',
   FLOW_CLASSIFIER__TOR1: '#edge--flow_classifier-tor1',
@@ -23,49 +23,66 @@ const LINK = {
   TOR4__PLZT: '#edge--tor4-plzt',
 }
 
-const getActiveLinksFromVlan = vlanId => {
+export const SW = {
+  TOR1: 'tor1',
+  TOR2: 'tor2',
+  TOR3: 'tor3',
+  TOR4: 'tor4',
+  SPINE: 'spine',
+  MEMS: 'mems',
+  PLZT: 'plzt'
+}
+
+const getLinksVia = (fromToR, toToR, viaSW) => {
+  return [
+    `#edge--${fromToR}-${viaSW}`,
+    `#edge--${toToR}-${viaSW}`,
+  ]
+}
+
+const getActiveLinksFromVlan = (vlanId, viaSW) => {
   switch(vlanId) {
     case 11: {
       return [
         LINK.SERVER1__FLOW_CLASSIFIER,
         LINK.FLOW_CLASSIFIER__TOR1,
         LINK.SERVER3__TOR2
-      ]
+      ].concat(getLinksVia(SW.TOR1, SW.TOR2, viaSW))
     }
     case 12: {
       return [
         LINK.SERVER2__FLOW_CLASSIFIER,
         LINK.FLOW_CLASSIFIER__TOR1,
         LINK.SERVER3__TOR2
-      ]
+      ].concat(getLinksVia(SW.TOR1, SW.TOR2, viaSW))
     }
     case 13: {
       return [
         LINK.SERVER1__FLOW_CLASSIFIER,
         LINK.FLOW_CLASSIFIER__TOR1,
         LINK.SERVER4__TOR3
-      ]
+      ].concat(getLinksVia(SW.TOR1, SW.TOR3, viaSW))
     }
     case 14: {
       return [
         LINK.SERVER2__FLOW_CLASSIFIER,
         LINK.FLOW_CLASSIFIER__TOR1,
         LINK.SERVER4__TOR3
-      ]
+      ].concat(getLinksVia(SW.TOR1, SW.TOR3, viaSW))
     }
     case 15: {
       return [
         LINK.SERVER1__FLOW_CLASSIFIER,
         LINK.FLOW_CLASSIFIER__TOR1,
         LINK.SERVER5__TOR4
-      ]
+      ].concat(getLinksVia(SW.TOR1, SW.TOR4, viaSW))
     }
     case 16: {
       return [
         LINK.SERVER2__FLOW_CLASSIFIER,
         LINK.FLOW_CLASSIFIER__TOR1,
         LINK.SERVER5__TOR4
-      ]
+      ].concat(getLinksVia(SW.TOR1, SW.TOR4, viaSW))
     }
     default: {
       return []
@@ -100,22 +117,26 @@ export class NetworkFigure extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { vlanId } = this.props;
+    const { vlanId, viaSW } = this.props;
     const nextVlanId = nextProps.vlanId;
-    const activeLinks = getActiveLinksFromVlan(vlanId);
-    const nextActiveLinks = getActiveLinksFromVlan(nextVlanId);
+    const nextViaSW = nextProps.viaSW;
+    const activeLinks = getActiveLinksFromVlan(vlanId, viaSW);
+    const nextActiveLinks = getActiveLinksFromVlan(nextVlanId, nextViaSW);
 
     const linksToAwake = _.difference(nextActiveLinks, activeLinks);
     const linksToSleep = _.difference(activeLinks, nextActiveLinks);
     const linksToKeepActive = _.intersection(activeLinks, nextActiveLinks);
 
-    // console.table({
-    //   active: activeLinks,
-    //   nextActive: nextActiveLinks,
-    //   awake: linksToAwake,
-    //   sleep: linksToSleep,
-    //   keep: linksToKeepActive
-    // });
+    console.table({
+      vlanId,
+      nextVlanId,
+      viaSW,
+      active: activeLinks,
+      nextActive: nextActiveLinks,
+      awake: linksToAwake,
+      sleep: linksToSleep,
+      keep: linksToKeepActive
+    });
 
     linksToAwake.forEach(link => {
       Snap.select(link).select('path')
