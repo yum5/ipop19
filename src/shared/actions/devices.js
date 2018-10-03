@@ -8,6 +8,9 @@ import {
   getIfDesc,
   getAdminStatus
 } from '../utils';
+import {
+  appendError
+} from './errors';
 
 export const REQUEST_DEVICES = 'REQUEST_DEVICES';
 export const RECEIVE_DEVICES = 'RECEIVE_DEVICES';
@@ -38,22 +41,26 @@ export const getDevices = (ips) =>
     //   }
     // );
     (async () => {
-      const results = await map(ips, async ip => {
-        const interfaceIndex = await getInterfaceIndex(ip);
-        const devices = await map(interfaceIndex, async index => {
-          const desc = await getIfDesc(ip, index);
-          const status = await getAdminStatus(ip, index);
+      try {
+        const results = await map(ips, async ip => {
+          const interfaceIndex = await getInterfaceIndex(ip);
+          const devices = await map(interfaceIndex, async index => {
+            const desc = await getIfDesc(ip, index);
+            const status = await getAdminStatus(ip, index);
 
-          return {
-            id: `${ip}::${index}`,
-            index,
-            ip,
-            desc,
-            status
-          }
+            return {
+              id: `${ip}::${index}`,
+              index,
+              ip,
+              desc,
+              status
+            }
+          })
+          return devices
         })
-        return devices
-      })
-      dispatch(receiveDevices(_.flatten(results)));
+        dispatch(receiveDevices(_.flatten(results)));
+      } catch (e) {
+        dispatch(appendError(e.message));
+      }
     })()
   }

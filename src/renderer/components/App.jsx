@@ -11,6 +11,8 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Snap from 'snapsvg-cjs';
 import _ from 'lodash';
 
+import ErrorListDrawer from './ErrorListDrawer';
+import ErrorListNavigation from './ErrorListNavigation';
 import Graph from './Graph';
 import NetworkFigure, { SW, getLinkColor } from './NetworkFigure';
 import NewGraphDialog from './NewGraphDialog';
@@ -43,6 +45,9 @@ export class App extends Component {
           open: false,
         },
         settings: {
+          open: false
+        },
+        errors: {
           open: false
         }
       },
@@ -150,6 +155,12 @@ export class App extends Component {
             <Graph device={entry.id}/>
           </div>
         )}
+        <ErrorListDrawer
+          open={this.state.dialog.errors.open}
+          onClose={this.handleClose('errors')}
+        />
+        <ErrorListNavigation
+          onClick={this.handleClickOpen('errors')} />
       </div>
     )
   }
