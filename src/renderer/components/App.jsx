@@ -12,7 +12,7 @@ import Snap from 'snapsvg-cjs';
 import _ from 'lodash';
 
 import Graph from './Graph';
-import NetworkFigure, { SW } from './NetworkFigure';
+import NetworkFigure, { SW, getLinkColor } from './NetworkFigure';
 import NewGraphDialog from './NewGraphDialog';
 import SettingsDialog from './SettingsDialog';
 import { addGraphEntry } from '../../shared/actions/settings';
@@ -123,6 +123,14 @@ export class App extends Component {
         />
         <div>
           VLAN Tag: {this.state.vlanId}
+
+          <ul>
+            {[11, 12, 13, 14, 15, 16].map(vlanId =>
+              <li key={vlanId}>
+                VLAN Tag {vlanId}: <span style={{background: getLinkColor(vlanId)}}>{getLinkColor(vlanId)}</span>
+              </li>
+            )}
+          </ul>
         </div>
         <Button onClick={this.handleClickOpen('newGraph')}>Open simple dialog</Button>
         <NewGraphDialog

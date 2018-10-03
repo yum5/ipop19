@@ -90,6 +90,23 @@ const getActiveLinksFromVlan = (vlanId, viaSW) => {
   }
 }
 
+export const COLORS = [
+  '#FF91E4',
+  '#6A65E8',
+  '#7CFFFB',
+  '#81E865',
+  '#FFD71C',
+  '#FF611C'
+]
+
+export const getLinkColor = (vlanId) => {
+  if (11 <= vlanId && vlanId <= 16) {
+    return COLORS[vlanId - 11];
+  } else {
+    return 'black';
+  }
+}
+
 const inactiveLinks = () =>  _.values(LINK)
 
 export class NetworkFigure extends Component {
@@ -127,16 +144,18 @@ export class NetworkFigure extends Component {
     const linksToSleep = _.difference(activeLinks, nextActiveLinks);
     const linksToKeepActive = _.intersection(activeLinks, nextActiveLinks);
 
-    console.table({
-      vlanId,
-      nextVlanId,
-      viaSW,
-      active: activeLinks,
-      nextActive: nextActiveLinks,
-      awake: linksToAwake,
-      sleep: linksToSleep,
-      keep: linksToKeepActive
-    });
+    const color = getLinkColor(nextVlanId);
+
+    // console.table({
+    //   vlanId,
+    //   nextVlanId,
+    //   viaSW,
+    //   active: activeLinks,
+    //   nextActive: nextActiveLinks,
+    //   awake: linksToAwake,
+    //   sleep: linksToSleep,
+    //   keep: linksToKeepActive
+    // });
 
     linksToAwake.forEach(link => {
       Snap.select(link).select('path')
@@ -144,7 +163,7 @@ export class NetworkFigure extends Component {
           'stroke-linecap': 'round'
         })
         .animate({
-          'stroke': 'red',
+          'stroke': color,
           'stroke-width': '3px'
       }, 200);
     })
@@ -163,10 +182,12 @@ export class NetworkFigure extends Component {
     linksToKeepActive.forEach(link => {
       Snap.select(link).select('path')
         .attr({
-          'stroke': 'red',
           'stroke-width': '3px',
           'stroke-linecap': 'round'
-      });
+        })
+        .animate({
+          'stroke': color,
+      }, 200);
     })
   }
 
