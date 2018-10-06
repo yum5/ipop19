@@ -213,4 +213,12 @@ export class NetworkFigure extends Component {
   }
 }
 
-export default withStyles(styles)(NetworkFigure)
+
+const mapStateToProps = (state) => {
+  return {
+    vlanId: state.packets.vlan.vlanId,
+    viaSW: state.packets.vlan.viaSW
+  };
+}
+
+export default connect(mapStateToProps)(withStyles(styles)(NetworkFigure));

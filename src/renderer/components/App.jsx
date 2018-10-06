@@ -69,16 +69,16 @@ export class App extends Component {
           open: false
         }
       },
-      vlanId: 11,
-      viaSW: SW.SPINE
+      // vlanId: 11,
+      // viaSW: SW.SPINE
     };
 
-    setInterval(() => {
-      this.setState({
-        vlanId: Math.floor(Math.random() * 6) + 11,
-        viaSW: _.sample([SW.SPINE, SW.MEMS, SW.PLZT])
-      })
-    }, 1000)
+    // setInterval(() => {
+    //   this.setState({
+    //     vlanId: Math.floor(Math.random() * 6) + 11,
+    //     viaSW: _.sample([SW.SPINE, SW.MEMS, SW.PLZT])
+    //   })
+    // }, 1000)
   }
 
   handleClickOpen(dialog) {
@@ -142,10 +142,7 @@ export class App extends Component {
             <Typography variant="headline" component="h1">
               Network Status
             </Typography>
-            <NetworkFigure
-              vlanId={this.state.vlanId}
-              viaSW={this.state.viaSW}
-            />
+            <NetworkFigure />
             <div>
               VLAN Tag: {this.state.vlanId}
 

@@ -5,10 +5,17 @@ const electron = require('electron');
 const cmd = require('node-cmd');
 const os = require('os');
 const NanoTimer = require('nanotimer');
+const timer = new NanoTimer();
 const { app, BrowserWindow, ipcMain } = electron;
 import configureStore from '../shared/store/configureStore';
-import { appendTime } from '../shared/actions/settings';
-import { packetCount } from '../shared/actions/packets';
+import {
+  appendTime,
+  loadSettings
+} from '../shared/actions/settings';
+import {
+  packetCount,
+  vlanConfig
+} from '../shared/actions/packets';
 import { getDevices } from '../shared/actions/devices';
 
 const PLATFORM = {
@@ -19,6 +26,37 @@ const PLATFORM = {
 
 // TODO: mainプロセスはWebpackに扱われず単にコピーされるだけなので、export NODE_ENV=production とないと反映されない！！！！！
 const isDevelopment = process.env.NODE_ENV !== 'production'
+
+
+const store = configureStore({}, 'main');
+
+const main = () => {
+  timer.setTimeout(main, '', `30000m`);
+
+  store.getState().settings.graphEntries.forEach(entry => {
+    store.dispatch(packetCount(entry));
+  })
+
+  const ryuHost = store.getState().settings.ryuHost;
+  store.dispatch(vlanConfig(ryuHost));
+}
+
+setTimeout(() => {
+  // wait a moment until React gets ready
+  // store.dispatch(getDevices(['192.168.100.2', '192.168.100.3', '192.168.100.7']));
+  store.dispatch(getDevices(['192.168.100.2']));
+  store.dispatch(loadSettings());
+
+  main()
+}, 3000)
+
+
+
+// setInterval(() => {
+//   store.dispatch(packetCount('en0'));
+// }, 1000)
+
+
 
 let mainWindow;
 
@@ -61,33 +99,3 @@ app.on('activate', () => {
     createWindow()
   }
 })
-
-const settings = {
-  interval: 20000,
-  interfaces: [],
-  selectedInterface: '',
-}
-
-const store = configureStore({}, 'main');
-setTimeout(() => {
-  // wait a moment until React gets ready
-  // store.dispatch(getDevices(['192.168.100.2', '192.168.100.3', '192.168.100.7']));
-  store.dispatch(getDevices(['192.168.100.2']));
-}, 3000)
-
-
-const timer = new NanoTimer();
-
-const main = () => {
-  timer.setTimeout(main, '', `${settings.interval}m`);
-
-  store.getState().settings.graphEntries.forEach(entry => {
-    store.dispatch(packetCount(entry));
-  })
-}
-
-main()
-
-// setInterval(() => {
-//   store.dispatch(packetCount('en0'));
-// }, 1000)

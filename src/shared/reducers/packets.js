@@ -1,6 +1,8 @@
 import {
   REQUEST_PACKET_COUNT,
-  RECEIVE_PACKET_COUNT
+  RECEIVE_PACKET_COUNT,
+  REQUEST_VLAN_CONFIG,
+  RECEIVE_VLAN_CONFIG
 } from '../actions/packets';
 
 import moment from 'moment';
@@ -14,6 +16,10 @@ const initialState = {
   //     tx: []
   //   }
   // ]
+  vlan: {
+    vlanId: 0,
+    viaSW: ''
+  }
 }
 export default function packets(state = initialState, action) {
   switch (action.type) {
@@ -89,6 +95,18 @@ export default function packets(state = initialState, action) {
           }
         }
       }
+    }
+
+    case REQUEST_VLAN_CONFIG: {
+      return state;
+    }
+
+    case RECEIVE_VLAN_CONFIG: {
+      const { payload } = action;
+      return {
+        ...state,
+        vlan: payload
+      };
     }
 
     default:

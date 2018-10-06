@@ -1,5 +1,6 @@
 const cmd = require('node-cmd');
 const os = require('os')
+const sftpClient = require('sftp-promises')
 
 const PLATFORM = {
   centos6: 'centos6',
@@ -217,6 +218,47 @@ const getAdminStatus = (ip, ifIndex) => {
   return _getAdminStatus(executeCommand, ip, ifIndex);
 }
 
+const getViaSWFromFlowType = (type) => {
+  if (type === 'mf') {
+    return 'spine'
+  } else if (type === 'df') {
+    return 'mems'
+  } else if (type === 'ef') {
+    return 'plzt'
+  } else {
+    throw new Error('got unexpected flow type from Ryu SDN Controller');
+  }
+}
+
+const _getVlanConfig = async (_executeCommand, ip) => {
+  const config = {
+    host: ip,
+    username: 'student',
+    password: 'yamanaka'
+  }
+
+  const sftp = new sftpClient(config);
+  const buffer = (await sftp.getBuffer('/home/student/holst/ryu-book/SC18/jsonfiles/vlan_state.json')).toString();
+  const json = JSON.parse(buffer);
+  console.log(json);
+  // const json = {
+  //   VLAN: 13,
+  //   type: 'mf'
+  // }
+
+  if (json && json['VLAN'] && json['type']) {
+    return {
+      vlanId: parseInt(json['VLAN']),
+      viaSW: getViaSWFromFlowType(json['type'])
+    }
+  } else {
+    throw new Error('got invalid json message from Ryu SDN Controller');
+  }
+}
+
+const getVlanConfig = (ip) => {
+  return _getVlanConfig(executeCommand, ip);
+}
 
 export {
   getPlatform,
@@ -234,5 +276,7 @@ export {
   _getIfDesc,
   getIfDesc,
   _getAdminStatus,
-  getAdminStatus
+  getAdminStatus,
+  _getVlanConfig,
+  getVlanConfig
 }

@@ -19,7 +19,11 @@ import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import blue from '@material-ui/core/colors/blue';
 
-import { updateSnmpHost } from '../../shared/actions/settings';
+import {
+  updateSnmpHost,
+  updateRyuHost,
+  saveSettings
+} from '../../shared/actions/settings';
 
 const styles = {
   settingsItemContainer: {
@@ -38,6 +42,7 @@ const styles = {
 
 const REGEX_IP_V4 = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
 const HELPER_TEXT_SNMP_HOSTS = 'Invalid IP address format!';
+const HELPER_TEXT_RYU_HOST = 'Invalid IP address format!';
 class SettingsDialog extends React.Component {
   constructor(props) {
     super(props);
@@ -52,9 +57,14 @@ class SettingsDialog extends React.Component {
     // }
     this.state = {
       snmpHosts: {
-        value: '',
+        value: '',  // stringified array of ip address separated by '\n'
         error: false,
         helperText: HELPER_TEXT_SNMP_HOSTS
+      },
+      ryuHost: {
+        value: '', // stringified ip address
+        error: false,
+        helperText: HELPER_TEXT_RYU_HOST
       }
     }
   }
@@ -78,6 +88,18 @@ class SettingsDialog extends React.Component {
             helperText: error ? HELPER_TEXT_SNMP_HOSTS: ''
           }
         });
+      } else if (name === 'ryuHost') {
+        const value = event.target.value;
+        const error = !REGEX_IP_V4.test(value);
+
+        this.setState({
+          ryuHost: {
+            ...this.state.ryuHost,
+            error,
+            value,
+            helperText: error ? HELPER_TEXT_RYU_HOST: ''
+          }
+        });
       } else {
         this.setState({
           [name]: {
@@ -96,9 +118,15 @@ class SettingsDialog extends React.Component {
 
   initState() {
     const snmpHosts = this.props.snmpHosts.join('\n');
+    const ryuHost = this.props.ryuHost;
     this.setState({
       snmpHosts: {
         value: snmpHosts,
+        error: false,
+        helperText: ''
+      },
+      ryuHost: {
+        value: ryuHost,
         error: false,
         helperText: ''
       }
@@ -106,13 +134,20 @@ class SettingsDialog extends React.Component {
   }
 
   commitChanges() {
+    const { dispatch } = this.props;
     const snmpHosts = this.state.snmpHosts.value.split('\n');
-    this.props.dispatch(updateSnmpHost(snmpHosts));
+    const ryuHost = this.state.ryuHost.value;
+    dispatch(updateSnmpHost(snmpHosts));
+    dispatch(updateRyuHost(ryuHost));
+    dispatch(saveSettings({
+      snmpHosts,
+      ryuHost
+    }));
   }
 
   render() {
     const { classes, items, open } = this.props;
-    const { snmpHosts } = this.state;
+    const { snmpHosts, ryuHost } = this.state;
 
     return (
       <Dialog
@@ -160,6 +195,10 @@ class SettingsDialog extends React.Component {
               <TextField
                 id="ryu"
                 label="IPv4 Address"
+                value={ryuHost.value}
+                error={ryuHost.error}
+                helperText={ryuHost.helperText}
+                onChange={this.handleChange('ryuHost')}
               />
             </div>
           </div>
@@ -167,7 +206,7 @@ class SettingsDialog extends React.Component {
         <DialogActions>
           <Button
             onClick={this.handleSaveClick}
-            disabled={snmpHosts.error}
+            disabled={snmpHosts.error || ryuHost.error}
           >Save</Button>
         </DialogActions>
       </Dialog>
@@ -182,7 +221,8 @@ SettingsDialog.propTypes = {
 
 const mapStateToProps = (state) => {
   return {
-    snmpHosts: state.settings.snmpHosts
+    snmpHosts: state.settings.snmpHosts,
+    ryuHost: state.settings.ryuHost
   };
 }
 
