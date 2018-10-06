@@ -14,8 +14,10 @@ import {
 } from '../shared/actions/settings';
 import {
   packetCount,
-  vlanConfig
 } from '../shared/actions/packets';
+import {
+  vlanConfig,
+} from '../shared/actions/vlan';
 import { getDevices } from '../shared/actions/devices';
 
 const PLATFORM = {

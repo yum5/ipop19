@@ -4,6 +4,7 @@ import errors from './errors';
 import settings from './settings';
 import packets from './packets';
 import devices from './devices';
+import vlan from './vlan';
 
 
 export default function getRootReducer(scope = 'main') {
@@ -12,14 +13,16 @@ export default function getRootReducer(scope = 'main') {
       errors,
       settings,
       packets,
-      devices
+      devices,
+      vlan
     });
   } else if (scope === 'renderer') {
     return combineReducers({
       errors,
       settings,
       packets,
-      devices
+      devices,
+      vlan
     });
   }
 }

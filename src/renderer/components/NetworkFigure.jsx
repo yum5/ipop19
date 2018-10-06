@@ -216,8 +216,8 @@ export class NetworkFigure extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    vlanId: state.packets.vlan.vlanId,
-    viaSW: state.packets.vlan.viaSW
+    vlanId: state.vlan.vlanId,
+    viaSW: state.vlan.viaSW
   };
 }
 
