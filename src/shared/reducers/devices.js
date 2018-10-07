@@ -5,13 +5,17 @@ import {
 
 const initialState = {
   nic: [],
-  interfaces: []
+  interfaces: [],
+  isLoading: false
 }
 
 export default function interfaces(state = initialState, action) {
   switch (action.type) {
     case REQUEST_DEVICES: {
-      return state;
+      return {
+        ...state,
+        isLoading: true
+      };
     }
     case RECEIVE_DEVICES: {
       const { payload } = action;
@@ -19,7 +23,8 @@ export default function interfaces(state = initialState, action) {
       return {
         ...state,
         nic: [...payload],
-        interfaces: payload
+        interfaces: payload,
+        isLoading: false
       };
     }
 

@@ -33,7 +33,8 @@ const isDevelopment = process.env.NODE_ENV !== 'production'
 const store = configureStore({}, 'main');
 
 const main = () => {
-  timer.setTimeout(main, '', `30000m`);
+  // timer.setTimeout(main, '', `30000m`);
+  timer.setTimeout(main, '', `2000m`);
 
   store.getState().settings.graphEntries.forEach(entry => {
     store.dispatch(packetCount(entry));
@@ -46,7 +47,7 @@ const main = () => {
 setTimeout(() => {
   // wait a moment until React gets ready
   // store.dispatch(getDevices(['192.168.100.2', '192.168.100.3', '192.168.100.7']));
-  store.dispatch(getDevices(['192.168.100.2']));
+  // store.dispatch(getDevices(['192.168.100.2']));
   store.dispatch(loadSettings());
 
   main()

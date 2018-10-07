@@ -21,6 +21,7 @@ import NetworkFigure, { SW, getLinkColor } from './NetworkFigure';
 import NewGraphDialog from './NewGraphDialog';
 import SettingsDialog from './SettingsDialog';
 import { addGraphEntry } from '../../shared/actions/settings';
+import { getDevices } from '../../shared/actions/devices';
 
 const styles = theme => ({
   root: {
@@ -57,6 +58,7 @@ export class App extends Component {
     this.handleClickOpen = this.handleClickOpen.bind(this)
     this.handleClose = this.handleClose.bind(this)
     this.handleItemClick = this.handleItemClick.bind(this)
+    this.handleLoadDevicesClick = this.handleLoadDevicesClick.bind(this)
     this.state = {
       dialog: {
         newGraph: {
@@ -122,8 +124,13 @@ export class App extends Component {
     });
   };
 
+  handleLoadDevicesClick() {
+    const { dispatch, snmpHosts } = this.props;
+    dispatch(getDevices(snmpHosts));
+  }
+
   render() {
-    const { classes, interfaces, graphEntries } = this.props;
+    const { classes, interfaces, graphEntries, isLoading } = this.props;
     return (
       <div>
         <AppBar position="static">
@@ -190,6 +197,8 @@ export class App extends Component {
           open={this.state.dialog.newGraph.open}
           onClose={this.handleClose('newGraph')}
           onItemClick={this.handleItemClick}
+          onLoadDevicesClick={this.handleLoadDevicesClick}
+          isLoading={isLoading}
           items={interfaces}
         />
         <SettingsDialog
@@ -209,8 +218,10 @@ const mapStateToProps = (state) => {
   return {
     nic: state.devices.nic,
     interfaces: state.devices.interfaces,
+    isLoading: state.devices.isLoading,
     graphData: state.packets.graphData,
-    graphEntries: state.settings.graphEntries
+    graphEntries: state.settings.graphEntries,
+    snmpHosts: state.settings.snmpHosts,
   };
 }
 
