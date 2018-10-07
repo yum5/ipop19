@@ -238,7 +238,7 @@ const _getVlanConfig = async (_executeCommand, ip) => {
   }
 
   const sftp = new sftpClient(config);
-  const buffer = (await sftp.getBuffer('/home/student/holst/ryu-book/SC18/jsonfiles/vlan_state.json')).toString();
+  const buffer = (await sftp.getBuffer('/home/student/holst/ryu-book/SC18/jsonfiles/vlan_state.sample.json')).toString();
   const json = JSON.parse(buffer);
   console.log(json);
   // const json = {

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import Snap from 'snapsvg-cjs';
 import _ from 'lodash';
 import { withStyles } from '@material-ui/core/styles';
 
@@ -203,11 +204,12 @@ export class NetworkFigure extends Component {
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, vlanId } = this.props;
 
     return (
       <div className={classes.root}>
         <div ref={d => this.snapRoot = d} />
+        <span>VLAN Tag: {vlanId}</span>
       </div>
     )
   }

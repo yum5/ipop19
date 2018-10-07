@@ -77,9 +77,12 @@ export class Graph extends Component {
   }
 
   onRefresh(chart) {
+    const { graphData } = this.props;
     chart.data.datasets.forEach(dataset => {
+      if (graphData == null) return;
+
       if (dataset.key === 'rx') {
-        this.props.graphData.rx.forEach(rx => {
+        graphData.rx.forEach(rx => {
           const last = dataset.data.slice(-1)[0];
           if (!last || moment(last.x).isBefore(moment(rx.x))) {
             dataset.data.push(rx)
@@ -94,7 +97,7 @@ export class Graph extends Component {
           // }
         })
       } else if (dataset.key === 'tx') {
-        this.props.graphData.tx.forEach(tx => {
+        graphData.tx.forEach(tx => {
           const last = dataset.data.slice(-1)[0];
           if (!last || moment(last.x).isBefore(moment(tx.x))) {
             dataset.data.push(tx)

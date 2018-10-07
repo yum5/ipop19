@@ -143,17 +143,17 @@ export class App extends Component {
               Network Status
             </Typography>
             <NetworkFigure />
-            <div>
+            {/*<div>
               VLAN Tag: {this.state.vlanId}
 
-              {/*<ul>
+              <ul>
                 {[11, 12, 13, 14, 15, 16].map(vlanId =>
                   <li key={vlanId}>
                     VLAN Tag {vlanId}: <span style={{background: getLinkColor(vlanId)}}>{getLinkColor(vlanId)}</span>
                   </li>
                 )}
-              </ul>*/}
-            </div>
+              </ul>
+            </div>*/}
           </Paper>
 
           <Paper className={classes.paper} elevation={1}>

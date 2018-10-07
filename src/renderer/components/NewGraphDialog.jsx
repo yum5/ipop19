@@ -56,7 +56,7 @@ NewGraphDialog.propTypes = {
   classes: PropTypes.object.isRequired,
   onClose: PropTypes.func,
   onItemClick: PropTypes.func,
-  items: PropTypes.arrayOf(PropTypes.string),
+  // items: PropTypes.arrayOf(PropTypes.string),
 };
 
 export default withStyles(styles)(NewGraphDialog);
