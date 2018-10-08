@@ -92,6 +92,30 @@ const getActiveLinksFromVlan = (vlanId, viaSW) => {
   }
 }
 
+export const getActiveLinks = (vlans) => {
+  return  _.flatten(vlans.map(vlan => {
+    const color = getLinkColor(vlan.vlanId);
+    return getActiveLinksFromVlan(vlan.vlanId, vlan.viaSW).map(label => {
+      return {
+        label,
+        color
+      }
+    })
+  }));
+}
+
+export const getLinksToAwake = (nextActiveLinks, activeLinks) => {
+  return _.differenceBy(nextActiveLinks, activeLinks, 'label');
+}
+
+export const getLinksToSleep = (activeLinks, nextActiveLinks) => {
+  return _.differenceBy(activeLinks, nextActiveLinks, 'label');
+}
+
+export const getLinksToKeepActive = (activeLinks, nextActiveLinks) => {
+  return _.intersectionBy(nextActiveLinks, activeLinks, 'label');
+}
+
 export const COLORS = [
   '#FF91E4',
   '#6A65E8',
@@ -146,42 +170,61 @@ export class NetworkFigure extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { vlanId, viaSW } = this.props;
-    const nextVlanId = nextProps.vlanId;
-    const nextViaSW = nextProps.viaSW;
-    const activeLinks = getActiveLinksFromVlan(vlanId, viaSW);
-    const nextActiveLinks = getActiveLinksFromVlan(nextVlanId, nextViaSW);
+    // const { vlanId, viaSW } = this.props;
+    const { vlans } = this.props;
+    // const nextVlanId = nextProps.vlanId;
+    // const nextViaSW = nextProps.viaSW;
+    const nextVlans = nextProps.vlans;
+    // const activeLinks = getActiveLinksFromVlan(vlanId, viaSW);
+    // const activeLinks = _.flatten(vlans.map(vlan => {
+    //   const color = getLinkColor(vlan.vlanId);
+    //   return getActiveLinksFromVlan(vlan.vlanId, vlan.viaSW).map(label => {
+    //     return {
+    //       label,
+    //       color
+    //     }
+    //   })
+    // }));
+    const activeLinks = getActiveLinks(vlans);
+    // const nextActiveLinks = getActiveLinksFromVlan(nextVlanId, nextViaSW);
+    const nextActiveLinks = getActiveLinks(nextVlans);
 
-    const linksToAwake = _.difference(nextActiveLinks, activeLinks);
-    const linksToSleep = _.difference(activeLinks, nextActiveLinks);
-    const linksToKeepActive = _.intersection(activeLinks, nextActiveLinks);
+    // const linksToAwake = _.differenceBy(nextActiveLinks, activeLinks, 'label');
+    const linksToAwake = getLinksToAwake(nextActiveLinks, activeLinks);
+    const linksToSleep = getLinksToSleep(activeLinks, nextActiveLinks);
+    const linksToKeepActive = getLinksToKeepActive(activeLinks, nextActiveLinks);
 
-    const color = getLinkColor(nextVlanId);
+    // const color = getLinkColor(nextVlanId);
 
-    // console.table({
-    //   vlanId,
-    //   nextVlanId,
-    //   viaSW,
-    //   active: activeLinks,
-    //   nextActive: nextActiveLinks,
-    //   awake: linksToAwake,
-    //   sleep: linksToSleep,
-    //   keep: linksToKeepActive
-    // });
+    console.table({
+      vlans,
+      nextVlans
+    })
+
+    console.table({
+      // vlanId,
+      // nextVlanId,
+      // viaSW,
+      active: activeLinks,
+      nextActive: nextActiveLinks,
+      awake: linksToAwake,
+      sleep: linksToSleep,
+      keep: linksToKeepActive
+    });
 
     linksToAwake.forEach(link => {
-      Snap.select(link).select('path')
+      Snap.select(link.label).select('path')
         .attr({
           'stroke-linecap': 'round'
         })
         .animate({
-          'stroke': color,
+          'stroke': link.color,
           'stroke-width': '3px'
       }, 200);
     })
 
     linksToSleep.forEach(link => {
-      Snap.select(link).select('path')
+      Snap.select(link.label).select('path')
         .attr({
           'stroke-linecap': 'round'
         })
@@ -192,35 +235,44 @@ export class NetworkFigure extends Component {
     })
 
     linksToKeepActive.forEach(link => {
-      Snap.select(link).select('path')
+      Snap.select(link.label).select('path')
         .attr({
           'stroke-width': '3px',
           'stroke-linecap': 'round'
         })
         .animate({
-          'stroke': color,
+          'stroke': link.color,
       }, 200);
     })
   }
 
   render() {
-    const { classes, vlanId } = this.props;
+    // const { classes, vlanId } = this.props;
+    const { classes, vlans } = this.props;
 
     return (
       <div className={classes.root}>
         <div ref={d => this.snapRoot = d} />
-        <span>VLAN Tag: {vlanId}</span>
+        {/*<span>VLAN Tag: {vlanId}</span>*/}
+        {vlans.map(vlan =>
+          <li key={vlan.vlanId}>
+            VLAN Tag {vlan.vlanId}: <span style={{background: getLinkColor(vlan.vlanId)}}>{getLinkColor(vlan.vlanId)}</span>
+          </li>
+        )}
       </div>
     )
   }
 }
 
+export const NetworkFigureStyled = withStyles(styles)(NetworkFigure);
+
 
 const mapStateToProps = (state) => {
   return {
-    vlanId: state.vlan.vlanId,
-    viaSW: state.vlan.viaSW
+    vlans: state.vlan
+    // vlanId: state.vlan.vlanId,
+    // viaSW: state.vlan.viaSW
   };
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(NetworkFigure));
+export default connect(mapStateToProps)(NetworkFigureStyled);

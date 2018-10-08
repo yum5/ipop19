@@ -27,7 +27,7 @@ describe('utils/index', () => {
     })
 
     it('should throw an error when command takes too long time', async () => {
-      await expect(executeCommand('sleep 10'))
+      await expect(executeCommand(`sleep ${30000 * 2 / 1000}`))
         .rejects.toThrowError('promise timeout');
     })
   })

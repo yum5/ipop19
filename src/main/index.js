@@ -17,6 +17,7 @@ import {
 } from '../shared/actions/packets';
 import {
   vlanConfig,
+  receiveVlanConfig
 } from '../shared/actions/vlan';
 import { getDevices } from '../shared/actions/devices';
 
@@ -40,8 +41,8 @@ const main = () => {
     store.dispatch(packetCount(entry));
   })
 
-  const ryuHost = store.getState().settings.ryuHost;
-  store.dispatch(vlanConfig(ryuHost));
+  // const ryuHost = store.getState().settings.ryuHost;
+  // store.dispatch(vlanConfig(ryuHost));
 }
 
 setTimeout(() => {
@@ -51,6 +52,10 @@ setTimeout(() => {
   store.dispatch(loadSettings());
 
   main()
+  store.dispatch(receiveVlanConfig([{
+    vlanId: 15,
+    viaSW: 'plzt',
+  }]));
 }, 3000)
 
 

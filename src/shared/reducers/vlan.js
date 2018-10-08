@@ -3,10 +3,17 @@ import {
   RECEIVE_VLAN_CONFIG
 } from '../actions/vlan';
 
-const initialState = {
-  vlanId: 0,
-  viaSW: ''
-}
+const initialState = [
+  // {
+  //   vlanId: 13,
+  //   viaSW: 'mems',
+  // },
+  {
+    vlanId: 15,
+    viaSW: 'plzt',
+  }
+];
+
 export default function packets(state = initialState, action) {
   switch (action.type) {
 
@@ -16,10 +23,11 @@ export default function packets(state = initialState, action) {
 
     case RECEIVE_VLAN_CONFIG: {
       const { payload } = action;
-      return {
-        ...state,
-        ...payload
-      };
+      // return {
+      //   ...state,
+      //   ...payload
+      // };
+      return payload
     }
 
     default:

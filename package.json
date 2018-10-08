@@ -76,6 +76,7 @@
     "moment": "^2.22.1",
     "node-sass": "^4.9.0",
     "node-shell-parser": "^0.2.1",
+    "react-test-renderer": "^16.5.2",
     "rxjs": "^6.0.0",
     "sass-loader": "^7.0.1",
     "sinon": "^6.2.0",
