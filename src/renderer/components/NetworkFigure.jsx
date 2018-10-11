@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import Snap from 'snapsvg-cjs';
+// import Snap from 'snapsvg-cjs';
+import Snap from 'snapsvg';
 import _ from 'lodash';
 import { withStyles } from '@material-ui/core/styles';
 
@@ -116,6 +117,61 @@ export const getLinksToKeepActive = (activeLinks, nextActiveLinks) => {
   return _.intersectionBy(nextActiveLinks, activeLinks, 'label');
 }
 
+
+// actuveLinks = {
+//   link-label-name-as-key: [array of color]
+// }
+export const getLinksToAwakeMap = (nextActiveLinks, activeLinks) => {
+  return _.mapValues(nextActiveLinks, (nextActiveLinksColors, link) => _.difference(nextActiveLinksColors, activeLinks[link]))
+}
+
+export const getLinksToSleepMap = (activeLinks, nextActiveLinks) => {
+  return _.mapValues(activeLinks, (activeLinksColors, link) => _.difference(activeLinksColors, nextActiveLinks[link]))
+}
+
+export const getLinksToKeepActiveMap = (activeLinks, nextActiveLinks) => {
+  const links = _.mapValues(nextActiveLinks, (nextActiveLinksColors, link) => _.intersection(activeLinks[link], nextActiveLinksColors))
+  return _.pickBy(links, (colors, link) => colors.length > 0);
+}
+
+export const groupByLabel = (links) => {
+  // key: link label
+  // values: [link]
+  // e.g.
+  // [ link-a: [ { label: 'link-a', color: 1 }, { label: 'link-a', color: 2 } ] ]
+  const groupedByLabel = links.reduce((accum, current) => {
+    if (accum[current.label] == null) {
+      accum[current.label] = [current]
+      return accum
+    }
+    accum[current.label].push(current)
+    return accum
+  }, {});
+
+  // e.g.
+  // { a: [ 1, 2 ] }
+  const linkColors =  _.mapValues(groupedByLabel, (links, label) => {
+    return links.map(link => link.color)
+  })
+
+  return linkColors;
+
+  // return _.map(linkColors, (value, key) => {
+  //   return {
+  //     label: key,
+  //     colors: value
+  //   }
+  // })
+}
+
+export const getLinksToDie = (nextActiveLinks) => {
+  const nextActiveGrouped = groupByLabel(nextActiveLinks);
+
+  const allLinks = _.values(LINK);
+  const linksToAlive = _.keys(nextActiveGrouped);
+  return _.difference(allLinks, linksToAlive);
+}
+
 export const COLORS = [
   '#FF91E4',
   '#6A65E8',
@@ -148,10 +204,19 @@ const styles = theme => ({
 export class NetworkFigure extends Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      paper: null
+    }
   }
 
   componentDidMount() {
     const root = Snap(this.snapRoot)
+    // console.log(root.gradient(`l(0, 0, 1, 1)${['red', 'blue'].join('-')}`))
+    console.log(root.gradient);
+    console.log(Snap(window.width, window.height))
+    console.log(Snap(window.width, window.height).gradient)
+
     Snap.load("network.svg", (data) => {
       if (root) {
         root.append(data);
@@ -166,6 +231,10 @@ export class NetworkFigure extends Component {
         //   color = color === 'red' ? 'black': 'red';
         // }, 3000)
       }
+    });
+
+    this.setState({
+      paper: root
     });
   }
 
@@ -201,47 +270,108 @@ export class NetworkFigure extends Component {
       nextVlans
     })
 
-    console.table({
-      // vlanId,
-      // nextVlanId,
-      // viaSW,
-      active: activeLinks,
-      nextActive: nextActiveLinks,
-      awake: linksToAwake,
-      sleep: linksToSleep,
-      keep: linksToKeepActive
-    });
+    // console.table({
+    //   // vlanId,
+    //   // nextVlanId,
+    //   // viaSW,
+    //   active: activeLinks,
+    //   nextActive: nextActiveLinks,
+    //   awake: linksToAwake,
+    //   sleep: linksToSleep,
+    //   keep: linksToKeepActive
+    // });
 
-    linksToAwake.forEach(link => {
-      Snap.select(link.label).select('path')
+    // linksToAwake.forEach(link => {
+    //   Snap.select(link.label).select('path')
+    //     .attr({
+    //       'stroke-linecap': 'round'
+    //     })
+    //     .animate({
+    //       'stroke': link.color,
+    //       'stroke-width': '3px'
+    //   }, 200);
+    // })
+    //
+    // linksToSleep.forEach(link => {
+    //   Snap.select(link.label).select('path')
+    //     .attr({
+    //       'stroke-linecap': 'round'
+    //     })
+    //     .animate({
+    //       'stroke': 'black',
+    //       'stroke-width': '1px'
+    //   }, 200);
+    // })
+    //
+    // linksToKeepActive.forEach(link => {
+    //   Snap.select(link.label).select('path')
+    //     .attr({
+    //       'stroke-width': '3px',
+    //       'stroke-linecap': 'round'
+    //     })
+    //     .animate({
+    //       'stroke': link.color,
+    //   }, 200);
+    // })
+
+
+    // const linksToAwakeMap = getLinksToAwakeMap(groupByLabel(nextActiveLinks), groupByLabel(activeLinks));
+    // const linksToSleepMap = getLinksToSleepMap(groupByLabel(activeLinks), groupByLabel(nextActiveLinks));
+    // const linksToKeepActiveMap = getLinksToKeepActiveMap(groupByLabel(activeLinks), groupByLabel(nextActiveLinks));
+    //
+    // _.forEach(linksToAwakeMap, (colors, link) => {
+    //   Snap.select(link).select('path')
+    //     .attr({
+    //       'stroke-linecap': 'round'
+    //     })
+    //     .animate({
+    //       'stroke': Snap.gradient(`l(0, 0, 1, 1)${colors.join('-')}`),
+    //       'stroke-width': '3px'
+    //   }, 200);
+    // })
+    //
+    // _.forEach(linksToSleepMap, (colors, link) => {
+    //   Snap.select(link).select('path')
+    //     .attr({
+    //       'stroke-linecap': 'round'
+    //     })
+    //     .animate({
+    //       'stroke': 'black', // cannot get colors of this link!!!
+    //       'stroke-width': '1px'
+    //   }, 200);
+    // })
+
+    const linksToAlive = groupByLabel(nextActiveLinks);  // label: color
+    const linksToDie = getLinksToDie(nextActiveLinks); // [label]
+
+    console.table({
+      linksToAlive,
+      linksToDie
+    })
+
+    const { paper } = this.state;
+    const s = Snap(window.width, window.height);
+    console.log(paper);
+
+    _.forEach(linksToAlive, (colors, link) => {
+      Snap.select(link).select('path')
         .attr({
           'stroke-linecap': 'round'
         })
         .animate({
-          'stroke': link.color,
+          'stroke': paper.gradient(`l(0, 0, 1, 1)${colors.join('-')}`),
           'stroke-width': '3px'
       }, 200);
     })
 
-    linksToSleep.forEach(link => {
-      Snap.select(link.label).select('path')
+    _.forEach(linksToDie, (link) => {
+      Snap.select(link).select('path')
         .attr({
           'stroke-linecap': 'round'
         })
         .animate({
-          'stroke': 'black',
+          'stroke': 'black', // cannot get colors of this link!!!
           'stroke-width': '1px'
-      }, 200);
-    })
-
-    linksToKeepActive.forEach(link => {
-      Snap.select(link.label).select('path')
-        .attr({
-          'stroke-width': '3px',
-          'stroke-linecap': 'round'
-        })
-        .animate({
-          'stroke': link.color,
       }, 200);
     })
   }
