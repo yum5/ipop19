@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-// import Snap from 'snapsvg-cjs';
-import Snap from 'snapsvg';
+import Snap from 'snapsvg-cjs';
+// import Snap from 'snapsvg';
+// import SVG from 'svg.js';
 import _ from 'lodash';
 import { withStyles } from '@material-ui/core/styles';
 
@@ -206,16 +207,18 @@ export class NetworkFigure extends Component {
     super(props);
 
     this.state = {
-      paper: null
+      paper: null,
+      activeLinksDom: []
     }
   }
 
   componentDidMount() {
     const root = Snap(this.snapRoot)
     // console.log(root.gradient(`l(0, 0, 1, 1)${['red', 'blue'].join('-')}`))
-    console.log(root.gradient);
-    console.log(Snap(window.width, window.height))
-    console.log(Snap(window.width, window.height).gradient)
+    // console.log(root.gradient);
+    // console.log(Snap(window.width, window.height))
+    // console.log(Snap(window.width, window.height).gradient)
+    console.log(root);
 
     Snap.load("network.svg", (data) => {
       if (root) {
@@ -230,12 +233,22 @@ export class NetworkFigure extends Component {
         //   }, 1000);
         //   color = color === 'red' ? 'black': 'red';
         // }, 3000)
+
+        this.setState({
+          paper: root,
+          data,
+          svg: root.select('svg')
+        });
       }
     });
 
-    this.setState({
-      paper: root
-    });
+
+
+    // const svg = SVG.adopt(this.svg)
+    //
+    // this.setState({
+    //   svg
+    // })
   }
 
   componentWillReceiveProps(nextProps) {
@@ -349,30 +362,75 @@ export class NetworkFigure extends Component {
       linksToDie
     })
 
-    const { paper } = this.state;
-    const s = Snap(window.width, window.height);
-    console.log(paper);
 
-    _.forEach(linksToAlive, (colors, link) => {
-      Snap.select(link).select('path')
-        .attr({
-          'stroke-linecap': 'round'
-        })
-        .animate({
-          'stroke': paper.gradient(`l(0, 0, 1, 1)${colors.join('-')}`),
-          'stroke-width': '3px'
-      }, 200);
+    const { paper, svg } = this.state;
+    // const s = Snap(window.width, window.height);
+    // console.log(paper);
+
+    // const g = svg.gradient(`l(0, 0, 1, 1)${['red', 'green', 'yellow'].join('-')}`)
+    // console.log('g')
+    // console.log(g)
+
+    // _.forEach(linksToAlive, (colors, link) => {
+    //   console.log(colors);
+    //   console.log(link);
+    //   // console.log(svg.gradient(`l(0, 0, 1, 1)${colors.join('-')}`));
+    //
+    //   // const color = Snap.select(link).gradient(`l(0, 0, 1, 1)${['red', 'green', 'yellow'].join('-')}`);
+    //   // const color = Snap.select(link).select('path').gradient(`l(0, 0, 1, 1)${['red', 'green', 'yellow'].join('-')}`);
+    //
+    //   const gradient = svg.gradient(`r(0, 0, 1, 1)${['red', 'green', 'yellow'].join('-')}`)
+    //   // id fix
+    //   gradient.node.id = gradient.id;
+    //
+    //   Snap.select(link).select('path')
+    //     .attr({
+    //       'stroke-linecap': 'round',
+    //       'stroke': `url(#${gradient.id})`,
+    //     })
+    //     .animate({
+    //       // 'stroke': `url(#${gradient.id})`,
+    //       // 'fill': svg.gradient(`l(0, 0, 1, 1)${colors.join('-')}`),
+    //       'stroke-width': '3px'
+    //   }, 200);
+    //   // svg.select(link).stroke({
+    //   //   color: 'red',
+    //   //   width: 3
+    //   // })
+    // })
+    //
+    // _.forEach(linksToDie, (link) => {
+    // //   Snap.select(link).select('path')
+    // //     .attr({
+    // //       'stroke-linecap': 'round'
+    // //     })
+    // //     .animate({
+    // //       'stroke': 'black', // cannot get colors of this link!!!
+    // //       'stroke-width': '1px'
+    // //   }, 200);
+    // })
+
+
+    this.state.activeLinksDom.forEach(dom => {
+      dom.remove();
     })
 
-    _.forEach(linksToDie, (link) => {
-      Snap.select(link).select('path')
-        .attr({
-          'stroke-linecap': 'round'
-        })
-        .animate({
-          'stroke': 'black', // cannot get colors of this link!!!
-          'stroke-width': '1px'
-      }, 200);
+    const list = [];
+    _.forEach(linksToAlive, (colors, link) => {
+      const path = Snap.select(link).select('path');
+      _.forEach(colors, (color, index) => {
+          const cloned = path.clone();
+          cloned.transform(Snap.matrix().translate(0, 3 * index));
+          cloned.attr({
+            'stroke-linecap': 'round',
+            'stroke-width': '3px',
+            'stroke': color,
+          });
+          list.push(cloned);
+      })
+    })
+    this.setState({
+      activeLinksDom: list
     })
   }
 

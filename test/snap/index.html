@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Snap Test</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/snap.svg/0.5.1/snap.svg-min.js" charset="utf-8"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.min.js" charset="utf-8"></script>
+  </head>
+  <body>
+    <div id="snapRoot"></div>
+    <script type="text/javascript">
+      const LINK = {
+        SERVER1__FLOW_CLASSIFIER: '#edge--server1-flow_classifier',
+        SERVER2__FLOW_CLASSIFIER: '#edge--server2-flow_classifier',
+        FLOW_CLASSIFIER__TOR1: '#edge--flow_classifier-tor1',
+        TOR1__SPINE: '#edge--tor1-spine',
+        TOR1__MEMS: '#edge--tor1-mems',
+        TOR1__PLZT: '#edge--tor1-plzt',
+        SERVER3__TOR2: '#edge--server3-tor2',
+        SERVER4__TOR3: '#edge--server4-tor3',
+        SERVER5__TOR4: '#edge--server5-tor4',
+        TOR2__SPINE: '#edge--tor2-spine',
+        TOR2__MEMS: '#edge--tor2-mems',
+        TOR2__PLZT: '#edge--tor2-plzt',
+        TOR3__SPINE: '#edge--tor3-spine',
+        TOR3__MEMS: '#edge--tor3-mems',
+        TOR3__PLZT: '#edge--tor3-plzt',
+        TOR4__SPINE: '#edge--tor4-spine',
+        TOR4__MEMS: '#edge--tor4-mems',
+        TOR4__PLZT: '#edge--tor4-plzt',
+      }
+
+      const root = Snap(document.getElementById('snapRoot'));
+      let activeLinks = []
+      Snap.load("network.svg", (data) => {
+        root.append(data);
+
+
+        // const links = _.values(LINK)
+        // _.forEach(links, (link) => {
+        //   // const gradient = root.select('svg').gradient(`l(0, 0, 1, 1)${['red', 'green', 'yellow'].join('-')}`)
+        //   //
+        //   // gradient.node.gradientUnits = 'userSpaceOnUse';
+        //   // gradient.node.attributes.gradientUnits = 'userSpaceOnUse';
+        //
+        //   Snap.select(link).select('path');
+        //   //   .attr({
+        //   //     'stroke-linecap': 'round',
+        //   //     'stroke': gradient,
+        //   //   })
+        //   //   .animate({
+        //   //     // 'stroke': gradient,
+        //   //     'stroke-width': '3px'
+        //   // }, 2000);
+        //   const cloned = Snap.select(link).select('path').clone();
+        //   cloned.attr({
+        //     'stroke-linecap': 'round',
+        //     'stroke-width': '3px',
+        //     'stroke': 'red',
+        //   })
+        //   cloned.transform(Snap.matrix().translate(0, 2))
+        // })
+      });
+
+      const shuffle = () => {
+        _.forEach(activeLinks, (link) => {
+          link.remove();
+        });
+
+        activeLinks = []
+
+        const nextActiveLinks = _.sampleSize(_.values(LINK), 5);
+
+        _.forEach(nextActiveLinks, (link) => {
+          const cloned = Snap.select(link).select('path').clone();
+          cloned.transform(Snap.matrix().translate(0, 0))
+          cloned.attr({
+            'stroke-linecap': 'round',
+            'stroke-width': '3px',
+            'stroke': 'red',
+          });
+          activeLinks.push(cloned);
+
+
+          const cloned2 = Snap.select(link).select('path').clone();
+          cloned2.transform(Snap.matrix().translate(0, 3))
+          cloned2.attr({
+            'stroke-linecap': 'round',
+            'stroke-width': '3px',
+            'stroke': 'blue',
+          });
+          activeLinks.push(cloned2);
+        });
+      }
+
+
+      setInterval(() => {
+        shuffle();
+      }, 3000)
+    </script>
+  </body>
+</html>

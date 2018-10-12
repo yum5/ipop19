@@ -27,15 +27,47 @@ const PLATFORM = {
   darwin: 'darwin'
 }
 
-// TODO: mainプロセスはWebpackに扱われず単にコピーされるだけなので、export NODE_ENV=production とないと反映されない！！！！！
+// mainプロセスはWebpackに扱われず単にコピーされるだけなので、export NODE_ENV=production とないと反映されない！！！！！
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
+// TODO: only for test purpose !!
+// remove this lines
+import _ from 'lodash';
+const getFakeVlanConfig = () => {
+  const sw = ['spine', 'mems', 'plzt'];
+  const list = [{
+    vlanId: 11,
+    viaSW: _.sample(sw),
+  },
+  {
+    vlanId: 12,
+    viaSW: _.sample(sw),
+  },
+  {
+    vlanId: 13,
+    viaSW: _.sample(sw),
+  },
+  {
+    vlanId: 14,
+    viaSW: _.sample(sw),
+  },
+  {
+    vlanId: 15,
+    viaSW: _.sample(sw),
+  },
+  {
+    vlanId: 16,
+    viaSW: _.sample(sw),
+  },
+  ]
+  return _.sampleSize(list, _.random(1, 6));
+}
 
 const store = configureStore({}, 'main');
 
 const main = () => {
   // timer.setTimeout(main, '', `30000m`);
-  timer.setTimeout(main, '', `2000m`);
+  timer.setTimeout(main, '', `4000m`);
 
   store.getState().settings.graphEntries.forEach(entry => {
     store.dispatch(packetCount(entry));
@@ -43,6 +75,8 @@ const main = () => {
 
   // const ryuHost = store.getState().settings.ryuHost;
   // store.dispatch(vlanConfig(ryuHost));
+  getFakeVlanConfig
+  store.dispatch(receiveVlanConfig(getFakeVlanConfig()));
 }
 
 setTimeout(() => {
