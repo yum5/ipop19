@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Snap from 'snapsvg-cjs';
-// import Snap from 'snapsvg';
-// import SVG from 'svg.js';
 import _ from 'lodash';
 import { withStyles } from '@material-ui/core/styles';
 
@@ -106,36 +104,7 @@ export const getActiveLinks = (vlans) => {
   }));
 }
 
-export const getLinksToAwake = (nextActiveLinks, activeLinks) => {
-  return _.differenceBy(nextActiveLinks, activeLinks, 'label');
-}
-
-export const getLinksToSleep = (activeLinks, nextActiveLinks) => {
-  return _.differenceBy(activeLinks, nextActiveLinks, 'label');
-}
-
-export const getLinksToKeepActive = (activeLinks, nextActiveLinks) => {
-  return _.intersectionBy(nextActiveLinks, activeLinks, 'label');
-}
-
-
-// actuveLinks = {
-//   link-label-name-as-key: [array of color]
-// }
-export const getLinksToAwakeMap = (nextActiveLinks, activeLinks) => {
-  return _.mapValues(nextActiveLinks, (nextActiveLinksColors, link) => _.difference(nextActiveLinksColors, activeLinks[link]))
-}
-
-export const getLinksToSleepMap = (activeLinks, nextActiveLinks) => {
-  return _.mapValues(activeLinks, (activeLinksColors, link) => _.difference(activeLinksColors, nextActiveLinks[link]))
-}
-
-export const getLinksToKeepActiveMap = (activeLinks, nextActiveLinks) => {
-  const links = _.mapValues(nextActiveLinks, (nextActiveLinksColors, link) => _.intersection(activeLinks[link], nextActiveLinksColors))
-  return _.pickBy(links, (colors, link) => colors.length > 0);
-}
-
-export const groupByLabel = (links) => {
+const groupByLabel = (links) => {
   // key: link label
   // values: [link]
   // e.g.
@@ -156,21 +125,10 @@ export const groupByLabel = (links) => {
   })
 
   return linkColors;
-
-  // return _.map(linkColors, (value, key) => {
-  //   return {
-  //     label: key,
-  //     colors: value
-  //   }
-  // })
 }
 
-export const getLinksToDie = (nextActiveLinks) => {
-  const nextActiveGrouped = groupByLabel(nextActiveLinks);
-
-  const allLinks = _.values(LINK);
-  const linksToAlive = _.keys(nextActiveGrouped);
-  return _.difference(allLinks, linksToAlive);
+export const getActiveLinksMap = (vlans) => {
+  return groupByLabel(getActiveLinks(vlans))
 }
 
 export const COLORS = [
@@ -190,8 +148,6 @@ export const getLinkColor = (vlanId) => {
   }
 }
 
-const inactiveLinks = () =>  _.values(LINK)
-
 const styles = theme => ({
   root: {
   },
@@ -207,216 +163,33 @@ export class NetworkFigure extends Component {
     super(props);
 
     this.state = {
-      paper: null,
       activeLinksDom: []
     }
   }
 
   componentDidMount() {
     const root = Snap(this.snapRoot)
-    // console.log(root.gradient(`l(0, 0, 1, 1)${['red', 'blue'].join('-')}`))
-    // console.log(root.gradient);
-    // console.log(Snap(window.width, window.height))
-    // console.log(Snap(window.width, window.height).gradient)
-    console.log(root);
 
     Snap.load("network.svg", (data) => {
       if (root) {
         root.append(data);
-        //
-        // let color = 'red';
-        // setInterval(() => {
-        // console.log(Snap.select("#edge--server3-tor2"));
-        //   Snap.select("#edge--server3-tor2").select('path')
-        //     .animate({
-        //       'stroke': color,
-        //   }, 1000);
-        //   color = color === 'red' ? 'black': 'red';
-        // }, 3000)
-
-        this.setState({
-          paper: root,
-          data,
-          svg: root.select('svg')
-        });
       }
     });
-
-
-
-    // const svg = SVG.adopt(this.svg)
-    //
-    // this.setState({
-    //   svg
-    // })
   }
 
   componentWillReceiveProps(nextProps) {
-    // const { vlanId, viaSW } = this.props;
-    const { vlans } = this.props;
-    // const nextVlanId = nextProps.vlanId;
-    // const nextViaSW = nextProps.viaSW;
     const nextVlans = nextProps.vlans;
-    // const activeLinks = getActiveLinksFromVlan(vlanId, viaSW);
-    // const activeLinks = _.flatten(vlans.map(vlan => {
-    //   const color = getLinkColor(vlan.vlanId);
-    //   return getActiveLinksFromVlan(vlan.vlanId, vlan.viaSW).map(label => {
-    //     return {
-    //       label,
-    //       color
-    //     }
-    //   })
-    // }));
-    const activeLinks = getActiveLinks(vlans);
-    // const nextActiveLinks = getActiveLinksFromVlan(nextVlanId, nextViaSW);
-    const nextActiveLinks = getActiveLinks(nextVlans);
-
-    // const linksToAwake = _.differenceBy(nextActiveLinks, activeLinks, 'label');
-    const linksToAwake = getLinksToAwake(nextActiveLinks, activeLinks);
-    const linksToSleep = getLinksToSleep(activeLinks, nextActiveLinks);
-    const linksToKeepActive = getLinksToKeepActive(activeLinks, nextActiveLinks);
-
-    // const color = getLinkColor(nextVlanId);
-
-    console.table({
-      vlans,
-      nextVlans
-    })
-
-    // console.table({
-    //   // vlanId,
-    //   // nextVlanId,
-    //   // viaSW,
-    //   active: activeLinks,
-    //   nextActive: nextActiveLinks,
-    //   awake: linksToAwake,
-    //   sleep: linksToSleep,
-    //   keep: linksToKeepActive
-    // });
-
-    // linksToAwake.forEach(link => {
-    //   Snap.select(link.label).select('path')
-    //     .attr({
-    //       'stroke-linecap': 'round'
-    //     })
-    //     .animate({
-    //       'stroke': link.color,
-    //       'stroke-width': '3px'
-    //   }, 200);
-    // })
-    //
-    // linksToSleep.forEach(link => {
-    //   Snap.select(link.label).select('path')
-    //     .attr({
-    //       'stroke-linecap': 'round'
-    //     })
-    //     .animate({
-    //       'stroke': 'black',
-    //       'stroke-width': '1px'
-    //   }, 200);
-    // })
-    //
-    // linksToKeepActive.forEach(link => {
-    //   Snap.select(link.label).select('path')
-    //     .attr({
-    //       'stroke-width': '3px',
-    //       'stroke-linecap': 'round'
-    //     })
-    //     .animate({
-    //       'stroke': link.color,
-    //   }, 200);
-    // })
+    const activeLinks = getActiveLinksMap(nextVlans)  // {label: color}
 
 
-    // const linksToAwakeMap = getLinksToAwakeMap(groupByLabel(nextActiveLinks), groupByLabel(activeLinks));
-    // const linksToSleepMap = getLinksToSleepMap(groupByLabel(activeLinks), groupByLabel(nextActiveLinks));
-    // const linksToKeepActiveMap = getLinksToKeepActiveMap(groupByLabel(activeLinks), groupByLabel(nextActiveLinks));
-    //
-    // _.forEach(linksToAwakeMap, (colors, link) => {
-    //   Snap.select(link).select('path')
-    //     .attr({
-    //       'stroke-linecap': 'round'
-    //     })
-    //     .animate({
-    //       'stroke': Snap.gradient(`l(0, 0, 1, 1)${colors.join('-')}`),
-    //       'stroke-width': '3px'
-    //   }, 200);
-    // })
-    //
-    // _.forEach(linksToSleepMap, (colors, link) => {
-    //   Snap.select(link).select('path')
-    //     .attr({
-    //       'stroke-linecap': 'round'
-    //     })
-    //     .animate({
-    //       'stroke': 'black', // cannot get colors of this link!!!
-    //       'stroke-width': '1px'
-    //   }, 200);
-    // })
-
-    const linksToAlive = groupByLabel(nextActiveLinks);  // label: color
-    const linksToDie = getLinksToDie(nextActiveLinks); // [label]
-
-    console.table({
-      linksToAlive,
-      linksToDie
-    })
-
-
-    const { paper, svg } = this.state;
-    // const s = Snap(window.width, window.height);
-    // console.log(paper);
-
-    // const g = svg.gradient(`l(0, 0, 1, 1)${['red', 'green', 'yellow'].join('-')}`)
-    // console.log('g')
-    // console.log(g)
-
-    // _.forEach(linksToAlive, (colors, link) => {
-    //   console.log(colors);
-    //   console.log(link);
-    //   // console.log(svg.gradient(`l(0, 0, 1, 1)${colors.join('-')}`));
-    //
-    //   // const color = Snap.select(link).gradient(`l(0, 0, 1, 1)${['red', 'green', 'yellow'].join('-')}`);
-    //   // const color = Snap.select(link).select('path').gradient(`l(0, 0, 1, 1)${['red', 'green', 'yellow'].join('-')}`);
-    //
-    //   const gradient = svg.gradient(`r(0, 0, 1, 1)${['red', 'green', 'yellow'].join('-')}`)
-    //   // id fix
-    //   gradient.node.id = gradient.id;
-    //
-    //   Snap.select(link).select('path')
-    //     .attr({
-    //       'stroke-linecap': 'round',
-    //       'stroke': `url(#${gradient.id})`,
-    //     })
-    //     .animate({
-    //       // 'stroke': `url(#${gradient.id})`,
-    //       // 'fill': svg.gradient(`l(0, 0, 1, 1)${colors.join('-')}`),
-    //       'stroke-width': '3px'
-    //   }, 200);
-    //   // svg.select(link).stroke({
-    //   //   color: 'red',
-    //   //   width: 3
-    //   // })
-    // })
-    //
-    // _.forEach(linksToDie, (link) => {
-    // //   Snap.select(link).select('path')
-    // //     .attr({
-    // //       'stroke-linecap': 'round'
-    // //     })
-    // //     .animate({
-    // //       'stroke': 'black', // cannot get colors of this link!!!
-    // //       'stroke-width': '1px'
-    // //   }, 200);
-    // })
-
-
+    // remove old colored edge element
     this.state.activeLinksDom.forEach(dom => {
       dom.remove();
     })
+    const activeLinksDom = [];
 
-    const list = [];
-    _.forEach(linksToAlive, (colors, link) => {
+
+    _.forEach(activeLinks, (colors, link) => {
       const path = Snap.select(link).select('path');
       _.forEach(colors, (color, index) => {
           const cloned = path.clone();
@@ -426,11 +199,11 @@ export class NetworkFigure extends Component {
             'stroke-width': '3px',
             'stroke': color,
           });
-          list.push(cloned);
+          activeLinksDom.push(cloned);
       })
     })
     this.setState({
-      activeLinksDom: list
+      activeLinksDom
     })
   }
 
@@ -441,7 +214,6 @@ export class NetworkFigure extends Component {
     return (
       <div className={classes.root}>
         <div ref={d => this.snapRoot = d} />
-        {/*<span>VLAN Tag: {vlanId}</span>*/}
         {vlans.map(vlan =>
           <li key={vlan.vlanId}>
             VLAN Tag {vlan.vlanId}: <span style={{background: getLinkColor(vlan.vlanId)}}>{getLinkColor(vlan.vlanId)}</span>
@@ -458,8 +230,6 @@ export const NetworkFigureStyled = withStyles(styles)(NetworkFigure);
 const mapStateToProps = (state) => {
   return {
     vlans: state.vlan
-    // vlanId: state.vlan.vlanId,
-    // viaSW: state.vlan.viaSW
   };
 }
 

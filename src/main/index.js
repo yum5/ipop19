@@ -75,7 +75,6 @@ const main = () => {
 
   // const ryuHost = store.getState().settings.ryuHost;
   // store.dispatch(vlanConfig(ryuHost));
-  getFakeVlanConfig
   store.dispatch(receiveVlanConfig(getFakeVlanConfig()));
 }
 
