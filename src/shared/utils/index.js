@@ -1,6 +1,7 @@
 const cmd = require('node-cmd');
 const os = require('os')
 const sftpClient = require('sftp-promises')
+import _ from 'lodash';
 
 const PLATFORM = {
   centos6: 'centos6',
@@ -240,20 +241,24 @@ const _getVlanConfig = async (_executeCommand, ip) => {
   const sftp = new sftpClient(config);
   const buffer = (await sftp.getBuffer('/home/student/holst/ryu-book/SC18/jsonfiles/vlan_state.json')).toString();
   const json = JSON.parse(buffer);
-  console.log(json);
+  // console.log(json);
   // const json = {
   //   VLAN: 13,
   //   type: 'mf'
   // }
 
-  if (json && json['VLAN'] && json['type']) {
-    return {
-      vlanId: parseInt(json['VLAN']),
-      viaSW: getViaSWFromFlowType(json['type'])
+  const vlans = _.map(_.values(json), (vlan) => {
+    if (vlan && vlan['VLAN'] && vlan['type']) {
+      return {
+        vlanId: parseInt(vlan['VLAN']),
+        viaSW: getViaSWFromFlowType(vlan['type'])
+      }
+    } else {
+      throw new Error('got invalid json message from Ryu SDN Controller');
     }
-  } else {
-    throw new Error('got invalid json message from Ryu SDN Controller');
-  }
+  })
+
+  return vlans;
 }
 
 const getVlanConfig = (ip) => {

@@ -73,9 +73,9 @@ const main = () => {
     store.dispatch(packetCount(entry));
   })
 
-  // const ryuHost = store.getState().settings.ryuHost;
-  // store.dispatch(vlanConfig(ryuHost));
-  store.dispatch(receiveVlanConfig(getFakeVlanConfig()));
+  const ryuHost = store.getState().settings.ryuHost;
+  store.dispatch(vlanConfig(ryuHost));
+  // store.dispatch(receiveVlanConfig(getFakeVlanConfig()));
 }
 
 setTimeout(() => {
