@@ -7,18 +7,14 @@ import {
 export const REQUEST_VLAN_CONFIG = 'REQUEST_VLAN_CONFIG';
 export const RECEIVE_VLAN_CONFIG = 'RECEIVE_VLAN_CONFIG';
 
-export const requestVlanConfig = () => {
-  return {
-    type: REQUEST_VLAN_CONFIG
-  }
-}
+export const requestVlanConfig = () => ({
+  type: REQUEST_VLAN_CONFIG
+})
 
-export const receiveVlanConfig = (payload) => {
-  return {
-    type: RECEIVE_VLAN_CONFIG,
-    payload
-  }
-}
+export const receiveVlanConfig = payload => ({
+  type: RECEIVE_VLAN_CONFIG,
+  payload
+})
 
 
 export const vlanConfig = ip =>

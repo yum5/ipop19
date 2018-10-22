@@ -20,8 +20,7 @@
     "react": {
       "createClass": "createReactClass",
       "pragma": "React",
-      "version": "15.0",
-      "flowVersion": "0.53"
+      "version": "16.4"
     },
     "propWrapperFunctions": [ "forbidExtraProps" ]
   },
@@ -30,8 +29,8 @@
       "react"
   ],
   "rules": {
-    "arrow-body-style": "error",
-    "arrow-parens": "error",
+    "arrow-body-style": ["error", "as-needed"],
+    "arrow-parens": ["error", "as-needed"],
     "arrow-spacing": "error",
     "generator-star-spacing": "error",
     "no-duplicate-imports": "error",

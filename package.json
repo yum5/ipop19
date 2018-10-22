@@ -49,7 +49,8 @@
     "pack:linux": "npm run build:production && electron-packager build/ Demo --platform=linux --arch=x64 --version=1.8.6 --asar --package-manager yarn --overwrite --out dist/",
     "pack:mac": "npm run build:production && electron-packager build/ Demo --platform=darwin --arch=x64 --version=1.8.6 --asar --package-manager yarn --overwrite --out dist/",
     "start": "npm run build && electron build/main.js",
-    "test": "jest --detectOpenHandles --forceExit"
+    "test": "jest --detectOpenHandles --forceExit",
+    "lint": "eslint src --ignore-pattern node_modules/ --ext .js,.jsx"
   },
   "devDependencies": {
     "chart.js": "^2.7.2",

@@ -2,14 +2,11 @@
 
 // const moment = require('moment');
 const electron = require('electron');
-const cmd = require('node-cmd');
-const os = require('os');
 const NanoTimer = require('nanotimer');
 const timer = new NanoTimer();
-const { app, BrowserWindow, ipcMain } = electron;
+const { app, BrowserWindow } = electron;
 import configureStore from '../shared/store/configureStore';
 import {
-  appendTime,
   loadSettings
 } from '../shared/actions/settings';
 import {
@@ -19,49 +16,41 @@ import {
   vlanConfig,
   receiveVlanConfig
 } from '../shared/actions/vlan';
-import { getDevices } from '../shared/actions/devices';
-
-const PLATFORM = {
-  centos6: 'centos6',
-  centos7: 'centos7',
-  darwin: 'darwin'
-}
+// import { getDevices } from '../shared/actions/devices';
 
 // mainプロセスはWebpackに扱われず単にコピーされるだけなので、export NODE_ENV=production とないと反映されない！！！！！
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
-// TODO: only for test purpose !!
-// remove this lines
-import _ from 'lodash';
-const getFakeVlanConfig = () => {
-  const sw = ['spine', 'mems', 'plzt'];
-  const list = [{
-    vlanId: 11,
-    viaSW: _.sample(sw),
-  },
-  {
-    vlanId: 12,
-    viaSW: _.sample(sw),
-  },
-  {
-    vlanId: 13,
-    viaSW: _.sample(sw),
-  },
-  {
-    vlanId: 14,
-    viaSW: _.sample(sw),
-  },
-  {
-    vlanId: 15,
-    viaSW: _.sample(sw),
-  },
-  {
-    vlanId: 16,
-    viaSW: _.sample(sw),
-  },
-  ]
-  return _.sampleSize(list, _.random(1, 6));
-}
+// import _ from 'lodash';
+// const getFakeVlanConfig = () => {
+//   const sw = ['spine', 'mems', 'plzt'];
+//   const list = [{
+//     vlanId: 11,
+//     viaSW: _.sample(sw),
+//   },
+//   {
+//     vlanId: 12,
+//     viaSW: _.sample(sw),
+//   },
+//   {
+//     vlanId: 13,
+//     viaSW: _.sample(sw),
+//   },
+//   {
+//     vlanId: 14,
+//     viaSW: _.sample(sw),
+//   },
+//   {
+//     vlanId: 15,
+//     viaSW: _.sample(sw),
+//   },
+//   {
+//     vlanId: 16,
+//     viaSW: _.sample(sw),
+//   },
+//   ]
+//   return _.sampleSize(list, _.random(1, 6));
+// }
 
 const store = configureStore({}, 'main');
 
@@ -78,10 +67,9 @@ const main = () => {
   // store.dispatch(receiveVlanConfig(getFakeVlanConfig()));
 }
 
+// wait a moment until React gets ready
 setTimeout(() => {
-  // wait a moment until React gets ready
   // store.dispatch(getDevices(['192.168.100.2', '192.168.100.3', '192.168.100.7']));
-  // store.dispatch(getDevices(['192.168.100.2']));
   store.dispatch(loadSettings());
 
   main()
@@ -112,13 +100,13 @@ function createWindow () {
       nativeWindowOpen: true
     }
   });
-  mainWindow.loadURL('file://' + __dirname + '/index.html');
+  mainWindow.loadURL(`file://${__dirname}/index.html`);
 
   if (isDevelopment) {
     mainWindow.webContents.openDevTools();
   }
 
-  mainWindow.on('closed', function() {
+  mainWindow.on('closed', () => {
     mainWindow = null;
   });
 }

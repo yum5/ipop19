@@ -1,9 +1,7 @@
 import "babel-polyfill";
-import cmd from 'node-cmd';
 const { map } = require('p-iteration');
 const _ = require('lodash');
 import {
-  getInterfacesCmd,
   getInterfaceIndex,
   getIfDesc,
   getAdminStatus
@@ -15,31 +13,19 @@ import {
 export const REQUEST_DEVICES = 'REQUEST_DEVICES';
 export const RECEIVE_DEVICES = 'RECEIVE_DEVICES';
 
-export const requestDevices = () => {
-  return {
-    type: REQUEST_DEVICES
-  }
-}
+export const requestDevices = () => ({
+  type: REQUEST_DEVICES
+})
 
-export const receiveDevices = (payload) => {
-  return {
-    type: RECEIVE_DEVICES,
-    payload
-  }
-}
+export const receiveDevices = payload => ({
+  type: RECEIVE_DEVICES,
+  payload
+})
 
-export const getDevices = (ips) =>
+export const getDevices = ips =>
   dispatch => {
     dispatch(requestDevices());
-    // const { command, parser } = getInterfacesCmd();
-    //
-    // cmd.get(command,
-    //   function(err, data, stderr) {
-    //     const list = parser(data);
-    //
-    //     dispatch(receiveDevices(list));
-    //   }
-    // );
+
     (async () => {
       try {
         const results = await map(ips, async ip => {
