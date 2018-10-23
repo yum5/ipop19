@@ -16,6 +16,9 @@ import {
   vlanConfig,
   receiveVlanConfig
 } from '../shared/actions/vlan';
+import {
+  slotSize,
+} from '../shared/actions/slot';
 // import { getDevices } from '../shared/actions/devices';
 
 // mainプロセスはWebpackに扱われず単にコピーされるだけなので、export NODE_ENV=production とないと反映されない！！！！！
@@ -64,6 +67,8 @@ const main = () => {
 
   const ryuHost = store.getState().settings.ryuHost;
   store.dispatch(vlanConfig(ryuHost));
+
+  store.dispatch(slotSize('fake-ip-address'));
   // store.dispatch(receiveVlanConfig(getFakeVlanConfig()));
 }
 

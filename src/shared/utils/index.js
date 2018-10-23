@@ -251,6 +251,12 @@ const _getVlanConfig = async (_executeCommand, ip) => {
 
 const getVlanConfig = ip => _getVlanConfig(executeCommand, ip)
 
+const getSlotSize = ip => ({
+  slotA: _.random(1, 100),
+  slotB: _.random(1, 100),
+  slotC: _.random(1, 100),
+})
+
 export {
   // getPlatform,
   // getPacketCountCmd,
@@ -269,5 +275,6 @@ export {
   _getAdminStatus,
   getAdminStatus,
   _getVlanConfig,
-  getVlanConfig
+  getVlanConfig,
+  getSlotSize
 }

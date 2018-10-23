@@ -14,7 +14,7 @@ const initialState = [
   }
 ];
 
-export default function packets(state = initialState, action) {
+export default function vlan(state = initialState, action) {
   switch (action.type) {
 
     case REQUEST_VLAN_CONFIG: {

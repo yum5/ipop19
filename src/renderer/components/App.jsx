@@ -15,6 +15,7 @@ import Graph from './Graph';
 import NetworkFigure from './NetworkFigure';
 import NewGraphDialog from './NewGraphDialog';
 import SettingsDialog from './SettingsDialog';
+import PLZTMonitor from './PLZTMonitor';
 import { addGraphEntry } from '../../shared/actions/settings';
 import { getDevices } from '../../shared/actions/devices';
 
@@ -145,6 +146,13 @@ export class App extends Component {
               Network Status
             </Typography>
             <NetworkFigure />
+          </Paper>
+
+          <Paper className={classes.paper} elevation={1}>
+            <Typography variant="headline" component="h1">
+              PLZT Monitor
+            </Typography>
+            <PLZTMonitor />
           </Paper>
 
           <Paper className={classes.paper} elevation={1}>
