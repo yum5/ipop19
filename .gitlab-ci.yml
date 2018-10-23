@@ -1,0 +1,12 @@
+image: node:8.11.4-jessie
+
+before_script:
+  - npm install
+
+stages:
+  - test
+
+run_test:
+  stage: test
+  script:
+    - npm test
