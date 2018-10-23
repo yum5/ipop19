@@ -17,13 +17,13 @@ export const receiveVlanConfig = payload => ({
 })
 
 
-export const vlanConfig = ip =>
+export const vlanConfig = (ip, isDebugMode) =>
   dispatch => {
     dispatch(requestVlanConfig());
 
     (async () => {
       try {
-        const config = await getVlanConfig(ip);
+        const config = await getVlanConfig(ip, isDebugMode);
 
         dispatch(receiveVlanConfig(config));
       } catch (e) {

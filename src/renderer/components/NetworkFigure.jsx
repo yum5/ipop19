@@ -179,7 +179,12 @@ export class NetworkFigure extends Component {
 
 
     _.forEach(activeLinks, (colors, link) => {
-      const path = Snap.select(link).select('path');
+      const g = Snap.select(link);
+      if (g == null) {
+        return;
+      }
+      const path = g.select('path');
+
       _.forEach(colors, (color, index) => {
           const cloned = path.clone();
           cloned.transform(Snap.matrix().translate(0, 3 * index));

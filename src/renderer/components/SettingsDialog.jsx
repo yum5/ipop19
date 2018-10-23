@@ -10,11 +10,13 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
+import Switch from '@material-ui/core/Switch';
 
 import {
   updateSnmpHost,
   updateRyuHost,
-  saveSettings
+  updateIsDebugMode,
+  saveSettings,
 } from '../../shared/actions/settings';
 
 const styles = {
@@ -57,6 +59,9 @@ class SettingsDialog extends React.Component {
         value: '', // stringified ip address
         error: false,
         helperText: HELPER_TEXT_RYU_HOST
+      },
+      isDebugMode: {
+        value: false
       }
     }
   }
@@ -67,7 +72,6 @@ class SettingsDialog extends React.Component {
 
   handleChange(name) {
     return event => {
-
       if (name === 'snmpHosts') {
         const value = event.target.value;
         const error = !value.split('\n').every(ip => REGEX_IP_V4.test(ip));
@@ -92,6 +96,13 @@ class SettingsDialog extends React.Component {
             helperText: error ? HELPER_TEXT_RYU_HOST: ''
           }
         });
+      } else if (name === 'isDebugMode') {
+        const current = this.state.isDebugMode.value;
+        this.setState({
+          isDebugMode: {
+            value: !current
+          }
+        });
       } else {
         this.setState({
           [name]: {
@@ -111,6 +122,7 @@ class SettingsDialog extends React.Component {
   initState() {
     const snmpHosts = this.props.snmpHosts.join('\n');
     const ryuHost = this.props.ryuHost;
+    const isDebugMode = this.props.isDebugMode;
     this.setState({
       snmpHosts: {
         value: snmpHosts,
@@ -121,6 +133,9 @@ class SettingsDialog extends React.Component {
         value: ryuHost,
         error: false,
         helperText: ''
+      },
+      isDebugMode: {
+        value: isDebugMode
       }
     });
   }
@@ -129,11 +144,14 @@ class SettingsDialog extends React.Component {
     const { dispatch } = this.props;
     const snmpHosts = this.state.snmpHosts.value.split('\n');
     const ryuHost = this.state.ryuHost.value;
+    const isDebugMode = this.state.isDebugMode.value;
     dispatch(updateSnmpHost(snmpHosts));
     dispatch(updateRyuHost(ryuHost));
+    dispatch(updateIsDebugMode(isDebugMode));
     dispatch(saveSettings({
       snmpHosts,
-      ryuHost
+      ryuHost,
+      isDebugMode
     }));
   }
 
@@ -194,6 +212,23 @@ class SettingsDialog extends React.Component {
               />
             </div>
           </div>
+          <Divider />
+          <div className={classes.settingsItemContainer}>
+            <div className={classes.settingsItemDescription}>
+              <Typography variant="subheading">
+                Debug Mode
+              </Typography>
+              <Typography variant="caption">
+                While debug mode is on, fake data will be served on Network Status, PLZT Monitor, Packet Graph instead of getting data from real network.
+              </Typography>
+            </div>
+            <div className={classes.settingsItemBody}>
+              <Switch
+                checked={this.state.isDebugMode.value}
+                onChange={this.handleChange('isDebugMode')}
+              />
+            </div>
+          </div>
         </DialogContent>
         <DialogActions>
           <Button
@@ -213,7 +248,8 @@ SettingsDialog.propTypes = {
 
 const mapStateToProps = state => ({
   snmpHosts: state.settings.snmpHosts,
-  ryuHost: state.settings.ryuHost
+  ryuHost: state.settings.ryuHost,
+  isDebugMode: state.settings.isDebugMode
 })
 
 export default connect(mapStateToProps)(withStyles(styles)(SettingsDialog));

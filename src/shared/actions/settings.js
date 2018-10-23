@@ -4,6 +4,7 @@ export const ADD_GRAPH_ENTRY = 'ADD_GRAPH_ENTRY';
 // export const REMOVE_GRAPH_ENTRY = 'REMOVE_GRAPH_ENTRY';
 export const UPDATE_SNMP_HOST = 'UPDATE_SNMP_HOST';
 export const UPDATE_RYU_HOST = 'UPDATE_RYU_HOST';
+export const UPDATE_IS_DEBUG_MODE = 'UPDATE_IS_DEBUG_MODE';
 export const REQUEST_LOAD_SETTINGS = 'REQUEST_LOAD_SETTINGS';
 export const RECEIVE_LOAD_SETTINGS = 'RECEIVE_LOAD_SETTINGS';
 export const REQUEST_SAVE_SETTINGS = 'REQUEST_SAVE_SETTINGS';
@@ -24,6 +25,11 @@ export const updateRyuHost = entry => ({
   payload: entry
 })
 
+export const updateIsDebugMode = entry => ({
+  type: UPDATE_IS_DEBUG_MODE,
+  payload: entry
+})
+
 export const requestLoadSettings = () => ({
   type: REQUEST_LOAD_SETTINGS
 })
@@ -41,8 +47,10 @@ export const loadSettings = () =>
     dispatch(requestLoadSettings())
     const snmpHosts = JSON.parse(electronSettings.get('settings.snmpHosts') || `["192.168.1.1"]`);
     const ryuHost = JSON.parse(electronSettings.get('settings.ryuHost') || `"192.168.100.21"`);
+    const isDebugMode = JSON.parse(electronSettings.get('settings.isDebugMode') || `"false"`);
     dispatch(updateSnmpHost(snmpHosts));
     dispatch(updateRyuHost(ryuHost));
+    dispatch(updateIsDebugMode(isDebugMode));
     // dispatch(receiveLoadSettings());
   }
 
@@ -59,6 +67,7 @@ export const saveSettings = settings =>
 
     electronSettings.set('settings', {
       snmpHosts: JSON.stringify(settings.snmpHosts),
-      ryuHost: JSON.stringify(settings.ryuHost)
+      ryuHost: JSON.stringify(settings.ryuHost),
+      isDebugMode: JSON.stringify(settings.isDebugMode),
     });
   }

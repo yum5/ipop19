@@ -24,40 +24,11 @@ import {
 // mainプロセスはWebpackに扱われず単にコピーされるだけなので、export NODE_ENV=production とないと反映されない！！！！！
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
-// import _ from 'lodash';
-// const getFakeVlanConfig = () => {
-//   const sw = ['spine', 'mems', 'plzt'];
-//   const list = [{
-//     vlanId: 11,
-//     viaSW: _.sample(sw),
-//   },
-//   {
-//     vlanId: 12,
-//     viaSW: _.sample(sw),
-//   },
-//   {
-//     vlanId: 13,
-//     viaSW: _.sample(sw),
-//   },
-//   {
-//     vlanId: 14,
-//     viaSW: _.sample(sw),
-//   },
-//   {
-//     vlanId: 15,
-//     viaSW: _.sample(sw),
-//   },
-//   {
-//     vlanId: 16,
-//     viaSW: _.sample(sw),
-//   },
-//   ]
-//   return _.sampleSize(list, _.random(1, 6));
-// }
 
 const store = configureStore({}, 'main');
 
 const main = () => {
+  const isDebugMode = store.getState().settings.isDebugMode;
   // timer.setTimeout(main, '', `30000m`);
   timer.setTimeout(main, '', `4000m`);
 
@@ -66,10 +37,9 @@ const main = () => {
   })
 
   const ryuHost = store.getState().settings.ryuHost;
-  store.dispatch(vlanConfig(ryuHost));
+  store.dispatch(vlanConfig(ryuHost, isDebugMode));
 
-  store.dispatch(slotSize('fake-ip-address'));
-  // store.dispatch(receiveVlanConfig(getFakeVlanConfig()));
+  store.dispatch(slotSize('fake-ip-address', isDebugMode));
 }
 
 // wait a moment until React gets ready

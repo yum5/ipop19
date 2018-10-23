@@ -25,7 +25,7 @@ export default function configureStore(initialState, scope = 'main') {
 
   if (isDevelopment) {
     middleware = [
-      logger,
+      // logger,
       ...middleware
     ]
   }

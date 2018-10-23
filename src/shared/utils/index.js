@@ -219,7 +219,41 @@ const getViaSWFromFlowType = type => {
   }
 }
 
-const _getVlanConfig = async (_executeCommand, ip) => {
+const getFakeVlanConfig = () => {
+  const sw = ['spine', 'mems', 'plzt'];
+  const list = [{
+    vlanId: 11,
+    viaSW: _.sample(sw),
+  },
+  {
+    vlanId: 12,
+    viaSW: _.sample(sw),
+  },
+  {
+    vlanId: 13,
+    viaSW: _.sample(sw),
+  },
+  {
+    vlanId: 14,
+    viaSW: _.sample(sw),
+  },
+  {
+    vlanId: 15,
+    viaSW: _.sample(sw),
+  },
+  {
+    vlanId: 16,
+    viaSW: _.sample(sw),
+  },
+  ]
+  return _.sampleSize(list, _.random(1, 6));
+}
+
+const _getVlanConfig = async (_executeCommand, ip, isDebugMode) => {
+  if (isDebugMode) {
+    return getFakeVlanConfig();
+  }
+
   const config = {
     host: ip,
     username: 'student',
@@ -249,13 +283,23 @@ const _getVlanConfig = async (_executeCommand, ip) => {
   return vlans;
 }
 
-const getVlanConfig = ip => _getVlanConfig(executeCommand, ip)
+const getVlanConfig = (ip, isDebugMode) => _getVlanConfig(executeCommand, ip, isDebugMode)
 
-const getSlotSize = ip => ({
-  slotA: _.random(1, 100),
-  slotB: _.random(1, 100),
-  slotC: _.random(1, 100),
-})
+const getSlotSize = (ip, isDebugMode) => {
+  if (isDebugMode) {
+    return {
+      slotA: _.random(1, 100),
+      slotB: _.random(1, 100),
+      slotC: _.random(1, 100),
+    }
+  }
+
+  return {
+    slotA: 2,
+    slotB: 3,
+    slotC: 5,
+  }
+}
 
 export {
   // getPlatform,

@@ -17,13 +17,13 @@ export const receiveSlotSize = payload => ({
 })
 
 
-export const slotSize = ip =>
+export const slotSize = (ip, isDebugMode) =>
   dispatch => {
     dispatch(requestSlotSize());
 
     (async () => {
       try {
-        const slotSize = await getSlotSize(ip);
+        const slotSize = await getSlotSize(ip, isDebugMode);
 
         dispatch(receiveSlotSize(slotSize));
       } catch (e) {
