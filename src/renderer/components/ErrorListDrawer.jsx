@@ -20,10 +20,6 @@ const styles = {
 };
 
 class ErrorListDrawer extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     const { errors, open, onClose } = this.props;
     return (
@@ -40,14 +36,12 @@ class ErrorListDrawer extends Component {
             </TableRow>
           </TableHead>
           <TableBody>
-            {errors.map(error => {
-              return (
-                <TableRow key={error.timestamp}>
-                  <TableCell>{error.timestamp}</TableCell>
-                  <TableCell>{error.message}</TableCell>
-                </TableRow>
-              );
-            })}
+            {errors.map(error => (
+              <TableRow key={error.timestamp}>
+                <TableCell>{error.timestamp}</TableCell>
+                <TableCell>{error.message}</TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </Drawer>
@@ -55,10 +49,8 @@ class ErrorListDrawer extends Component {
   }
 }
 
-const mapStateToProps = (state, props) => {
-  return {
-    errors: state.errors
-  };
-}
+const mapStateToProps = state => ({
+  errors: state.errors
+})
 
 export default connect(mapStateToProps)(withStyles(styles)(ErrorListDrawer))

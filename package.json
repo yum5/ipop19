@@ -50,7 +50,7 @@
     "pack:mac": "npm run build:production && electron-packager build/ Demo --platform=darwin --arch=x64 --version=1.8.6 --asar --package-manager yarn --overwrite --out dist/",
     "start": "npm run build && electron build/main.js",
     "test": "jest --detectOpenHandles --forceExit",
-    "lint": "eslint src --ignore-pattern node_modules/ --ext .js,.jsx"
+    "lint": "eslint src test --ignore-pattern node_modules/ --ext .js,.jsx"
   },
   "devDependencies": {
     "chart.js": "^2.7.2",
@@ -68,7 +68,8 @@
     "eslint-config-airbnb": "^16.1.0",
     "eslint-config-google": "^0.9.1",
     "eslint-plugin-eslint-comments": "^3.0.1",
-    "eslint-plugin-import": "^2.11.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jest": "^21.26.0",
     "eslint-plugin-jsx-a11y": "^6.0.3",
     "eslint-plugin-react": "^7.11.1",
     "extract-text-webpack-plugin": "^3.0.2",

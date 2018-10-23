@@ -3,21 +3,13 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import Avatar from '@material-ui/core/Avatar';
 import TextField from '@material-ui/core/TextField';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import ListItemText from '@material-ui/core/ListItemText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import PersonIcon from '@material-ui/icons/Person';
-import AddIcon from '@material-ui/icons/Add';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
-import blue from '@material-ui/core/colors/blue';
 
 import {
   updateSnmpHost,
@@ -71,7 +63,7 @@ class SettingsDialog extends React.Component {
 
   handleClose() {
     this.props.onClose();
-  };
+  }
 
   handleChange(name) {
     return event => {
@@ -109,7 +101,7 @@ class SettingsDialog extends React.Component {
         });
       }
     }
-  };
+  }
 
   handleSaveClick() {
     this.commitChanges();
@@ -146,7 +138,7 @@ class SettingsDialog extends React.Component {
   }
 
   render() {
-    const { classes, items, open } = this.props;
+    const { classes, open } = this.props;
     const { snmpHosts, ryuHost } = this.state;
 
     return (
@@ -219,11 +211,9 @@ SettingsDialog.propTypes = {
   onClose: PropTypes.func,
 };
 
-const mapStateToProps = (state) => {
-  return {
-    snmpHosts: state.settings.snmpHosts,
-    ryuHost: state.settings.ryuHost
-  };
-}
+const mapStateToProps = state => ({
+  snmpHosts: state.settings.snmpHosts,
+  ryuHost: state.settings.ryuHost
+})
 
 export default connect(mapStateToProps)(withStyles(styles)(SettingsDialog));

@@ -35,12 +35,10 @@ export const SW = {
   PLZT: 'plzt'
 }
 
-const getLinksVia = (fromToR, toToR, viaSW) => {
-  return [
-    `#edge--${fromToR}-${viaSW}`,
-    `#edge--${toToR}-${viaSW}`,
-  ]
-}
+const getLinksVia = (fromToR, toToR, viaSW) => [
+  `#edge--${fromToR}-${viaSW}`,
+  `#edge--${toToR}-${viaSW}`,
+]
 
 const getActiveLinksFromVlan = (vlanId, viaSW) => {
   switch(vlanId) {
@@ -92,19 +90,15 @@ const getActiveLinksFromVlan = (vlanId, viaSW) => {
   }
 }
 
-export const getActiveLinks = (vlans) => {
-  return  _.flatten(vlans.map(vlan => {
-    const color = getLinkColor(vlan.vlanId);
-    return getActiveLinksFromVlan(vlan.vlanId, vlan.viaSW).map(label => {
-      return {
-        label,
-        color
-      }
-    })
-  }));
-}
+export const getActiveLinks = vlans => _.flatten(vlans.map(vlan => {
+  const color = getLinkColor(vlan.vlanId);
+  return getActiveLinksFromVlan(vlan.vlanId, vlan.viaSW).map(label => ({
+    label,
+    color
+  }))
+}))
 
-const groupByLabel = (links) => {
+const groupByLabel = links => {
   // key: link label
   // values: [link]
   // e.g.
@@ -120,16 +114,11 @@ const groupByLabel = (links) => {
 
   // e.g.
   // { a: [ 1, 2 ] }
-  const linkColors =  _.mapValues(groupedByLabel, (links, label) => {
-    return links.map(link => link.color)
-  })
-
+  const linkColors =  _.mapValues(groupedByLabel, links => links.map(link => link.color))
   return linkColors;
 }
 
-export const getActiveLinksMap = (vlans) => {
-  return groupByLabel(getActiveLinks(vlans))
-}
+export const getActiveLinksMap = vlans => groupByLabel(getActiveLinks(vlans))
 
 export const COLORS = [
   '#FF91E4',
@@ -140,7 +129,7 @@ export const COLORS = [
   '#FF611C'
 ]
 
-export const getLinkColor = (vlanId) => {
+export const getLinkColor = vlanId => {
   if (11 <= vlanId && vlanId <= 16) {
     return COLORS[vlanId - 11];
   } else {
@@ -148,7 +137,7 @@ export const getLinkColor = (vlanId) => {
   }
 }
 
-const styles = theme => ({
+const styles = {
   root: {
   },
   '@global': {
@@ -156,7 +145,7 @@ const styles = theme => ({
       width: '100%'
     },
   },
-})
+)
 
 export class NetworkFigure extends Component {
   constructor(props) {
@@ -170,7 +159,7 @@ export class NetworkFigure extends Component {
   componentDidMount() {
     const root = Snap(this.snapRoot)
 
-    Snap.load("network.svg", (data) => {
+    Snap.load("network.svg", data => {
       if (root) {
         root.append(data);
       }
@@ -227,10 +216,8 @@ export class NetworkFigure extends Component {
 export const NetworkFigureStyled = withStyles(styles)(NetworkFigure);
 
 
-const mapStateToProps = (state) => {
-  return {
-    vlans: state.vlan
-  };
-}
+const mapStateToProps = state => ({
+  vlans: state.vlan
+})
 
 export default connect(mapStateToProps)(NetworkFigureStyled);

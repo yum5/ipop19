@@ -1,7 +1,7 @@
 const electronSettings = require('electron-settings');
 
 export const ADD_GRAPH_ENTRY = 'ADD_GRAPH_ENTRY';
-export const REMOVE_GRAPH_ENTRY = 'REMOVE_GRAPH_ENTRY';
+// export const REMOVE_GRAPH_ENTRY = 'REMOVE_GRAPH_ENTRY';
 export const UPDATE_SNMP_HOST = 'UPDATE_SNMP_HOST';
 export const UPDATE_RYU_HOST = 'UPDATE_RYU_HOST';
 export const REQUEST_LOAD_SETTINGS = 'REQUEST_LOAD_SETTINGS';

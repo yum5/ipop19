@@ -7,17 +7,12 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
 import Divider from '@material-ui/core/Divider';
-
-import Snap from 'snapsvg-cjs';
-import _ from 'lodash';
 
 import ErrorListDrawer from './ErrorListDrawer';
 import ErrorListNavigation from './ErrorListNavigation';
 import Graph from './Graph';
-import NetworkFigure, { SW, getLinkColor } from './NetworkFigure';
+import NetworkFigure from './NetworkFigure';
 import NewGraphDialog from './NewGraphDialog';
 import SettingsDialog from './SettingsDialog';
 import { addGraphEntry } from '../../shared/actions/settings';
@@ -95,7 +90,7 @@ export class App extends Component {
         }
       });
     }
-  };
+  }
 
   handleClose(dialog) {
     return () => {
@@ -109,7 +104,7 @@ export class App extends Component {
         }
       });
     }
-  };
+  }
 
   handleItemClick(value) {
     this.props.dispatch(addGraphEntry(value));
@@ -122,7 +117,7 @@ export class App extends Component {
         }
       }
     });
-  };
+  }
 
   handleLoadDevicesClick() {
     const { dispatch, snmpHosts } = this.props;
@@ -150,17 +145,6 @@ export class App extends Component {
               Network Status
             </Typography>
             <NetworkFigure />
-            {/*<div>
-              VLAN Tag: {this.state.vlanId}
-
-              <ul>
-                {[11, 12, 13, 14, 15, 16].map(vlanId =>
-                  <li key={vlanId}>
-                    VLAN Tag {vlanId}: <span style={{background: getLinkColor(vlanId)}}>{getLinkColor(vlanId)}</span>
-                  </li>
-                )}
-              </ul>
-            </div>*/}
           </Paper>
 
           <Paper className={classes.paper} elevation={1}>
@@ -177,9 +161,7 @@ export class App extends Component {
                   Device: {entry.id}
                 </Typography>
                 <Graph device={entry.id}/>
-              </div>).reduce((accum, elem) => {
-                return accum === null ? [elem] : [...accum, <Divider/>, elem]
-              }, null)}
+              </div>).reduce((accum, elem) => accum === null ? [elem] : [...accum, <Divider/>, elem], null)}
           </Paper>
           <Button
             variant="fab"
@@ -214,15 +196,13 @@ export class App extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-    nic: state.devices.nic,
-    interfaces: state.devices.interfaces,
-    isLoading: state.devices.isLoading,
-    graphData: state.packets.graphData,
-    graphEntries: state.settings.graphEntries,
-    snmpHosts: state.settings.snmpHosts,
-  };
-}
+const mapStateToProps = state => ({
+  nic: state.devices.nic,
+  interfaces: state.devices.interfaces,
+  isLoading: state.devices.isLoading,
+  graphData: state.packets.graphData,
+  graphEntries: state.settings.graphEntries,
+  snmpHosts: state.settings.snmpHosts,
+})
 
 export default connect(mapStateToProps)(withStyles(styles)(App))

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
@@ -26,12 +25,8 @@ const styles = theme => ({
 });
 
 class ErrorListNavigation extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
-    const { errors, onClick, classes } = this.props;
+    const { onClick, classes } = this.props;
     return (
       <Paper
         square
@@ -49,10 +44,4 @@ class ErrorListNavigation extends Component {
   }
 }
 
-const mapStateToProps = (state, props) => {
-  return {
-    errors: state.errors
-  };
-}
-
-export default connect(mapStateToProps)(withStyles(styles)(ErrorListNavigation))
+export default withStyles(styles)(ErrorListNavigation)

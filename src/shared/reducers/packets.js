@@ -42,9 +42,9 @@ export default function packets(state = initialState, action) {
           timestamp: payload.timestamp,
           rx: payload.rx,
           tx: payload.tx,
-          rxDelta: rxDelta,
-          txDelta: txDelta,
-          timeInterval: timeInterval,
+          rxDelta,
+          txDelta,
+          timeInterval,
           rxDeltaPerSec: rxDelta / timeInterval,
           txDeltaPerSec: txDelta / timeInterval
         };

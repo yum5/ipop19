@@ -1,6 +1,5 @@
 import {
   ADD_GRAPH_ENTRY,
-  REMOVE_GRAPH_ENTRY,
   UPDATE_SNMP_HOST,
   UPDATE_RYU_HOST
 } from '../actions/settings';

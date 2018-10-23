@@ -1,5 +1,5 @@
 const cmd = require('node-cmd');
-const os = require('os')
+// const os = require('os')
 const sftpClient = require('sftp-promises')
 import _ from 'lodash';
 
@@ -110,10 +110,10 @@ import _ from 'lodash';
 // }
 
 
-const executeCommand = (command) => {
+const executeCommand = command => {
   const promise = new Promise((resolve, reject) => {
     cmd.get(command,
-      function(err, data, stderr) {
+      (err, data) => {
         if (err) {
           reject(new Error(err));
         } else {
@@ -145,9 +145,7 @@ const _getHostName = async (_executeCommand, ip) => {
    }
 }
 
-const getHostName = (ip) => {
-  return _getHostName(executeCommand, ip);
-}
+const getHostName = ip => _getHostName(executeCommand, ip)
 
 const _getInterfaceIndex = async (_executeCommand, ip) => {
    const result = await _executeCommand(`snmpwalk -v 2c -c public ${ip} 1.3.6.1.2.1.2.2.1.1`);
@@ -159,9 +157,7 @@ const _getInterfaceIndex = async (_executeCommand, ip) => {
    }
 }
 
-const getInterfaceIndex = (ip) => {
-  return _getInterfaceIndex(executeCommand, ip);
-}
+const getInterfaceIndex = ip => _getInterfaceIndex(executeCommand, ip)
 
 const _getInOctets = async (_executeCommand, ip, ifIndex) => {
    const result = await _executeCommand(`snmpwalk -v 2c -c public ${ip} 1.3.6.1.2.1.31.1.1.1.6.${ifIndex}`);
@@ -173,9 +169,7 @@ const _getInOctets = async (_executeCommand, ip, ifIndex) => {
    }
 }
 
-const getInOctets = (ip, ifIndex) => {
-  return _getInOctets(executeCommand, ip, ifIndex);
-}
+const getInOctets = (ip, ifIndex) => _getInOctets(executeCommand, ip, ifIndex)
 
 const _getOutOctets = async (_executeCommand, ip, ifIndex) => {
    const result = await _executeCommand(`snmpwalk -v 2c -c public ${ip} 1.3.6.1.2.1.31.1.1.1.10.${ifIndex}`);
@@ -187,9 +181,7 @@ const _getOutOctets = async (_executeCommand, ip, ifIndex) => {
    }
 }
 
-const getOutOctets = (ip, ifIndex) => {
-  return _getOutOctets(executeCommand, ip, ifIndex);
-}
+const getOutOctets = (ip, ifIndex) => _getOutOctets(executeCommand, ip, ifIndex)
 
 const _getIfDesc = async (_executeCommand, ip, ifIndex) => {
    const result = await _executeCommand(`snmpwalk -v 2c -c public ${ip} 1.3.6.1.2.1.2.2.1.2.${ifIndex}`);
@@ -201,9 +193,7 @@ const _getIfDesc = async (_executeCommand, ip, ifIndex) => {
    }
 }
 
-const getIfDesc = (ip, ifIndex) => {
-  return _getIfDesc(executeCommand, ip, ifIndex);
-}
+const getIfDesc = (ip, ifIndex) => _getIfDesc(executeCommand, ip, ifIndex)
 
 const _getAdminStatus = async (_executeCommand, ip, ifIndex) => {
    const result = await _executeCommand(`snmpwalk -v 2c -c public ${ip} 1.3.6.1.2.1.2.2.1.7.${ifIndex}`);
@@ -215,11 +205,9 @@ const _getAdminStatus = async (_executeCommand, ip, ifIndex) => {
    }
 }
 
-const getAdminStatus = (ip, ifIndex) => {
-  return _getAdminStatus(executeCommand, ip, ifIndex);
-}
+const getAdminStatus = (ip, ifIndex) => _getAdminStatus(executeCommand, ip, ifIndex)
 
-const getViaSWFromFlowType = (type) => {
+const getViaSWFromFlowType = type => {
   if (type === 'mf') {
     return 'spine'
   } else if (type === 'df') {
@@ -247,7 +235,7 @@ const _getVlanConfig = async (_executeCommand, ip) => {
   //   type: 'mf'
   // }
 
-  const vlans = _.map(_.values(json), (vlan) => {
+  const vlans = _.map(_.values(json), vlan => {
     if (vlan && vlan['VLAN'] && vlan['type']) {
       return {
         vlanId: parseInt(vlan['VLAN']),
@@ -261,14 +249,12 @@ const _getVlanConfig = async (_executeCommand, ip) => {
   return vlans;
 }
 
-const getVlanConfig = (ip) => {
-  return _getVlanConfig(executeCommand, ip);
-}
+const getVlanConfig = ip => _getVlanConfig(executeCommand, ip)
 
 export {
-  getPlatform,
-  getPacketCountCmd,
-  getInterfacesCmd,
+  // getPlatform,
+  // getPacketCountCmd,
+  // getInterfacesCmd,
   executeCommand,
   _getHostName,
   getHostName,
