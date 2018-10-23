@@ -42,5 +42,3 @@ jspm_packages
 dist
 build/*
 !build/package.json
-output.csv
-fakenetstat_tmp.txt
