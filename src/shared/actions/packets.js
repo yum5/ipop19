@@ -16,15 +16,15 @@ export const receivePacketCount = payload => ({
   payload
 })
 
-export const packetCount = device =>
+export const packetCount = (device, isDebugMode) =>
   dispatch => {
     dispatch(requestPacketCount());
 
     (async () => {
       try {
         const { ip, index, id } = device;
-        const rx = await getInOctets(ip, index);
-        const tx = await getOutOctets(ip, index);
+        const rx = await getInOctets(ip, index, isDebugMode);
+        const tx = await getOutOctets(ip, index, isDebugMode);
 
         dispatch(receivePacketCount({
           device: id,

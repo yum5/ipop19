@@ -41,9 +41,14 @@ const styles = theme => ({
     right: theme.spacing.unit * 2,
     zIndex: 10,
   },
+  graphArea: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
   graphContainer: {
     paddingTop: 16,
-    paddingBottom: 16
+    paddingBottom: 16,
+    width: '33%'
   }
 })
 
@@ -121,8 +126,8 @@ export class App extends Component {
   }
 
   handleLoadDevicesClick() {
-    const { dispatch, snmpHosts } = this.props;
-    dispatch(getDevices(snmpHosts));
+    const { dispatch, snmpHosts, isDebugMode } = this.props;
+    dispatch(getDevices(snmpHosts, isDebugMode));
   }
 
   render() {
@@ -159,17 +164,20 @@ export class App extends Component {
             <Typography variant="headline" component="h1">
               Graph
             </Typography>
-            {graphEntries.map(entry =>
-              <div key={entry.id} className={classes.graphContainer}>
-                <Typography
-                  variant="subheading"
-                  color="inherit"
-                  component="h1"
-                >
-                  Device: {entry.id}
-                </Typography>
-                <Graph device={entry.id}/>
-              </div>).reduce((accum, elem) => accum === null ? [elem] : [...accum, <Divider/>, elem], null)}
+            <div className={classes.graphArea}>
+              {graphEntries.map(entry =>
+                <div key={entry.id} className={classes.graphContainer}>
+                  <Typography
+                    variant="subheading"
+                    color="inherit"
+                    component="h1"
+                  >
+                    Device: {entry.id}
+                  </Typography>
+                  <Graph device={entry.id}/>
+                </div>)}
+              {/*.reduce((accum, elem) => accum === null ? [elem] : [...accum, <Divider/>, elem], null)*/}
+              </div>
           </Paper>
           <Button
             variant="fab"
@@ -211,6 +219,7 @@ const mapStateToProps = state => ({
   graphData: state.packets.graphData,
   graphEntries: state.settings.graphEntries,
   snmpHosts: state.settings.snmpHosts,
+  isDebugMode: state.settings.isDebugMode,
 })
 
 export default connect(mapStateToProps)(withStyles(styles)(App))

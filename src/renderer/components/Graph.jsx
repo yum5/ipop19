@@ -21,15 +21,16 @@ export class Graph extends Component {
         borderWidth: 1,
         // data: this.props.graphData.rx,
         data: []
-      },{
-        key: 'tx',
-        label: 'Tx Packets',
-        backgroundColor: Chart.helpers.color(blue).alpha(0.5).rgbString(),
-        borderColor: blue,
-        borderWidth: 1,
-        // data: this.props.graphData.tx,
-        data: []
       }]
+      // },{
+      //   key: 'tx',
+      //   label: 'Tx Packets',
+      //   backgroundColor: Chart.helpers.color(blue).alpha(0.5).rgbString(),
+      //   borderColor: blue,
+      //   borderWidth: 1,
+      //   // data: this.props.graphData.tx,
+      //   data: []
+      // }]
     }
 
     const options = {
@@ -96,18 +97,14 @@ export class Graph extends Component {
           //   dataset.data.push(rx)
           // }
         })
-      } else if (dataset.key === 'tx') {
-        graphData.tx.forEach(tx => {
-          const last = dataset.data.slice(-1)[0];
-          if (!last || moment(last.x).isBefore(moment(tx.x))) {
-            dataset.data.push(tx)
-          }
-          // dataset.data.forEach(data => {
-          //   if (!moment(data.timestamp).isSame(moment(tx.timestamp))) {
-          //     dataset.data.push(tx)
-          //   }
-          // })
-        })
+      // } else if (dataset.key === 'tx') {
+      //   graphData.tx.forEach(tx => {
+      //     const last = dataset.data.slice(-1)[0];
+      //     if (!last || moment(last.x).isBefore(moment(tx.x))) {
+      //       dataset.data.push(tx)
+      //     }
+      //   })
+      // }
       }
     })
   }
@@ -116,7 +113,7 @@ export class Graph extends Component {
     const { data, options } = this;
     return (
       <div>
-        <Line data={data} options={options} width={800} height={300}/>
+        <Line data={data} options={options} width={600} height={400}/>
       </div>
     )
   }

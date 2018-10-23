@@ -2,21 +2,27 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 
-const styles = {
+const styles = theme => ({
   root: {
     display: 'flex',
     boxSizing: 'border-box',
   },
   slotA: {
-    background: 'skyblue'
+    background: 'skyblue',
+    boxSizing: 'border-box',
+    padding: theme.spacing.unit
   },
   slotB: {
-    background: 'lime'
+    background: 'lime',
+    boxSizing: 'border-box',
+    padding: theme.spacing.unit
   },
   slotC: {
-    background: 'pink'
+    background: 'pink',
+    boxSizing: 'border-box',
+    padding: theme.spacing.unit
   },
-};
+});
 
 class PLZTMonitor extends Component {
   render() {

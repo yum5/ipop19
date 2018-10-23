@@ -109,6 +109,10 @@ import _ from 'lodash';
 //   }
 // }
 
+const DEBUG_IN_OCTET = {
+}
+const DEBUG_OUT_OCTET = {
+}
 
 const executeCommand = command => {
   const promise = new Promise((resolve, reject) => {
@@ -159,29 +163,45 @@ const _getInterfaceIndex = async (_executeCommand, ip) => {
 
 const getInterfaceIndex = ip => _getInterfaceIndex(executeCommand, ip)
 
-const _getInOctets = async (_executeCommand, ip, ifIndex) => {
-   const result = await _executeCommand(`snmpwalk -v 2c -c public ${ip} 1.3.6.1.2.1.31.1.1.1.6.${ifIndex}`);
+const _getInOctets = async (_executeCommand, ip, ifIndex, isDebugMode) => {
+  if (isDebugMode) {
+    const current = DEBUG_IN_OCTET[`${ip}::${ifIndex}`] || 1000;
+    const delta = _.random(0, 10) + _.random(0, 10) + _.random(0, 10);
+    const next = current + delta;
 
-   try {
-     return parseInt(result.match(/^IF-MIB::ifHCInOctets\.(\d+) = Counter64: (\d+)\n$/)[2]);
-   } catch (e) {
-     throw new Error('snmpwalk returns unexpected result');
-   }
+    DEBUG_IN_OCTET[`${ip}::${ifIndex}`] = next;
+    return next;
+  }
+  const result = await _executeCommand(`snmpwalk -v 2c -c public ${ip} 1.3.6.1.2.1.31.1.1.1.6.${ifIndex}`);
+
+  try {
+   return parseInt(result.match(/^IF-MIB::ifHCInOctets\.(\d+) = Counter64: (\d+)\n$/)[2]);
+  } catch (e) {
+   throw new Error('snmpwalk returns unexpected result');
+  }
 }
 
-const getInOctets = (ip, ifIndex) => _getInOctets(executeCommand, ip, ifIndex)
+const getInOctets = (ip, ifIndex, isDebugMode) => _getInOctets(executeCommand, ip, ifIndex, isDebugMode)
 
-const _getOutOctets = async (_executeCommand, ip, ifIndex) => {
-   const result = await _executeCommand(`snmpwalk -v 2c -c public ${ip} 1.3.6.1.2.1.31.1.1.1.10.${ifIndex}`);
+const _getOutOctets = async (_executeCommand, ip, ifIndex, isDebugMode) => {
+  if (isDebugMode) {
+    const current = DEBUG_OUT_OCTET[`${ip}::${ifIndex}`] || 1000;
+    const delta = _.random(0, 10) + _.random(0, 10) + _.random(0, 10);
+    const next = current + delta;
 
-   try {
-     return parseInt(result.match(/^IF-MIB::ifHCOutOctets\.(\d+) = Counter64: (\d+)\n$/)[2]);
-   } catch (e) {
-     throw new Error('snmpwalk returns unexpected result');
-   }
+    DEBUG_OUT_OCTET[`${ip}::${ifIndex}`] = next;
+    return next;
+  }
+  const result = await _executeCommand(`snmpwalk -v 2c -c public ${ip} 1.3.6.1.2.1.31.1.1.1.10.${ifIndex}`);
+
+  try {
+   return parseInt(result.match(/^IF-MIB::ifHCOutOctets\.(\d+) = Counter64: (\d+)\n$/)[2]);
+  } catch (e) {
+   throw new Error('snmpwalk returns unexpected result');
+  }
 }
 
-const getOutOctets = (ip, ifIndex) => _getOutOctets(executeCommand, ip, ifIndex)
+const getOutOctets = (ip, ifIndex, isDebugMode) => _getOutOctets(executeCommand, ip, ifIndex, isDebugMode)
 
 const _getIfDesc = async (_executeCommand, ip, ifIndex) => {
    const result = await _executeCommand(`snmpwalk -v 2c -c public ${ip} 1.3.6.1.2.1.2.2.1.2.${ifIndex}`);
