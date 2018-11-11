@@ -16,7 +16,7 @@ export const receivePacketCount = payload => ({
   payload
 })
 
-export const packetCount = (device, isDebugMode) =>
+export const packetCount = (device, timestamp, isDebugMode) =>
   dispatch => {
     dispatch(requestPacketCount());
 
@@ -28,7 +28,8 @@ export const packetCount = (device, isDebugMode) =>
 
         dispatch(receivePacketCount({
           device: id,
-          timestamp: new Date(),
+          // timestamp: new Date(),
+          timestamp,
           rx,
           tx
         }));

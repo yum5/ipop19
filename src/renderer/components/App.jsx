@@ -12,6 +12,7 @@ import Divider from '@material-ui/core/Divider';
 import ErrorListDrawer from './ErrorListDrawer';
 import ErrorListNavigation from './ErrorListNavigation';
 import Graph from './Graph';
+import PowerGraph from './PowerGraph';
 import NetworkFigure from './NetworkFigure';
 import NewGraphDialog from './NewGraphDialog';
 import SettingsDialog from './SettingsDialog';
@@ -177,7 +178,8 @@ export class App extends Component {
                   <Graph device={entry.id}/>
                 </div>)}
               {/*.reduce((accum, elem) => accum === null ? [elem] : [...accum, <Divider/>, elem], null)*/}
-              </div>
+            </div>
+            <PowerGraph />
           </Paper>
           <Button
             variant="fab"
@@ -213,7 +215,7 @@ export class App extends Component {
 }
 
 const mapStateToProps = state => ({
-  nic: state.devices.nic,
+  // nic: state.devices.nic,
   interfaces: state.devices.interfaces,
   isLoading: state.devices.isLoading,
   graphData: state.packets.graphData,

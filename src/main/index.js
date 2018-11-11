@@ -32,8 +32,9 @@ const main = () => {
   // timer.setTimeout(main, '', `30000m`);
   timer.setTimeout(main, '', `4000m`);
 
+  const timestamp = new Date();
   store.getState().settings.graphEntries.forEach(entry => {
-    store.dispatch(packetCount(entry, isDebugMode));
+    store.dispatch(packetCount(entry, timestamp, isDebugMode));
   })
 
   const ryuHost = store.getState().settings.ryuHost;

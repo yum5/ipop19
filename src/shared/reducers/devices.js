@@ -4,8 +4,30 @@ import {
 } from '../actions/devices';
 
 const initialState = {
-  nic: [],
-  interfaces: [],
+  // nic: [],
+  interfaces: [
+    {
+      id: 'mf',
+      index: 10,
+      ip: '192.168.100.11',
+      desc: 'mf interface',
+      status: 'up'
+    },
+    {
+      id: 'df',
+      index: 10,
+      ip: '192.168.100.12',
+      desc: 'df interface',
+      status: 'up'
+    },
+    {
+      id: 'ef',
+      index: 11,
+      ip: '192.168.100.13',
+      desc: 'ef interface',
+      status: 'up'
+    }
+  ],
   isLoading: false
 }
 
@@ -22,8 +44,8 @@ export default function interfaces(state = initialState, action) {
 
       return {
         ...state,
-        nic: [...payload],
-        interfaces: payload,
+        // nic: [...payload],
+        interfaces: [...state.interfaces, ...payload],
         isLoading: false
       };
     }

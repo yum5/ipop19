@@ -7,7 +7,27 @@ import {
 
 const initialState = {
   // times: [],
-  graphEntries: [],
+  graphEntries: [{
+    id: 'mf',
+    index: 10,
+    ip: '192.168.100.11',
+    desc: 'mf interface',
+    status: 'up'
+  },
+  {
+    id: 'df',
+    index: 10,
+    ip: '192.168.100.12',
+    desc: 'df interface',
+    status: 'up'
+  },
+  {
+    id: 'ef',
+    index: 11,
+    ip: '192.168.100.13',
+    desc: 'ef interface',
+    status: 'up'
+  }],
   snmpHosts: [],
   ryuHost: '',
   isDebugMode: false
