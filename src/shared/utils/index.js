@@ -307,7 +307,7 @@ const _getVlanConfig = async (_executeCommand, ip, isDebugMode) => {
 
 const getVlanConfig = (ip, isDebugMode) => _getVlanConfig(executeCommand, ip, isDebugMode)
 
-const getSlotSize = (ip, isDebugMode) => {
+const getSlotSize = async (ip, isDebugMode) => {
   if (isDebugMode) {
     return {
       slotA: _.random(1, 100),
@@ -316,10 +316,24 @@ const getSlotSize = (ip, isDebugMode) => {
     }
   }
 
+  const config = {
+    host: ip,
+    username: 'student',
+    password: 'yamanaka'
+  }
+
+  const sftp = new sftpClient(config);
+  const buffer = (await sftp.getBuffer('/home/student/holst/ryu-book/SC18/jsonfiles/vlan_state.json')).toString();
+  const json = JSON.parse(buffer);
+
+  if (json.length !== 3) {
+    throw new Error('got invalid json message from PLZT Controller');
+  }
+
   return {
-    slotA: 2,
-    slotB: 3,
-    slotC: 5,
+    slotA: json[0],
+    slotB: json[1],
+    slotC: json[2],
   }
 }
 
