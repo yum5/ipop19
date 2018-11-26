@@ -3,6 +3,8 @@ const cmd = require('node-cmd');
 const sftpClient = require('sftp-promises')
 import _ from 'lodash';
 
+const TIMEOUT = 30000
+
 // const PLATFORM = {
 //   centos6: 'centos6',
 //   centos7: 'centos7',
@@ -130,7 +132,7 @@ const executeCommand = command => {
     const id = setTimeout(() => {
       clearTimeout(id);
       reject(new Error(`promise timeout for: ${command}`))
-    }, 30000)
+    }, TIMEOUT)
   })
 
   return Promise.race([
@@ -325,6 +327,7 @@ export {
   // getPlatform,
   // getPacketCountCmd,
   // getInterfacesCmd,
+  TIMEOUT,
   executeCommand,
   _getHostName,
   getHostName,

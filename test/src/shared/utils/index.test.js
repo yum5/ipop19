@@ -1,4 +1,6 @@
-import { executeCommand,
+import {
+  TIMEOUT,
+  executeCommand,
   getHostName,
   _getHostName,
   _getInterfaceIndex,
@@ -27,7 +29,8 @@ describe('utils/index', () => {
     })
 
     it('should throw an error when command takes too long time', async () => {
-      await expect(executeCommand(`sleep ${30000 * 2 / 1000}`))
+      jest.setTimeout(TIMEOUT * 2); 
+      await expect(executeCommand(`sleep ${TIMEOUT * 2 / 1000}`))
         .rejects.toThrowError('promise timeout');
     })
   })
