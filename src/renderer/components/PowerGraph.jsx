@@ -7,7 +7,8 @@ import moment from 'moment';
 const orange = 'rgb(255, 159, 64)';
 const blue = 'rgb(64, 159, 255)';
 const POWER_CONSUMPTION_ELECTRICAL = 0.1;
-const POWER_CONSUMPTION_OPTICAL = 0.03;
+const POWER_CONSUMPTION_OPTICAL = 0.0000000000001;
+const OPTICAL_BANDWIDTH = 10 * 1000 * 1000 * 1000; // 10Gbps
 
 export class PowerGraph extends Component {
   constructor(props) {
@@ -38,7 +39,7 @@ export class PowerGraph extends Component {
       responsive: true,
       title: {
         display: true,
-        text: 'Power Monitor'
+        text: 'Power Consumption Comparison'
       },
       scales: {
         xAxes: [{
@@ -79,36 +80,36 @@ export class PowerGraph extends Component {
   }
 
   onRefresh(chart) {
-    const { graphDataMf, graphDataDf, graphDataEf } = this.props;
+    const { spine, mems, plzt } = this.props;
     chart.data.datasets.forEach(dataset => {
-      if (graphDataMf == null || graphDataDf == null || graphDataEf == null) return;
+      if (spine == null || mems == null || plzt == null) return;
 
       if (dataset.key === 'conventional') {
-        graphDataMf.rx.forEach((rx, index) => {
+        spine.forEach((row, index) => {
           const last = dataset.data.slice(-1)[0];
-          if (!last || moment(last.x).isBefore(moment(rx.x))) {
-            const mf = graphDataMf.rx[index].y;
-            const df = graphDataDf.rx[index].y;
-            const ef = graphDataEf.rx[index].y;
+          if (!last || moment(last.x).isBefore(moment(row.timestamp))) {
+            const mf = spine[index].txDeltaPerSec;
+            const df = plzt[index].txDeltaPerSec;
+            const ef = mems[index].txDeltaPerSec;
             const power = (mf + df + ef) * POWER_CONSUMPTION_ELECTRICAL;
 
             dataset.data.push({
-              x: rx.x,
+              x: row.timestamp,
               y: power
             });
           }
         })
       } else if (dataset.key === 'holst') {
-        graphDataDf.rx.forEach((rx, index) => {
+        spine.forEach((row, index) => {
           const last = dataset.data.slice(-1)[0];
-          if (!last || moment(last.x).isBefore(moment(rx.x))) {
-            const mf = graphDataMf.rx[index].y;
-            const df = graphDataDf.rx[index].y;
-            const ef = graphDataEf.rx[index].y;
-            const power = mf * POWER_CONSUMPTION_ELECTRICAL + (df + ef) * POWER_CONSUMPTION_OPTICAL;
+          if (!last || moment(last.x).isBefore(moment(row.timestamp))) {
+            const mf = spine[index].txDeltaPerSec;
+            const df = plzt[index].txDeltaPerSec;
+            const ef = mems[index].txDeltaPerSec;
+            const power = mf * POWER_CONSUMPTION_ELECTRICAL + OPTICAL_BANDWIDTH * POWER_CONSUMPTION_OPTICAL;
 
             dataset.data.push({
-              x: rx.x,
+              x: row.timestamp,
               y: power
             })
           }
@@ -129,9 +130,9 @@ export class PowerGraph extends Component {
 
 const mapStateToProps = (state, props) => {
   return {
-    graphDataMf: state.packets.mf && state.packets.mf.graphData,
-    graphDataDf: state.packets.df && state.packets.df.graphData,
-    graphDataEf: state.packets.ef && state.packets.ef.graphData
+    spine: state.packets['tx--to-spine'] && state.packets['tx--to-spine'].rawData,
+    mems: state.packets['tx--to-mems'] && state.packets['tx--to-mems'].rawData,
+    plzt: state.packets['tx--to-plzt'] && state.packets['tx--to-plzt'].rawData
   };
 }
 

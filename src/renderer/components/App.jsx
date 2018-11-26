@@ -149,21 +149,21 @@ export class App extends Component {
         <div className={classes.appContent}>
           <Paper className={classes.paper} elevation={1}>
             <Typography variant="headline" component="h1">
-              Network Status
+              VLAN Config
             </Typography>
             <NetworkFigure />
           </Paper>
 
           <Paper className={classes.paper} elevation={1}>
             <Typography variant="headline" component="h1">
-              PLZT Monitor
+              PLZT Optical Slot Size
             </Typography>
             <PLZTMonitor />
           </Paper>
 
           <Paper className={classes.paper} elevation={1}>
             <Typography variant="headline" component="h1">
-              Graph
+              Traffic Monitor
             </Typography>
             <div className={classes.graphArea}>
               {graphEntries.map(entry =>

@@ -4,7 +4,30 @@ import {
 } from '../actions/devices';
 
 const initialState = {
-  // nic: [],
+  // watch TX ports of ToR1 to analyze energy consumption
+  dataSources: [
+    {
+      id: 'tx--to-spine',
+      index: 10,
+      ip: '192.168.100.11',
+      desc: 'packets going to spine SW',
+      status: 'up'
+    },
+    {
+      id: 'tx--to-mems',
+      index: 10,
+      ip: '192.168.100.11',
+      desc: 'packets going to mems SW',
+      status: 'up'
+    },
+    {
+      id: 'tx--to-plzt',
+      index: 10,
+      ip: '192.168.100.11',
+      desc: 'packets going to plzt SW',
+      status: 'up'
+    }
+  ],
   interfaces: [
     {
       id: 'mf',
