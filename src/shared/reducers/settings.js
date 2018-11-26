@@ -8,28 +8,29 @@ import {
 const initialState = {
   // times: [],
   graphEntries: [{
-    id: 'mf',
-    index: 10,
-    ip: '192.168.100.11',
-    desc: 'mf interface',
-    status: 'up'
-  },
-  {
-    id: 'df',
-    index: 10,
-    ip: '192.168.100.12',
-    desc: 'df interface',
-    status: 'up'
-  },
-  {
-    id: 'ef',
+    id: 'slotA',
     index: 11,
-    ip: '192.168.100.13',
-    desc: 'ef interface',
+    ip: '192.168.100.14',
+    desc: 'slotA interface',
+    status: 'up'
+  },
+  {
+    id: 'slotB',
+    index: 11,
+    ip: '192.168.100.15',
+    desc: 'slotB interface',
+    status: 'up'
+  },
+  {
+    id: 'slotC',
+    index: 10,
+    ip: '192.168.100.16',
+    desc: 'slotC interface',
     status: 'up'
   }],
   snmpHosts: [],
   ryuHost: '',
+  plztController: '192.168.100.21', // server that tells optical slot size configuration
   isDebugMode: false
 }
 export default function settings(state = initialState, action) {

@@ -8,46 +8,46 @@ const initialState = {
   dataSources: [
     {
       id: 'tx--to-spine',
-      index: 10,
-      ip: '192.168.100.11',
+      index: 19,
+      ip: '192.168.100.2',
       desc: 'packets going to spine SW',
       status: 'up'
     },
     {
       id: 'tx--to-mems',
-      index: 10,
-      ip: '192.168.100.11',
+      index: 15,
+      ip: '192.168.100.2',
       desc: 'packets going to mems SW',
       status: 'up'
     },
     {
       id: 'tx--to-plzt',
-      index: 10,
-      ip: '192.168.100.11',
+      index: 17,
+      ip: '192.168.100.2',
       desc: 'packets going to plzt SW',
       status: 'up'
     }
   ],
   interfaces: [
     {
-      id: 'mf',
-      index: 10,
-      ip: '192.168.100.11',
-      desc: 'mf interface',
-      status: 'up'
-    },
-    {
-      id: 'df',
-      index: 10,
-      ip: '192.168.100.12',
-      desc: 'df interface',
-      status: 'up'
-    },
-    {
-      id: 'ef',
+      id: 'slotA',
       index: 11,
-      ip: '192.168.100.13',
-      desc: 'ef interface',
+      ip: '192.168.100.14',
+      desc: 'slotA interface',
+      status: 'up'
+    },
+    {
+      id: 'slotB',
+      index: 11,
+      ip: '192.168.100.15',
+      desc: 'slotB interface',
+      status: 'up'
+    },
+    {
+      id: 'slotC',
+      index: 10,
+      ip: '192.168.100.16',
+      desc: 'slotC interface',
       status: 'up'
     }
   ],

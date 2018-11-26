@@ -28,22 +28,23 @@ const isDevelopment = process.env.NODE_ENV !== 'production'
 const store = configureStore({}, 'main');
 
 const main = () => {
-  const isDebugMode = store.getState().settings.isDebugMode;
+  const settings = store.getState().settings
+  const isDebugMode = settings.isDebugMode;
   // timer.setTimeout(main, '', `30000m`);
   timer.setTimeout(main, '', `4000m`);
 
   const timestamp = new Date();
-  store.getState().settings.graphEntries.forEach(device => {
+  settings.graphEntries.forEach(device => {
     store.dispatch(packetCount(device, timestamp, isDebugMode));
   })
   store.getState().devices.dataSources.forEach(device => {
     store.dispatch(packetCount(device, timestamp, isDebugMode));
   })
 
-  const ryuHost = store.getState().settings.ryuHost;
+  const ryuHost = settings.ryuHost;
   store.dispatch(vlanConfig(ryuHost, isDebugMode));
 
-  store.dispatch(slotSize('fake-ip-address', isDebugMode));
+  store.dispatch(slotSize(settings.plztController, isDebugMode));
 }
 
 // wait a moment until React gets ready
