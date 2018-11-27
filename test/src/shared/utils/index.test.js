@@ -24,12 +24,12 @@ describe('utils/index', () => {
 
     it('should throw an error when command not found', async () => {
       await expect(executeCommand('unknown-command'))
-        .rejects.toThrowError('command not found');
+        .rejects.toThrow();
       // done();
     })
 
     it('should throw an error when command takes too long time', async () => {
-      jest.setTimeout(TIMEOUT * 2); 
+      jest.setTimeout(TIMEOUT * 2);
       await expect(executeCommand(`sleep ${TIMEOUT * 2 / 1000}`))
         .rejects.toThrowError('promise timeout');
     })
