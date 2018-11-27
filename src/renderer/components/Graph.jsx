@@ -49,7 +49,7 @@ export class Graph extends Component {
           display: true,
           scaleLabel: {
             display: true,
-            labelString: '# of packets sent / received per milliseconds'
+            labelString: 'packets / s'
           }
         }]
       },

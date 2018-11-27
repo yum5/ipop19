@@ -6,9 +6,10 @@ import moment from 'moment';
 
 const orange = 'rgb(255, 159, 64)';
 const blue = 'rgb(64, 159, 255)';
-const POWER_CONSUMPTION_ELECTRICAL = 0.1;
-const POWER_CONSUMPTION_OPTICAL = 0.0000000000001;
-const OPTICAL_BANDWIDTH = 10 * 1000 * 1000 * 1000; // 10Gbps
+const PACKET_SIZE = 1000; // 1k
+const POWER_CONSUMPTION_ELECTRICAL_PER_BIT = 6.88; // nJ/bit
+const POWER_CONSUMPTION_OPTICAL = 3.55; // nJ
+// const OPTICAL_BANDWIDTH = 10 * 1000 * 1000 * 1000; // 10Gbps
 
 export class PowerGraph extends Component {
   constructor(props) {
@@ -91,7 +92,7 @@ export class PowerGraph extends Component {
             const mf = spine[index].txDeltaPerSec;
             const df = plzt[index].txDeltaPerSec;
             const ef = mems[index].txDeltaPerSec;
-            const power = (mf + df + ef) * POWER_CONSUMPTION_ELECTRICAL;
+            const power = (mf + df + ef) * PACKET_SIZE * POWER_CONSUMPTION_ELECTRICAL_PER_BIT;
 
             dataset.data.push({
               x: row.timestamp,
@@ -106,7 +107,7 @@ export class PowerGraph extends Component {
             const mf = spine[index].txDeltaPerSec;
             const df = plzt[index].txDeltaPerSec;
             const ef = mems[index].txDeltaPerSec;
-            const power = mf * POWER_CONSUMPTION_ELECTRICAL + OPTICAL_BANDWIDTH * POWER_CONSUMPTION_OPTICAL;
+            const power = mf * PACKET_SIZE * POWER_CONSUMPTION_ELECTRICAL_PER_BIT + POWER_CONSUMPTION_OPTICAL * 2;
 
             dataset.data.push({
               x: row.timestamp,

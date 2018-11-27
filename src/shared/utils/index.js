@@ -323,17 +323,17 @@ const getSlotSize = async (ip, isDebugMode) => {
   }
 
   const sftp = new sftpClient(config);
-  const buffer = (await sftp.getBuffer('/home/student/holst/ryu-book/SC18/jsonfiles/vlan_state.json')).toString();
+  const buffer = (await sftp.getBuffer('/home/student/keio_technomall_2018/slot.json')).toString();
   const json = JSON.parse(buffer);
 
-  if (json.length !== 3) {
+  if (json && json['slotA'] && json['slotB'] && json['slotC']) {
+    return {
+      slotA: json['slotA'],
+      slotB: json['slotB'],
+      slotC: json['slotC'],
+    }
+  } else {
     throw new Error('got invalid json message from PLZT Controller');
-  }
-
-  return {
-    slotA: json[0],
-    slotB: json[1],
-    slotC: json[2],
   }
 }
 
