@@ -159,12 +159,7 @@ export class App extends Component {
               PLZT Optical Slot Size
             </Typography>
             <PLZTMonitor />
-          </Paper>
 
-          <Paper className={classes.paper} elevation={1}>
-            <Typography variant="headline" component="h1">
-              Traffic Monitor
-            </Typography>
             <div className={classes.graphArea}>
               {graphEntries.map(entry =>
                 <div key={entry.id} className={classes.graphContainer}>
@@ -179,6 +174,13 @@ export class App extends Component {
                 </div>)}
               {/*.reduce((accum, elem) => accum === null ? [elem] : [...accum, <Divider/>, elem], null)*/}
             </div>
+          </Paper>
+
+          <Paper className={classes.paper} elevation={1}>
+            <Typography variant="headline" component="h1">
+              Power Consumption Comparison
+            </Typography>
+
             <PowerGraph />
           </Paper>
           <Button
