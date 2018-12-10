@@ -233,9 +233,9 @@ const getViaSWFromFlowType = type => {
   if (type === 'mf') {
     return 'spine'
   } else if (type === 'df') {
-    return 'mems'
-  } else if (type === 'ef') {
     return 'plzt'
+  } else if (type === 'ef') {
+    return 'mems'
   } else {
     throw new Error('got unexpected flow type from Ryu SDN Controller');
   }
