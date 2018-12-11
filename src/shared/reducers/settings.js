@@ -9,21 +9,21 @@ const initialState = {
   // times: [],
   graphEntries: [{
     id: 'slotA',
-    index: 11,
+    index: 21,
     ip: '192.168.100.14',
     desc: 'slotA interface',
     status: 'up'
   },
   {
     id: 'slotB',
-    index: 11,
+    index: 21,
     ip: '192.168.100.15',
     desc: 'slotB interface',
     status: 'up'
   },
   {
     id: 'slotC',
-    index: 10,
+    index: 21,
     ip: '192.168.100.16',
     desc: 'slotC interface',
     status: 'up'
