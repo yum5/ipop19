@@ -326,7 +326,7 @@ const getSlotSize = async (ip, isDebugMode) => {
   const buffer = (await sftp.getBuffer('/home/student/keio_technomall_2018/slot.json')).toString();
   const json = JSON.parse(buffer);
 
-  if (json && json['slotA'] && json['slotB'] && json['slotC']) {
+  if (json) {
     return {
       slotA: json['slotA'],
       slotB: json['slotB'],
