@@ -6,6 +6,7 @@ HOLST Demoには、VLAN回線設定、PLZT Optical Slot Size、消費電力削�
 - yarn がインストールされている
 - git がインストールされている
 - Electronが動作する
+- snmpwalk がインストールされている
 - SNMPやscpで情報を取得してくるスイッチやホストと同一ネットワークに接続されている
 
 macOS、Ubuntu 16.04LTSでの動作を確認していますが、他の \*NIX 環境でも動作するはずです。
