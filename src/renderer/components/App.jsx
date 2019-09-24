@@ -12,6 +12,11 @@ import Divider from '@material-ui/core/Divider';
 import ErrorListDrawer from './ErrorListDrawer';
 import ErrorListNavigation from './ErrorListNavigation';
 import Graph from './Graph';
+import Graph2 from './Graph2';
+import Graph3 from './Graph3';
+import Graph4 from './Graph4';
+import Graph5 from './Graph5';
+import Graph6 from './Graph6';
 import PowerGraph from './PowerGraph';
 import NetworkFigure from './NetworkFigure';
 import NewGraphDialog from './NewGraphDialog';
@@ -138,7 +143,7 @@ export class App extends Component {
         <AppBar position="static">
           <Toolbar>
             <Typography variant="title" color="inherit" className={classes.flex}>
-              HOLST Demo
+              IPOP2019 Demo
             </Typography>
             <Button
               color="inherit"
@@ -147,21 +152,20 @@ export class App extends Component {
           </Toolbar>
         </AppBar>
         <div className={classes.appContent}>
-          <Paper className={classes.paper} elevation={1}>
+          {/* <Paper className={classes.paper} elevation={1}>
             <Typography variant="headline" component="h1">
               VLAN Config
             </Typography>
             <NetworkFigure />
-          </Paper>
+          </Paper> */}
 
           <Paper className={classes.paper} elevation={1}>
-            <Typography variant="headline" component="h1">
+            {/* <Typography variant="headline" component="h1">
               PLZT Optical Slot Size
-            </Typography>
+            </Typography> */}
             <PLZTMonitor />
-
             <div className={classes.graphArea}>
-              {graphEntries.map(entry =>
+              {/* {graphEntries.map(entry =>
                 <div key={entry.id} className={classes.graphContainer}>
                   <Typography
                     variant="subheading"
@@ -171,12 +175,75 @@ export class App extends Component {
                     Device: {entry.id}
                   </Typography>
                   <Graph device={entry.id}/>
-                </div>)}
+                </div>)} */}
               {/*.reduce((accum, elem) => accum === null ? [elem] : [...accum, <Divider/>, elem], null)*/}
+              {/* <Typography
+                    variant="subheading"
+                    color="inherit"
+                    component="h1"
+                  >
+                  Device: {["電気L2スイッチ"]}
+                  </Typography> */}
+             {/* <Graph device={["slotA"]}/> */}
+
+             {/* <Typography
+                    variant="subheading"
+                    color="inherit"
+                    component="h1"
+                  >
+                  Device: {["光L1スイッチ"]}
+                  </Typography> */}
+             {/* <Graph device={["slotB"]}/> */}
+
+              {/* <Typography
+                    variant="subheading"
+                    color="inherit"
+                    component="h1"
+                  >
+                  Device: {["電気L1スイッチ"]}
+               </Typography> */}
+             <Graph5 device={["slotA0","slotA1","slotA2"]}/>
+             <Graph4 device={["slotB0","slotB1","slotB2","slotB3"]}/>
+             <Graph3 device={["slotC0","slotC1","slotC2","slotC3","slotC4","slotC5"]}/>
+             <Graph device={["slotD0"]}/>
+             {/* <Graph6 device={["slotD1"]}/>
+             <Graph device={["slotC5"]}/>
+             <Graph6 device={["slotD2"]}/> */}
+             {/* <Graph2 device={["slotD0"]}/>
+             <Graph6 device={["slotD0"]}/> */}
+             {/* <Graph2 device={["slotD1"]}/>
+             <Graph2 device={["slotD2"]}/> */}
+              {/* <Typography
+                    variant="subheading"
+                    color="inherit"
+                    component="h1"
+                  >
+                  Device: {["slotD"]}
+                  </Typography> */}
+             {/* <Graph device={["slotD0"]}/> */}
+
+              {/* <Typography
+                    variant="subheading"
+                    color="inherit"
+                    component="h1"
+                  >
+                  Device: {["slotE"]}
+                  </Typography> */}
+             {/* <Graph device={["slotE"]}/> */}
+
+             {/* <Graph2 device={["slotD"]}/> */}
+             {/* <Typography
+                    variant="subheading"
+                    color="inherit"
+                    component="h1"
+                  >
+                  Device: {["ADVマイグレーション"]}
+                  </Typography> */}
+             {/* <Graph2 device={["slotD","slotE"]}/> */}
             </div>
           </Paper>
 
-          <Paper className={classes.paper} elevation={1}>
+          {/* <Paper className={classes.paper} elevation={1}>
             <Typography variant="headline" component="h1">
               Power Consumption Comparison
             </Typography>
@@ -191,7 +258,7 @@ export class App extends Component {
             className={classes.fab}
           >
             <AddIcon />
-          </Button>
+          </Button> */}
         </div>
         <ErrorListNavigation
           onClick={this.handleClickOpen('errors')} />

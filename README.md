@@ -115,3 +115,11 @@ IF-MIB::ifAdminStatus.10 = INTEGER: up(1)
 $ snmpwalk -v 2c -c public 192.168.1.1 1.3.6.1.2.1.2.2.1.7.3
 IF-MIB::ifAdminStatus.3 = INTEGER: down(2)
 ```
+###インターフェイス指定
+src/shared/devices.jsとsrc/shared/settingsをいじる
+
+###snmpwalkの設定
+src/utils/index.js
+
+###
+App.jsxで各Graphを描画　Graph.jsxなどをいじればグラフの設定を変更可能

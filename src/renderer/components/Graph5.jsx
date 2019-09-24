@@ -5,39 +5,26 @@ import 'chartjs-plugin-streaming';
 import moment from 'moment';
 
 const orange = 'rgb(255, 159, 64)';
-const blue = 'rgb(64, 159, 255)';
 
-export class Graph extends Component {
+export class Graph5 extends Component {
   constructor(props) {
     super(props);
     const data = {
       type: 'line',
-      // labels: ['rx', 'tx'],
       datasets: [{
         key: 'rx',
-        label: 'Rx Packets',
+        label: 'Tx Packets',
         backgroundColor: Chart.helpers.color(orange).alpha(0.5).rgbString(),
         borderColor: orange,
         borderWidth: 1,
-        // data: this.props.graphData.rx,
         data: []
       }]
-      // },{
-      //   key: 'tx',
-      //   label: 'Tx Packets',
-      //   backgroundColor: Chart.helpers.color(blue).alpha(0.5).rgbString(),
-      //   borderColor: blue,
-      //   borderWidth: 1,
-      //   // data: this.props.graphData.tx,
-      //   data: []
-      // }]
     }
-
     const options = {
       responsive: true,
       title: {
         display: true,
-        text: 'ADV Migration Flow'
+        text: 'Electrical L2 Switch'
       },
       scales: {
         xAxes: [{
@@ -50,9 +37,6 @@ export class Graph extends Component {
           scaleLabel: {
             display: true,
             labelString: 'packets / s'
-          },
-          ticks:{
-            max:100000
           }
         }]
       },
@@ -81,20 +65,28 @@ export class Graph extends Component {
   }
 
   onRefresh(chart) {
-    const { graphData } = this.props;
-    chart.data.datasets.forEach(dataset => {
-      if (graphData == null) return;
-        graphData.rx.forEach(rx => {
-          const last = dataset.data.slice(-1)[0];
-          if (!last || moment(last.x).isBefore(moment(rx.x))) {
-            // if(rx.y==0){
-            // }else{
-            //   rx.y = rx.y/1150;
-            // }
-            dataset.data.push(rx)
-            // dataset.data[0].y+=100;
-          }
-        })
+    const { graphData0,graphData1,graphData2 } = this.props;
+    chart.data.datasets.forEach(datasetall => {
+      if (graphData0 == null||graphData1==null||graphData2==null) return;
+      graphData0.tx.forEach(rx0 => {
+        const last = datasetall.data.slice(-1)[0];
+        if (!last || moment(last.x).isBefore(moment(rx0.x))) {
+          graphData1.tx.forEach(rx1 => {
+            if (!last || moment(last.x).isBefore(moment(rx1.x))){
+              graphData2.tx.forEach(rx2 => {
+                if (!last || moment(last.x).isBefore(moment(rx2.x))){
+                              const packet0= rx0.y;
+                              const packet1= rx1.y;
+                              const packet2= rx2.y;
+                              let allpacket = packet0+packet1+packet2;
+                              // allpacket=allpacket/2;
+                              datasetall.data.push({
+                                x:rx0.x,
+                                y:allpacket
+                              })
+                    }})
+            }})
+        }})
     })
   }
 
@@ -111,8 +103,10 @@ export class Graph extends Component {
 const mapStateToProps = (state, props) => {
   const device = props.device;
   return {
-    graphData: state.packets[device] && state.packets[device].graphData
+    graphData0:state.packets[device[0]] && state.packets[device[0]].graphData,
+    graphData1:state.packets[device[1]] && state.packets[device[1]].graphData,
+    graphData2:state.packets[device[2]] && state.packets[device[2]].graphData
   };
 }
 
-export default connect(mapStateToProps)(Graph)
+export default connect(mapStateToProps)(Graph5)

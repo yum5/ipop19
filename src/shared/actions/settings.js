@@ -47,7 +47,7 @@ export const loadSettings = () =>
     dispatch(requestLoadSettings())
     const snmpHosts = JSON.parse(electronSettings.get('settings.snmpHosts') || `["192.168.1.1"]`);
     const ryuHost = JSON.parse(electronSettings.get('settings.ryuHost') || `"192.168.100.21"`);
-    const isDebugMode = JSON.parse(electronSettings.get('settings.isDebugMode') || `"false"`);
+    const isDebugMode = JSON.parse(electronSettings.get('settings.isDebugMode') || `"true"`);
     dispatch(updateSnmpHost(snmpHosts));
     dispatch(updateRyuHost(ryuHost));
     dispatch(updateIsDebugMode(isDebugMode));

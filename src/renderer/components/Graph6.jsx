@@ -50,9 +50,6 @@ export class Graph extends Component {
           scaleLabel: {
             display: true,
             labelString: 'packets / s'
-          },
-          ticks:{
-            max:100000
           }
         }]
       },
@@ -84,7 +81,7 @@ export class Graph extends Component {
     const { graphData } = this.props;
     chart.data.datasets.forEach(dataset => {
       if (graphData == null) return;
-        graphData.rx.forEach(rx => {
+        graphData.tx.forEach(rx => {
           const last = dataset.data.slice(-1)[0];
           if (!last || moment(last.x).isBefore(moment(rx.x))) {
             // if(rx.y==0){

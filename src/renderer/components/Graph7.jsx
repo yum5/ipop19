@@ -50,9 +50,6 @@ export class Graph extends Component {
           scaleLabel: {
             display: true,
             labelString: 'packets / s'
-          },
-          ticks:{
-            max:100000
           }
         }]
       },

@@ -31,7 +31,7 @@ const main = () => {
   const settings = store.getState().settings
   const isDebugMode = settings.isDebugMode;
   // timer.setTimeout(main, '', `30000m`);
-  timer.setTimeout(main, '', `4000m`);
+  timer.setTimeout(main, '', `15000m`);
 
   const timestamp = new Date();
   settings.graphEntries.forEach(device => {

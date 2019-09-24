@@ -88,7 +88,7 @@ const expected = `IF-MIB::ifHCInOctets.1 = Counter64: 2881550
     it('should throw an error when command returns unexpected result', async () => {
       const _executeCommand = sinon.stub().returns(Promise.resolve('*******\n****\n****'));
       await expect(_getInOctets(_executeCommand, '192.168.100.14', 10))
-        .rejects.toThrowError('snmpwalk returns unexpected result');
+        .rejects.toThrowError(' returns unexpected result');
     })
   })
 

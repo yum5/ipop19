@@ -3,7 +3,7 @@ const cmd = require('node-cmd');
 const sftpClient = require('sftp-promises')
 import _ from 'lodash';
 
-const TIMEOUT = 30000
+const TIMEOUT = 100000
 
 // const PLATFORM = {
 //   centos6: 'centos6',
@@ -145,9 +145,9 @@ const _getHostName = async (_executeCommand, ip) => {
    const result = await _executeCommand(`snmpwalk -v 2c -c public ${ip} 1.3.6.1.2.1.1.5.0`);
 
    try {
-     return result.match(/^SNMPv2-MIB::sysName\.0 = STRING: (.+)\n$/)[1];
+     return result.match(/^SNMPv2-MIB::sysName\.0 = STRING: (.+)\r\n/)[1];
    } catch (e) {
-     throw new Error('snmpwalk returns unexpected result');
+     throw new Error('snmpwalk returns unexpected result1');
    }
 }
 
@@ -157,9 +157,9 @@ const _getInterfaceIndex = async (_executeCommand, ip) => {
    const result = await _executeCommand(`snmpwalk -v 2c -c public ${ip} 1.3.6.1.2.1.2.2.1.1`);
 
    try {
-     return result.split('\n').filter(v => v).map(v => v.match(/^IF-MIB::ifIndex\.(\d+) = INTEGER: (\d+)$/)[2]).map(v => parseInt(v));
+     return result.split('\n').filter(v => v).map(v => v.match(/^IF-MIB::ifIndex\.(\d+) = INTEGER: (\d+)/)[2]).map(v => parseInt(v));
    } catch (e) {
-     throw new Error('snmpwalk returns unexpected result');
+     throw new Error('snmpwalk returns unexpected result2');
    }
 }
 
@@ -174,12 +174,16 @@ const _getInOctets = async (_executeCommand, ip, ifIndex, isDebugMode) => {
     DEBUG_IN_OCTET[`${ip}::${ifIndex}`] = next;
     return next;
   }
-  const result = await _executeCommand(`snmpwalk -v 2c -c public ${ip} 1.3.6.1.2.1.31.1.1.1.6.${ifIndex}`);
-
+  // const result = await _executeCommand(`snmpwalk -v 2c -c public ${ip} 1.3.6.1.2.1.31.1.1.1.6`);
+  // const result = await _executeCommand(`snmpget -v 2c -c public ${ip} ifHCInOctets.${ifIndex}`);
+  const result = await _executeCommand(`snmpget -v 2c -c public ${ip} ifHCInUcastPkts.${ifIndex}`);
   try {
-   return parseInt(result.match(/^IF-MIB::ifHCInOctets\.(\d+) = Counter64: (\d+)\n$/)[2]);
+    // if (ifIndex == 10406){
+    //   return parseInt(result.match(/^IF-MIB::ifHCInOctets\.10406 = Counter64: (\d+)\r\n/)[2]);
+    // }
+   return parseInt(result.match(/^IF-MIB::ifHCInUcastPkts\.(\d+) = Counter64: (\d+)\r\n/)[2]);
   } catch (e) {
-   throw new Error('snmpwalk returns unexpected result');
+   throw new Error('snmpwalk returns unexpected result3');
   }
 }
 
@@ -194,12 +198,13 @@ const _getOutOctets = async (_executeCommand, ip, ifIndex, isDebugMode) => {
     DEBUG_OUT_OCTET[`${ip}::${ifIndex}`] = next;
     return next;
   }
-  const result = await _executeCommand(`snmpwalk -v 2c -c public ${ip} 1.3.6.1.2.1.31.1.1.1.10.${ifIndex}`);
+  // const result = await _executeCommand(`snmpwalk -v 2c -c public ${ip} 1.3.6.1.2.1.31.1.1.1.10.${ifIndex}`);
+  const result = await _executeCommand(`snmpget -v 2c -c public ${ip} ifHCOutUcastPkts.${ifIndex}`);
 
   try {
-   return parseInt(result.match(/^IF-MIB::ifHCOutOctets\.(\d+) = Counter64: (\d+)\n$/)[2]);
+   return parseInt(result.match(/^IF-MIB::ifHCOutUcastPkts\.(\d+) = Counter64: (\d+)\r\n/)[2]);
   } catch (e) {
-   throw new Error('snmpwalk returns unexpected result');
+   throw new Error('snmpwalk returns unexpected result4');
   }
 }
 
@@ -207,11 +212,12 @@ const getOutOctets = (ip, ifIndex, isDebugMode) => _getOutOctets(executeCommand,
 
 const _getIfDesc = async (_executeCommand, ip, ifIndex) => {
    const result = await _executeCommand(`snmpwalk -v 2c -c public ${ip} 1.3.6.1.2.1.2.2.1.2.${ifIndex}`);
+   
 
    try {
-     return result.match(/^IF-MIB::ifDescr\.(\d+) = STRING: (.+)\n$/)[2];
+     return result.match(/^IF-MIB::ifDescr\.(\d+) = STRING: (.+)\r\n/)[2];
    } catch (e) {
-     throw new Error('snmpwalk returns unexpected result');
+     throw new Error('snmpwalk returns unexpected result5');
    }
 }
 
@@ -221,9 +227,9 @@ const _getAdminStatus = async (_executeCommand, ip, ifIndex) => {
    const result = await _executeCommand(`snmpwalk -v 2c -c public ${ip} 1.3.6.1.2.1.2.2.1.7.${ifIndex}`);
 
    try {
-     return result.match(/^IF-MIB::ifAdminStatus\.(\d+) = INTEGER: (\w+)\((\d+)\)\n$/)[2];
+     return result.match(/^IF-MIB::ifAdminStatus\.(\d+) = INTEGER: (\w+)\((\d+)\)\r\n/)[2];
    } catch (e) {
-     throw new Error('snmpwalk returns unexpected result');
+     throw new Error('snmpwalk returns unexpected result6');
    }
 }
 
@@ -310,9 +316,32 @@ const getVlanConfig = (ip, isDebugMode) => _getVlanConfig(executeCommand, ip, is
 const getSlotSize = async (ip, isDebugMode) => {
   if (isDebugMode) {
     return {
-      slotA: _.random(1, 100),
-      slotB: _.random(1, 100),
-      slotC: _.random(1, 100),
+      // slotA: _.random(1, 100),
+      // slotB: _.random(1, 100),
+      // slotC: _.random(1, 100),
+      slotA0: _.random(1, 100),
+      slotA1: _.random(1, 100),
+      slotA2: _.random(1, 100),
+      // slotA3: _.random(1, 100),
+      // slotA4: _.random(1, 100),
+      // slotA5: _.random(1, 100),
+      slotB0: _.random(1, 100),
+      slotB1: _.random(1, 100),
+      slotB2: _.random(1, 100),
+      slotB3: _.random(1, 100),
+      slotB4: _.random(1, 100),
+      slotB5: _.random(1, 100),
+      slotC0: _.random(1, 100),
+      slotC1: _.random(1, 100),
+      slotC2: _.random(1, 100),
+      slotC3: _.random(1, 100),
+      slotC4: _.random(1, 100),
+      slotC5: _.random(1, 100),
+      slotD0: _.random(1, 100),
+      slotD1: _.random(1, 100),
+      slotD2: _.random(1, 100),
+      // slotD: _.random(1, 100),
+      // slotE: _.random(1, 100),
     }
   }
 
@@ -329,8 +358,25 @@ const getSlotSize = async (ip, isDebugMode) => {
   if (json) {
     return {
       slotA: json['slotA'],
+      slotA0: json['slotA0'],
+      slotA1: json['slotA1'],
+      slotA2: json['slotA2'],
       slotB: json['slotB'],
+      slotB0: json['slotB0'],
+      slotB1: json['slotB1'],
+      slotB2: json['slotB2'],
+      slotB3: json['slotB3'],
+      slotB4: json['slotB4'],
+      slotB5: json['slotB5'],
       slotC: json['slotC'],
+      slotC0: json['slotC0'],
+      slotC1: json['slotC1'],
+      slotC2: json['slotC2'],
+      slotC3: json['slotC3'],
+      slotC4: json['slotC4'],
+      slotC5: json['slotC5'],
+      slotD: json['slotD'],
+      slotE: json['slotE'],
     }
   } else {
     throw new Error('got invalid json message from PLZT Controller');

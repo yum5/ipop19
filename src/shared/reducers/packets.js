@@ -45,6 +45,8 @@ export default function packets(state = initialState, action) {
           timeInterval,
           rxDeltaPerSec: rxDelta / timeInterval * 1000,
           txDeltaPerSec: txDelta / timeInterval * 1000
+          // rxDeltaPerSec: rxDelta / (timeInterval * 128),
+          // txDeltaPerSec: txDelta / (timeInterval * 128)
         };
 
         return {
